@@ -3,134 +3,243 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>KANTO APLO · ΚΆΝΤΟ ΑΠΛΌ · Rends-le Simple</title>
+<title>Éditeurs · KANTO APLO · ΚΆΝΤΟ ΑΠΛΌ</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#08070B;--bg2:#0E0C14;--bg3:#141220;
-  --gold:#C9963A;--goldl:#E8BE6A;--goldd:rgba(201,150,58,.12);--goldb:rgba(201,150,58,.32);
+  --bg:#07060B;--bg2:#0F0D16;--bg3:#141220;
+  --gold:#C9963A;--goldl:#E8BE6A;--goldb:rgba(201,150,58,.3);--goldd:rgba(201,150,58,.1);
   --text:#EDE7DB;--textm:#9C968E;--textd:#524E48;
   --tekton:#C9963A;--logos:#3D8EE8;--mantis:#8B5CF6;--hermes:#E8714A;--synergos:#2DD4A0;--kairos:#F472B6;
 }
 html{scroll-behavior:smooth}
 body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;line-height:1.65;overflow-x:hidden}
+body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");opacity:.022;pointer-events:none;z-index:9999}
 
-/* GRAIN */
-body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");opacity:.025;pointer-events:none;z-index:9999}
-
-/* NAV */
-nav{position:fixed;top:0;left:0;right:0;z-index:200;padding:20px 56px;display:flex;align-items:center;justify-content:space-between;background:linear-gradient(180deg,rgba(8,7,11,.92) 0%,rgba(8,7,11,0) 100%);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+/* ── NAV ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;padding:17px 52px;display:flex;align-items:center;justify-content:space-between;background:rgba(7,6,11,.88);backdrop-filter:blur(18px);border-bottom:1px solid rgba(201,150,58,.08)}
 .nlogo{display:flex;align-items:center;gap:11px;text-decoration:none}
 .nmark{width:36px;height:36px;background:linear-gradient(135deg,#C9963A,#7A5618);border-radius:9px;display:flex;align-items:center;justify-content:center;font-family:'Cinzel',serif;font-size:16px;font-weight:900;color:#fff}
 .nname{font-family:'Cinzel',serif;font-size:13px;font-weight:700;color:var(--text);letter-spacing:2.5px}
-.nsub{font-size:9.5px;color:var(--textd);letter-spacing:3px;text-transform:uppercase;margin-top:1px}
-.nright{display:flex;align-items:center;gap:28px}
-.nlink{font-size:12px;letter-spacing:1.5px;text-transform:uppercase;color:var(--textm);text-decoration:none;transition:color .2s}
-.nlink:hover{color:var(--gold)}
-.nbtn{font-size:12px;letter-spacing:.5px;font-weight:600;color:var(--bg);background:var(--gold);padding:9px 22px;border-radius:7px;text-decoration:none;transition:all .2s}
-.nbtn:hover{background:var(--goldl)}
+.nsub{font-size:9px;color:var(--textd);letter-spacing:3px;text-transform:uppercase;margin-top:1px}
+.nright{display:flex;align-items:center;gap:24px}
+.nlink{font-size:11.5px;letter-spacing:1.5px;text-transform:uppercase;color:var(--textm);text-decoration:none;transition:color .2s}.nlink:hover{color:var(--gold)}
+.nbtn{font-size:12px;font-weight:600;color:var(--bg);background:var(--gold);padding:9px 22px;border-radius:7px;text-decoration:none;transition:all .2s}.nbtn:hover{background:var(--goldl)}
 
-/* HERO */
-.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:130px 48px 80px;position:relative;overflow:hidden}
-.hero-glow{position:absolute;top:50%;left:50%;transform:translate(-50%,-60%);width:900px;height:600px;background:radial-gradient(ellipse,rgba(201,150,58,.07) 0%,transparent 68%);pointer-events:none}
+/* ── HERO ── */
+.hero{padding:130px 72px 80px;text-align:center;position:relative;overflow:hidden}
+.hero-glow{position:absolute;top:50%;left:50%;transform:translate(-50%,-60%);width:900px;height:500px;background:radial-gradient(ellipse,rgba(201,150,58,.07) 0%,transparent 65%);pointer-events:none}
 .hero-line{position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--goldb),transparent)}
+.heye{font-size:10px;letter-spacing:4px;text-transform:uppercase;color:var(--gold);margin-bottom:18px;opacity:0;animation:fu .8s ease forwards .2s}
+.htitle{font-family:'Cinzel',serif;font-size:clamp(36px,6vw,72px);font-weight:900;line-height:1.02;letter-spacing:-1px;background:linear-gradient(125deg,#F0EAE0 0%,#E8BE6A 38%,#C9963A 55%,#F0EAE0 100%);background-size:300% 300%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:shimmer 6s ease-in-out infinite,fu .9s ease forwards .4s;opacity:0}
+.hgreek{display:block;font-family:'Cinzel',serif;font-size:clamp(12px,1.6vw,18px);letter-spacing:10px;-webkit-text-fill-color:var(--textd);color:var(--textd);font-weight:400;margin-top:8px}
+.htag{font-family:'Cormorant Garamond',serif;font-size:clamp(16px,2vw,22px);font-style:italic;color:var(--textm);margin:20px 0 0;opacity:0;animation:fu .9s ease forwards .7s}
 
-.hero-eye{font-size:10.5px;letter-spacing:4px;text-transform:uppercase;color:var(--gold);margin-bottom:32px;opacity:0;animation:fu .8s ease forwards .3s}
+/* ── TABS ── */
+.tabsec{padding:48px 72px 0;max-width:1200px;margin:0 auto}
+.tabs{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:40px}
+.tab{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:30px;padding:10px 20px;cursor:pointer;display:flex;flex-direction:column;align-items:center;transition:all .3s;outline:none;font-family:inherit}
+.tab.active{border-color:var(--tc,#888);background:rgba(var(--tcr,200,150,58),.12)}
+.tab-greek{font-family:'Cinzel',serif;font-size:14px;font-weight:700;color:var(--textd);letter-spacing:1px;transition:color .3s}
+.tab.active .tab-greek{color:var(--tc,#888)}
+.tab-latin{font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:var(--textd);margin-top:2px;transition:color .3s}
+.tab.active .tab-latin{color:var(--tc,#888)}
+.tab:hover .tab-greek,.tab:hover .tab-latin{color:#9C968E}
 
-.hero-title{position:relative;margin-bottom:12px;opacity:0;animation:fu .9s ease forwards .55s}
-.htmain{font-family:'Cinzel',serif;font-size:clamp(44px,7.5vw,88px);font-weight:900;line-height:1.02;letter-spacing:-1px;background:linear-gradient(125deg,#F0EAE0 0%,#E8BE6A 40%,#C9963A 60%,#F0EAE0 100%);background-size:300% 300%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:shimmer 5s ease-in-out infinite 1.8s;display:block}
-.htgreek{display:block;font-family:'Cinzel',serif;font-size:clamp(13px,1.8vw,20px);color:var(--textd);letter-spacing:9px;font-weight:400;-webkit-text-fill-color:var(--textd);margin-top:10px}
+/* ── MOCKUP WRAPPER ── */
+.mockup-area{max-width:1000px;margin:0 auto;padding:0 72px 80px}
+.mock-header{display:flex;align-items:center;gap:14px;margin-bottom:22px}
+.mock-bar{width:3px;height:44px;border-radius:2px}
+.mock-greek{font-family:'Cinzel',serif;font-size:24px;font-weight:900;letter-spacing:2px}
+.mock-latin{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--textd);margin-top:3px}
+.mock-role{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--textd);margin-top:3px}
 
-.hero-tag{font-family:'Cormorant Garamond',serif;font-size:clamp(18px,2.4vw,24px);font-weight:300;font-style:italic;color:var(--textm);margin:22px 0 44px;opacity:0;animation:fu .9s ease forwards .85s}
+.mock-box{background:var(--bg2);border-radius:18px;padding:28px;position:relative;overflow:hidden;border:1px solid rgba(255,255,255,.07);animation:fadeup .4s ease;box-shadow:0 24px 64px rgba(0,0,0,.5)}
+.mock-box::before{content:'';position:absolute;top:0;left:0;right:0;height:1.5px}
+.mock-panel{display:none}.mock-panel.active{display:block}
 
-.hctag{display:flex;gap:14px;justify-content:center;opacity:0;animation:fu .9s ease forwards 1.1s}
-.btnp{padding:14px 34px;background:var(--gold);color:var(--bg);border-radius:8px;font-size:13px;font-weight:600;letter-spacing:.5px;text-decoration:none;transition:all .25s}
-.btnp:hover{background:var(--goldl);transform:translateY(-2px)}
-.btns{padding:14px 34px;background:transparent;color:var(--textm);border-radius:8px;font-size:13px;font-weight:500;letter-spacing:.5px;text-decoration:none;border:1px solid var(--goldb);transition:all .25s}
-.btns:hover{color:var(--gold);border-color:var(--gold);transform:translateY(-2px)}
+/* ── PANEL LINK ── */
+.mock-link{display:block;margin-top:22px;text-align:center;text-decoration:none;padding:13px 28px;background:rgba(var(--tcr,200,150,58),.1);border:1px solid rgba(var(--tcr,200,150,58),.28);border-radius:10px;font-size:13px;font-weight:600;color:var(--tc,#888);letter-spacing:.5px;transition:all .25s}
+.mock-link:hover{background:rgba(var(--tcr,200,150,58),.18);transform:translateY(-2px)}
 
-.hstats{display:flex;gap:52px;margin-top:68px;padding-top:44px;border-top:1px solid var(--goldd);opacity:0;animation:fu .9s ease forwards 1.4s}
-.stat-val{font-family:'Cinzel',serif;font-size:30px;font-weight:700;color:var(--gold);display:block;line-height:1}
-.stat-lbl{font-size:10.5px;letter-spacing:2.5px;text-transform:uppercase;color:var(--textd);margin-top:6px}
+/* ═══════════════════════════
+   TEKTON MOCKUP
+═══════════════════════════ */
+.tek-wrap{display:flex;gap:14px;height:300px}
+.tek-palette{width:140px;display:flex;flex-direction:column;gap:7px}
+.tek-pal-title{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--textd);margin-bottom:4px}
+.tek-bloc{background:rgba(201,150,58,.07);border:1px solid rgba(201,150,58,.2);border-radius:8px;padding:9px 12px;cursor:pointer;display:flex;align-items:center;gap:9px;font-size:12px;color:var(--textm);transition:all .2s}
+.tek-bloc:hover{background:rgba(201,150,58,.14);color:var(--text)}
+.tek-bloc-icon{color:var(--tekton);font-size:14px;flex-shrink:0}
+.tek-hint{margin-top:auto;font-size:9px;color:#2A2720;letter-spacing:1px}
+.tek-canvas{flex:1;background:rgba(0,0,0,.3);border-radius:12px;border:1px solid rgba(255,255,255,.06);padding:12px;display:flex;flex-direction:column;gap:8px;overflow-y:auto}
+.tek-canvas-title{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--textd);margin-bottom:4px}
+.tek-row{height:46px;background:rgba(201,150,58,.04);border:1px dashed rgba(201,150,58,.2);border-radius:8px;display:flex;align-items:center;padding:0 14px;cursor:grab;transition:all .2s;justify-content:space-between;font-size:12px;color:var(--textm)}
+.tek-row:hover{background:rgba(201,150,58,.09);border-style:solid;border-color:rgba(201,150,58,.45);color:var(--text)}
+.tek-row-left{display:flex;align-items:center;gap:10px}
+.tek-drag{color:rgba(201,150,58,.3);font-size:12px}
+.tek-actions{display:none;gap:5px}
+.tek-row:hover .tek-actions{display:flex}
+.tek-act{font-size:10px;color:var(--tekton);background:rgba(201,150,58,.12);width:22px;height:22px;border-radius:5px;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.tek-drop{height:38px;border:1px dashed rgba(201,150,58,.1);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:11px;color:rgba(201,150,58,.25);letter-spacing:1px}
+.tek-props{width:126px;display:flex;flex-direction:column;gap:8px}
+.tek-props-title{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--textd);margin-bottom:4px}
+.tek-prop label{font-size:9px;color:var(--textd);display:block;margin-bottom:3px}
+.tek-prop div{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:6px;padding:5px 9px;font-size:11px;color:var(--textm)}
 
-/* CAROUSEL */
-.carsec{padding:110px 0;position:relative;overflow:hidden}
-.carsec::before,.carsec::after{content:'';position:absolute;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--goldb),transparent)}
-.carsec::before{top:0}.carsec::after{bottom:0}
+/* ═══════════════════════════
+   LOGOS MOCKUP — Cascading panels
+═══════════════════════════ */
+.log-wrap{position:relative;height:300px}
+.log-panel{position:absolute;inset:0;background:#131118;border:1px solid rgba(255,255,255,.07);border-radius:14px;overflow:hidden;transition:all .55s cubic-bezier(.4,0,.2,1);cursor:pointer}
+.log-panel[data-pos="0"]{z-index:3;transform:translateX(0) translateY(0) scale(1);border-color:rgba(255,255,255,.14);box-shadow:0 12px 40px rgba(0,0,0,.6)}
+.log-panel[data-pos="1"]{z-index:2;transform:translateX(28px) translateY(22px) scale(.94)}
+.log-panel[data-pos="2"]{z-index:1;transform:translateX(56px) translateY(44px) scale(.88)}
+.log-header{display:flex;align-items:center;justify-content:space-between;padding:11px 16px;border-bottom:1px solid rgba(255,255,255,.06);background:rgba(0,0,0,.25)}
+.log-lang{display:flex;align-items:center;gap:9px;font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase}
+.log-dots{display:flex;gap:5px}
+.log-dot{width:10px;height:10px;border-radius:50%}
+.log-body{padding:18px 20px;display:flex;flex-direction:column;gap:6px}
+.log-line{display:flex;gap:14px;align-items:center}
+.log-ln{font-size:10px;color:#2A2720;width:12px;text-align:right;flex-shrink:0;font-family:monospace}
+.log-code{font-family:monospace;font-size:12px;line-height:1.7}
+.log-cursor{display:inline-block;width:2px;height:13px;vertical-align:middle;margin-left:2px;animation:blink 1s step-end infinite}
+.log-active-bar{position:absolute;top:0;left:0;right:0;height:2px}
 
-/* Greek meander decorative top */
-.meander{position:absolute;top:14px;left:0;right:0;display:flex;justify-content:center;opacity:.12;pointer-events:none;overflow:hidden;height:18px}
-.meander svg{width:100%;max-width:900px;height:18px}
+/* ═══════════════════════════
+   MANTIS MOCKUP
+═══════════════════════════ */
+.man-wrap{display:flex;flex-direction:column;gap:12px;height:300px}
+.man-kpis{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.man-kpi{background:rgba(0,0,0,.3);border:1px solid rgba(139,92,246,.15);border-radius:10px;padding:10px 12px}
+.man-kpi-lbl{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--textd);margin-bottom:4px}
+.man-kpi-val{font-size:22px;font-weight:700;font-family:'Cinzel',serif;line-height:1}
+.man-kpi-delta{font-size:10px;color:#4DC478;margin-top:4px}
+.man-chart{flex:1;background:rgba(0,0,0,.25);border:1px solid rgba(139,92,246,.1);border-radius:10px;padding:12px 16px;position:relative;overflow:hidden}
+.man-chart-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.man-chart-title{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--textd)}
+.man-legend{display:flex;gap:14px}
+.man-leg{display:flex;align-items:center;gap:5px;font-size:9px;color:var(--textd)}
+.man-leg-line{width:16px;height:2px;border-radius:2px;flex-shrink:0}
 
-.carinner{max-width:860px;margin:0 auto;padding:0 56px;position:relative;min-height:220px;display:flex;align-items:center;justify-content:center}
-.carbg{position:absolute;font-family:'Cinzel',serif;font-size:260px;font-weight:900;color:rgba(201,150,58,.025);pointer-events:none;user-select:none;top:50%;left:50%;transform:translate(-50%,-50%);line-height:1;letter-spacing:-12px}
-.slogan{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .9s ease;padding:24px 56px}
+/* ═══════════════════════════
+   HERMES MOCKUP — Node graph
+═══════════════════════════ */
+.her-wrap{height:300px;background:rgba(0,0,0,.25);border-radius:12px;border:1px solid rgba(232,113,74,.1);position:relative;overflow:hidden}
+.her-status{position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,.5);padding:6px 14px;display:flex;gap:16px;border-top:1px solid rgba(232,113,74,.08);z-index:10}
+.her-stat{font-size:9px;letter-spacing:1px}
+
+/* ═══════════════════════════
+   SYNERGOS MOCKUP
+═══════════════════════════ */
+.syn-wrap{display:flex;gap:14px;height:300px}
+.syn-list{flex:1;display:flex;flex-direction:column;gap:7px}
+.syn-title{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--textd);margin-bottom:4px}
+.syn-row{display:flex;align-items:center;gap:10px;background:rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.06);border-radius:9px;padding:9px 12px;cursor:pointer;transition:all .25s}
+.syn-row:hover,.syn-row.active{background:rgba(45,212,160,.08);border-color:rgba(45,212,160,.25)}
+.syn-icon{font-size:18px;flex-shrink:0}
+.syn-info{flex:1}
+.syn-name{font-size:12px;font-weight:600;color:var(--textm);transition:color .2s}
+.syn-row:hover .syn-name,.syn-row.active .syn-name{color:var(--text)}
+.syn-type{font-size:9px;color:var(--textd);letter-spacing:1px}
+.syn-status{display:flex;align-items:center;gap:5px}
+.syn-dot{width:6px;height:6px;border-radius:50%;animation:pulsedot 2s ease-in-out infinite}
+.syn-dot-lbl{font-size:9px}
+.syn-hub{width:150px;display:flex;align-items:center;justify-content:center}
+
+/* ═══════════════════════════
+   KAIROS MOCKUP
+═══════════════════════════ */
+.kai-wrap{display:flex;flex-direction:column;gap:12px;height:300px}
+.kai-head{display:flex;justify-content:space-between;align-items:center}
+.kai-title{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--textd)}
+.kai-sig{font-size:9px;display:flex;align-items:center;gap:5px}
+.kai-sig-dot{width:6px;height:6px;border-radius:50%;animation:pulsedot 1s ease-in-out infinite}
+.kai-cards{display:grid;grid-template-columns:1fr 1fr;gap:12px;flex:1}
+.kai-card{border-radius:12px;padding:16px 18px;display:flex;flex-direction:column;gap:10px;position:relative;overflow:hidden;transition:all .6s ease}
+.kai-card-bar{position:absolute;top:0;left:0;right:0;height:2px}
+.kai-label{font-size:11px;font-weight:700;letter-spacing:3px}
+.kai-name{font-size:10px;color:var(--textd)}
+.kai-val{font-size:34px;font-weight:900;font-family:'Cinzel',serif;line-height:1}
+.kai-track{height:6px;background:rgba(255,255,255,.06);border-radius:3px;overflow:hidden}
+.kai-fill{height:100%;border-radius:3px;transition:width .35s ease}
+.kai-info{font-size:10px;color:var(--textd)}
+.kai-sigbar{background:rgba(0,0,0,.2);border-radius:8px;padding:8px 14px}
+.kai-sigbar-head{display:flex;justify-content:space-between;margin-bottom:5px}
+.kai-sigbar-lbl{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--textd)}
+.kai-sigbar-val{font-size:9px;font-weight:600}
+.kai-sigbar-track{height:4px;background:rgba(255,255,255,.06);border-radius:2px;overflow:hidden}
+.kai-sigbar-fill{height:100%;border-radius:2px;transition:width .3s ease}
+
+/* ── CAROUSEL ── */
+.carsec{padding:80px 0;position:relative;border-top:1px solid rgba(201,150,58,.07);border-bottom:1px solid rgba(201,150,58,.07)}
+.meander{position:absolute;top:12px;left:0;right:0;display:flex;justify-content:center;opacity:.1;pointer-events:none;overflow:hidden;height:16px}
+.carinner{max-width:820px;margin:0 auto;padding:0 56px;min-height:190px;display:flex;align-items:center;justify-content:center;position:relative}
+.carbg{position:absolute;font-family:'Cinzel',serif;font-size:240px;font-weight:900;color:rgba(201,150,58,.025);pointer-events:none;user-select:none;top:50%;left:50%;transform:translate(-50%,-50%);line-height:1}
+.slogan{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .9s ease;padding:0 56px}
 .slogan.active{opacity:1}
-.slogtxt{text-align:center;max-width:760px}
-.slogp1{font-family:'Cormorant Garamond',serif;font-size:clamp(17px,2.2vw,22px);font-weight:400;color:#EDE7DB;line-height:1.55;display:block;margin-bottom:6px}
-.slogbrand{font-family:'Cinzel',serif;font-size:clamp(17px,2.2vw,22px);font-weight:700;letter-spacing:3px;display:inline-block;padding:0 10px;position:relative}
-.slogbrand::before,.slogbrand::after{content:'◆';font-size:8px;position:absolute;top:50%;transform:translateY(-50%);opacity:.5}
-.slogbrand::before{left:-2px}.slogbrand::after{right:-2px}
-.slogp3{font-family:'Cormorant Garamond',serif;font-size:clamp(17px,2.2vw,22px);font-weight:400;font-style:italic;color:#D4AB5E;line-height:1.55;display:block;margin-top:6px}
+.slogtxt{text-align:center;max-width:740px}
+.sp1{font-family:'Cormorant Garamond',serif;font-size:clamp(16px,2.1vw,20px);color:#EDE7DB;line-height:1.6;display:block;margin-bottom:4px}
+.sbrand{font-family:'Cinzel',serif;font-size:clamp(16px,2.1vw,20px);font-weight:700;letter-spacing:3px;display:inline-block;margin:6px 0;padding:2px 16px;border-radius:4px}
+.sp3{font-family:'Cormorant Garamond',serif;font-size:clamp(16px,2.1vw,20px);font-style:italic;color:#D4AB5E;line-height:1.6;display:block;margin-top:4px}
+.sdots{display:flex;gap:8px;justify-content:center;margin-top:28px}
+.sdot{width:18px;height:2px;background:rgba(201,150,58,.2);border-radius:2px;cursor:pointer;transition:all .4s}
+.sdot.active{width:36px;background:var(--gold)}
 
-.cardots{max-width:860px;margin:44px auto 0;padding:0 56px;display:flex;gap:8px;justify-content:center}
-.cdot{width:20px;height:2px;background:var(--goldd);border-radius:2px;cursor:pointer;transition:all .4s}
-.cdot.active{background:var(--gold);width:44px}
-
-/* EDITORS */
-.edsec{padding:110px 56px;max-width:1240px;margin:0 auto}
-.sechead{text-align:center;margin-bottom:70px}
-.seceye{font-size:10.5px;letter-spacing:4px;text-transform:uppercase;color:var(--gold);margin-bottom:14px}
-.sectit{font-family:'Cinzel',serif;font-size:clamp(24px,3.5vw,38px);font-weight:700;color:var(--text);margin-bottom:14px;letter-spacing:.5px}
-.secsub{font-size:15px;color:var(--textm);max-width:540px;margin:0 auto;line-height:1.75}
-
-.edgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
-
-.edcard{position:relative;background:linear-gradient(150deg,var(--bg2),var(--bg3));border-radius:18px;padding:34px;text-decoration:none;color:inherit;border:1px solid rgba(255,255,255,.055);transition:all .38s ease;overflow:hidden;display:block}
-.edcard::before{content:'';position:absolute;top:0;left:0;right:0;height:2.5px;background:linear-gradient(90deg,transparent,var(--c,#888) 40%,var(--c,#888) 60%,transparent);opacity:0;transition:opacity .38s}
-.edcard::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at top,rgba(var(--cr,200,150,58),.06) 0%,transparent 60%);opacity:0;transition:opacity .38s}
-.edcard:hover{border-color:rgba(255,255,255,.11);transform:translateY(-5px);box-shadow:0 24px 64px rgba(0,0,0,.45)}
+/* ── EDITOR GRID ── */
+.edsec{padding:90px 72px;max-width:1320px;margin:0 auto}
+.sechead{text-align:center;margin-bottom:60px}
+.seceye{font-size:10px;letter-spacing:4px;text-transform:uppercase;color:var(--gold);margin-bottom:14px}
+.sectit{font-family:'Cinzel',serif;font-size:clamp(22px,3vw,36px);font-weight:700;color:var(--text);margin-bottom:14px}
+.secsub{font-size:15px;color:var(--textm);max-width:520px;margin:0 auto;line-height:1.8}
+.edgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.edcard{position:relative;background:linear-gradient(155deg,var(--bg2),var(--bg3));border-radius:20px;padding:30px;text-decoration:none;color:inherit;border:1px solid rgba(255,255,255,.05);transition:all .4s;overflow:hidden;display:block}
+.edcard:hover{border-color:rgba(255,255,255,.1);transform:translateY(-6px);box-shadow:0 28px 70px rgba(0,0,0,.5)}
+.edcard::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--c,#888) 40%,var(--c,#888) 60%,transparent);opacity:0;transition:opacity .4s}
+.edcard::after{content:'';position:absolute;bottom:0;right:0;width:140px;height:140px;background:radial-gradient(circle at 100% 100%,rgba(var(--cr,200,150,58),.09) 0%,transparent 65%);opacity:0;transition:opacity .4s}
 .edcard:hover::before,.edcard:hover::after{opacity:1}
-.edcard-soon{opacity:.45;cursor:default;pointer-events:none}
+.ec-letter{font-family:'Cinzel',serif;font-size:80px;font-weight:900;line-height:1;color:var(--c,#888);opacity:.07;transition:opacity .4s;position:absolute;right:18px;bottom:10px;pointer-events:none;user-select:none}
+.edcard:hover .ec-letter{opacity:.18}
+.ec-icon{width:46px;height:46px;border-radius:12px;background:rgba(var(--cr,200,150,58),.08);border:1px solid rgba(var(--cr,200,150,58),.18);display:flex;align-items:center;justify-content:center;font-size:21px;margin-bottom:18px;transition:all .4s}
+.edcard:hover .ec-icon{background:rgba(var(--cr,200,150,58),.15);transform:scale(1.08)}
+.ec-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px}
+.ec-greek{font-family:'Cinzel',serif;font-size:24px;font-weight:900;letter-spacing:2px;color:var(--c,#888);line-height:1;margin-bottom:2px}
+.ec-latin{font-size:10px;letter-spacing:4px;text-transform:uppercase;color:var(--textd)}
+.ec-tag{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--c,#888);background:rgba(var(--cr,200,150,58),.1);border:1px solid rgba(var(--cr,200,150,58),.2);padding:4px 11px;border-radius:20px;flex-shrink:0;height:fit-content;margin-top:3px}
+.ec-title{font-size:15px;font-weight:600;color:var(--text);margin-bottom:7px}
+.ec-meaning{font-family:'Cormorant Garamond',serif;font-size:13px;font-style:italic;color:var(--textd);margin-bottom:12px;border-left:2px solid rgba(var(--cr,200,150,58),.3);padding-left:9px;line-height:1.5}
+.ec-desc{font-size:13px;color:var(--textm);line-height:1.75}
+.ec-arrow{margin-top:18px;font-size:11px;letter-spacing:2px;color:var(--c,#888);opacity:0;transition:all .3s;transform:translateX(-10px)}
+.edcard:hover .ec-arrow{opacity:1;transform:translateX(0)}
 
-.ecbg{position:absolute;bottom:-14px;right:-8px;font-family:'Cinzel',serif;font-size:100px;font-weight:900;color:var(--c,#888);opacity:.04;pointer-events:none;line-height:1;transition:opacity .38s;user-select:none}
-.edcard:hover .ecbg{opacity:.09}
-
-.ecicon{width:46px;height:46px;border-radius:12px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);display:flex;align-items:center;justify-content:center;margin-bottom:22px;font-size:20px;flex-shrink:0}
-.ecgreek{font-family:'Cinzel',serif;font-size:23px;font-weight:900;letter-spacing:2px;color:var(--c,#888);margin-bottom:3px;line-height:1.2}
-.eclatin{font-size:11px;letter-spacing:4px;text-transform:uppercase;color:var(--textd);margin-bottom:15px}
-.ectitle{font-size:15px;font-weight:600;color:var(--text);margin-bottom:7px}
-.ecmeaning{font-family:'Cormorant Garamond',serif;font-size:13.5px;font-style:italic;color:var(--textd);margin-bottom:14px;line-height:1.5}
-.ecdesc{font-size:13px;color:var(--textm);line-height:1.72}
-.ecarrow{margin-top:22px;font-size:11.5px;letter-spacing:2px;color:var(--c,#888);opacity:0;transition:opacity .3s,transform .3s;transform:translateX(-8px);font-weight:500}
-.edcard:hover .ecarrow{opacity:1;transform:translateX(0)}
-.badgesoon{position:absolute;top:14px;right:14px;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--textd);background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);padding:4px 11px;border-radius:20px}
-
-/* COMPANY */
-.comsec{padding:90px 56px;border-top:1px solid var(--goldd);text-align:center}
-.comtag{font-size:11px;letter-spacing:3.5px;color:var(--textd);text-transform:uppercase;margin-bottom:28px}
-.comlink{display:inline-flex;align-items:center;gap:14px;text-decoration:none;color:var(--text);font-size:14px;letter-spacing:.5px;padding:18px 32px;border-radius:12px;border:1px solid var(--goldd);transition:all .3s;background:var(--bg2)}
+/* ── COMPANY ── */
+.comsec{padding:80px 72px;border-top:1px solid rgba(201,150,58,.08);text-align:center}
+.comlink{display:inline-flex;align-items:center;gap:14px;text-decoration:none;color:var(--text);font-size:14px;padding:18px 32px;border-radius:14px;border:1px solid rgba(201,150,58,.12);background:var(--bg2);transition:all .3s}
 .comlink:hover{border-color:var(--goldb);color:var(--gold);background:rgba(201,150,58,.05)}
 .comdot{width:8px;height:8px;border-radius:50%;background:var(--gold);animation:pulsedot 2s ease-in-out infinite}
 .comname{font-family:'Cinzel',serif;letter-spacing:3px;font-weight:700}
-.comdesc{margin-top:22px;font-size:14px;color:var(--textm);max-width:480px;margin-left:auto;margin-right:auto;line-height:1.75}
+.comdesc{margin-top:20px;font-size:14px;color:var(--textm);max-width:460px;margin-left:auto;margin-right:auto;line-height:1.8}
 
-/* FOOTER */
-footer{padding:40px 56px;border-top:1px solid rgba(255,255,255,.05);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px}
+/* ── FOOTER ── */
+footer{padding:36px 72px;border-top:1px solid rgba(255,255,255,.05);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px}
 .fbrand{font-family:'Cinzel',serif;font-size:13px;color:var(--gold);letter-spacing:2px}
-.fsub{font-size:10.5px;color:var(--textd);margin-top:4px;letter-spacing:1px}
-.fright{font-size:10.5px;color:var(--textd);text-align:right;letter-spacing:.5px;line-height:1.8}
+.fsub{font-size:10px;color:var(--textd);margin-top:3px;letter-spacing:1px}
+.fright{font-size:10px;color:var(--textd);text-align:right;line-height:1.8}
 
-/* KEYFRAMES */
-@keyframes fu{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+/* ── KEYFRAMES ── */
+@keyframes fu{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
 @keyframes shimmer{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
-@keyframes pulsedot{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.5);opacity:.55}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+@keyframes pulsedot{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.6);opacity:.5}}
+@keyframes fadeup{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+@keyframes orbit{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+@keyframes packetA{0%{offset-distance:0%}100%{offset-distance:100%}}
 
-@media(max-width:960px){.edgrid{grid-template-columns:1fr 1fr}nav{padding:16px 28px}}
-@media(max-width:620px){.edgrid{grid-template-columns:1fr}.hstats{flex-wrap:wrap;gap:24px;justify-content:center}.nright .nlink{display:none}}
+@media(max-width:960px){.edgrid{grid-template-columns:1fr 1fr}.tabs{gap:6px}.tab{padding:8px 14px}.tek-wrap{flex-direction:column;height:auto}}
+@media(max-width:640px){.edgrid{grid-template-columns:1fr}nav{padding:14px 22px}.hero{padding:110px 28px 60px}.edsec{padding:70px 28px}.mockup-area{padding:0 28px 60px}.tabsec{padding:40px 28px 0}.comsec{padding:60px 28px}footer{padding:28px}}
 </style>
 </head>
 <body>
@@ -139,13 +248,10 @@ footer{padding:40px 56px;border-top:1px solid rgba(255,255,255,.05);display:flex
 <nav>
   <a href="index.html" class="nlogo">
     <div class="nmark">Κ</div>
-    <div>
-      <div class="nname">KANTO APLO</div>
-      <div class="nsub">ΚΆΝΤΟ ΑΠΛΌ</div>
-    </div>
+    <div><div class="nname">KANTO APLO</div><div class="nsub">ΚΆΝΤΟ ΑΠΛΌ</div></div>
   </a>
   <div class="nright">
-    <a href="#editeurs" class="nlink">Éditeurs</a>
+    <a href="index.html" class="nlink">← Accueil</a>
     <a href="https://cephalosophie.com" target="_blank" class="nlink">Cephalo Sophie</a>
     <a href="https://kantoaplo.com" target="_blank" class="nbtn">Accéder →</a>
   </div>
@@ -155,132 +261,380 @@ footer{padding:40px 56px;border-top:1px solid rgba(255,255,255,.05);display:flex
 <section class="hero">
   <div class="hero-glow"></div>
   <div class="hero-line"></div>
+  <div class="heye">KANTO APLO · Aperçu des Éditeurs</div>
+  <h1 class="htitle">Interfaces Vivantes<span class="hgreek">ΚΆΝΤΟ ΑΠΛΌ · Éditeurs</span></h1>
+  <p class="htag">« Chaque éditeur, une expérience visuelle unique »</p>
+</section>
 
-  <div class="hero-eye">Plateforme No-Code &amp; Low-Code · by Cephalo Sophie</div>
-
-  <h1 class="hero-title">
-    <span class="htmain">KANTO APLO</span>
-    <span class="htgreek">ΚΆΝΤΟ ΑΠΛΌ</span>
-  </h1>
-
-  <p class="hero-tag">« Rends-le Simple »</p>
-
-  <div class="hctag">
-    <a href="#editeurs" class="btnp">Découvrir les éditeurs</a>
-    <a href="https://kantoaplo.com" target="_blank" class="btns">Accéder à la plateforme →</a>
-  </div>
-
-  <div class="hstats">
-    <div><span class="stat-val">6+</span><div class="stat-lbl">Éditeurs</div></div>
-    <div><span class="stat-val">∞</span><div class="stat-lbl">Possibilités</div></div>
-    <div><span class="stat-val">0</span><div class="stat-lbl">Ligne de code</div></div>
-    <div><span class="stat-val">15+</span><div class="stat-lbl">Ans d'expertise</div></div>
+<!-- TABS + MOCKUPS -->
+<section class="tabsec">
+  <div class="tabs" id="TABS">
+    <button class="tab active" data-ed="tekton"   style="--tc:#C9963A;--tcr:201,150,58"><span class="tab-greek">ΤΈΚΤΩΝ</span><span class="tab-latin">Tektôn</span></button>
+    <button class="tab"        data-ed="logos"    style="--tc:#3D8EE8;--tcr:61,142,232"><span class="tab-greek">ΛΌΓΟΣ</span><span class="tab-latin">Logos</span></button>
+    <button class="tab"        data-ed="mantis"   style="--tc:#8B5CF6;--tcr:139,92,246"><span class="tab-greek">ΜΆΝΤΙΣ</span><span class="tab-latin">Mantis</span></button>
+    <button class="tab"        data-ed="hermes"   style="--tc:#E8714A;--tcr:232,113,74"><span class="tab-greek">ἙΡΜΗ͂Σ</span><span class="tab-latin">Hermès</span></button>
+    <button class="tab"        data-ed="synergos" style="--tc:#2DD4A0;--tcr:45,212,160"><span class="tab-greek">ΣΥΝΕΡΓΟΣ</span><span class="tab-latin">Synergos</span></button>
+    <button class="tab"        data-ed="kairos"   style="--tc:#F472B6;--tcr:244,114,182"><span class="tab-greek">ΚΑΙΡΟΣ</span><span class="tab-latin">Kairos</span></button>
   </div>
 </section>
+
+<div class="mockup-area" id="MOCK_AREA">
+
+  <!-- ═══ TEKTON ═══ -->
+  <div class="mock-panel active" id="mp-tekton">
+    <div class="mock-header">
+      <div class="mock-bar" style="background:#C9963A"></div>
+      <div>
+        <div class="mock-greek" style="color:#C9963A">ΤΈΚΤΩΝ <span style="font-size:14px;opacity:.5;letter-spacing:4px">· Tektôn</span></div>
+        <div class="mock-role">Éditeur de Pages</div>
+      </div>
+    </div>
+    <div class="mock-box" style="border-color:rgba(201,150,58,.2)">
+      <div style="position:absolute;top:0;left:0;right:0;height:1.5px;background:linear-gradient(90deg,transparent,#C9963A88,transparent)"></div>
+      <!-- TEKTON UI -->
+      <div class="tek-wrap">
+        <div class="tek-palette">
+          <div class="tek-pal-title">Blocs</div>
+          <div class="tek-bloc" onclick="tekAdd('Hero Section')"><span class="tek-bloc-icon">🏛️</span>Hero Section</div>
+          <div class="tek-bloc" onclick="tekAdd('2 Colonnes')"><span class="tek-bloc-icon">⊞</span>2 Colonnes</div>
+          <div class="tek-bloc" onclick="tekAdd('Formulaire')"><span class="tek-bloc-icon">✦</span>Formulaire</div>
+          <div class="tek-bloc" onclick="tekAdd('Bouton CTA')"><span class="tek-bloc-icon">⚡</span>Bouton CTA</div>
+          <div class="tek-bloc" onclick="tekAdd('Média')"><span class="tek-bloc-icon">◈</span>Média</div>
+          <div class="tek-hint">Cliquer pour ajouter</div>
+        </div>
+        <div class="tek-canvas">
+          <div class="tek-canvas-title">Canevas — Page d'accueil</div>
+          <div id="TEK_CANVAS">
+            <div class="tek-row"><div class="tek-row-left"><span class="tek-drag">⠿</span>Hero Section</div><div class="tek-actions"><div class="tek-act">✎</div><div class="tek-act">⊞</div><div class="tek-act">×</div></div></div>
+            <div class="tek-row"><div class="tek-row-left"><span class="tek-drag">⠿</span>2 Colonnes</div><div class="tek-actions"><div class="tek-act">✎</div><div class="tek-act">⊞</div><div class="tek-act">×</div></div></div>
+            <div class="tek-row"><div class="tek-row-left"><span class="tek-drag">⠿</span>Formulaire</div><div class="tek-actions"><div class="tek-act">✎</div><div class="tek-act">⊞</div><div class="tek-act">×</div></div></div>
+          </div>
+          <div class="tek-drop">+ déposer un bloc ici</div>
+        </div>
+        <div class="tek-props">
+          <div class="tek-props-title">Propriétés</div>
+          <div class="tek-prop"><label>Largeur</label><div>100%</div></div>
+          <div class="tek-prop"><label>Hauteur</label><div>auto</div></div>
+          <div class="tek-prop"><label>Padding</label><div>24px</div></div>
+          <div class="tek-prop"><label>Couleur</label><div style="display:flex;align-items:center;gap:6px"><span style="width:10px;height:10px;border-radius:3px;background:#C9963A;flex-shrink:0"></span>#C9963A</div></div>
+          <div class="tek-prop"><label>Radius</label><div>12px</div></div>
+        </div>
+      </div>
+    </div>
+    <a href="https://editors.kantoaplo.com/tekton.html" class="mock-link" style="--tc:#C9963A;--tcr:201,150,58">Explorer ΤΈΚΤΩΝ · Tektôn →</a>
+  </div>
+
+  <!-- ═══ LOGOS ═══ -->
+  <div class="mock-panel" id="mp-logos">
+    <div class="mock-header">
+      <div class="mock-bar" style="background:#3D8EE8"></div>
+      <div>
+        <div class="mock-greek" style="color:#3D8EE8">ΛΌΓΟΣ <span style="font-size:14px;opacity:.5;letter-spacing:4px">· Logos</span></div>
+        <div class="mock-role">Éditeur d'APIs</div>
+      </div>
+    </div>
+    <div class="mock-box" style="border-color:rgba(61,142,232,.2)">
+      <div style="position:absolute;top:0;left:0;right:0;height:1.5px;background:linear-gradient(90deg,transparent,#3D8EE888,transparent)"></div>
+      <div class="log-wrap" id="LOG_WRAP">
+
+        <div class="log-panel" data-idx="0" data-pos="0" onclick="logClick(0)">
+          <div class="log-active-bar" style="background:linear-gradient(90deg,transparent,#3D8EE8,transparent)"></div>
+          <div class="log-header">
+            <div class="log-lang" style="color:#3D8EE8"><span>⚡</span>ROUTE</div>
+            <div class="log-dots"><div class="log-dot" style="background:#FF5F57"></div><div class="log-dot" style="background:#FEBC2E"></div><div class="log-dot" style="background:#28C840"></div></div>
+          </div>
+          <div class="log-body">
+            <div class="log-line"><span class="log-ln">1</span><span class="log-code"><span style="color:#3D8EE8">GET</span><span style="color:#9C968E"> </span><span style="color:#4DC478">"/api/users"</span><span class="log-cursor" style="background:#3D8EE8"></span></span></div>
+            <div class="log-line"><span class="log-ln">2</span><span class="log-code"></span></div>
+            <div class="log-line"><span class="log-ln">3</span><span class="log-code"><span style="color:#3D8EE8">  params</span><span style="color:#9C968E">: </span><span style="color:#E8B74A">{ id, limit }</span></span></div>
+            <div class="log-line"><span class="log-ln">4</span><span class="log-code"></span></div>
+            <div class="log-line"><span class="log-ln">5</span><span class="log-code"><span style="color:#3D8EE8">  auth</span><span style="color:#9C968E">: </span><span style="color:#4DC478">"JWT"</span></span></div>
+            <div class="log-line"><span class="log-ln">6</span><span class="log-code"></span></div>
+            <div class="log-line"><span class="log-ln">7</span><span class="log-code"><span style="color:#3D8EE8">  rate_limit</span><span style="color:#9C968E">: </span><span style="color:#E8B74A">1000</span><span style="color:#9C968E">/min</span></span></div>
+          </div>
+        </div>
+
+        <div class="log-panel" data-idx="1" data-pos="1" onclick="logClick(1)">
+          <div class="log-header">
+            <div class="log-lang" style="color:#6BB8FF"><span>⚙</span>LOGIQUE</div>
+            <div class="log-dots"><div class="log-dot" style="background:rgba(255,95,87,.3)"></div><div class="log-dot" style="background:rgba(254,188,46,.3)"></div><div class="log-dot" style="background:rgba(40,200,64,.3)"></div></div>
+          </div>
+          <div class="log-body">
+            <div class="log-line"><span class="log-ln">1</span><span class="log-code"><span style="color:#6BB8FF">SI</span><span style="color:#9C968E"> </span><span style="color:#E8B74A">user.role</span><span style="color:#9C968E"> == </span><span style="color:#4DC478">"admin"</span></span></div>
+            <div class="log-line"><span class="log-ln">2</span><span class="log-code"></span></div>
+            <div class="log-line"><span class="log-ln">3</span><span class="log-code"><span style="color:#6BB8FF">  ALORS</span><span style="color:#9C968E"> → </span><span style="color:#E8B74A">accès_total()</span></span></div>
+            <div class="log-line"><span class="log-ln">4</span><span class="log-code"></span></div>
+            <div class="log-line"><span class="log-ln">5</span><span class="log-code"><span style="color:#6BB8FF">SINON</span><span style="color:#9C968E"> → </span><span style="color:#E87474">"403 Interdit"</span></span></div>
+          </div>
+        </div>
+
+        <div class="log-panel" data-idx="2" data-pos="2" onclick="logClick(2)">
+          <div class="log-header">
+            <div class="log-lang" style="color:#4DC478"><span>◈</span>RÉPONSE</div>
+            <div class="log-dots"><div class="log-dot" style="background:rgba(255,95,87,.15)"></div><div class="log-dot" style="background:rgba(254,188,46,.15)"></div><div class="log-dot" style="background:rgba(40,200,64,.15)"></div></div>
+          </div>
+          <div class="log-body">
+            <div class="log-line"><span class="log-ln">1</span><span class="log-code"><span style="color:#4DC478">status</span><span style="color:#9C968E">: </span><span style="color:#E8B74A">200</span></span></div>
+            <div class="log-line"><span class="log-ln">2</span><span class="log-code"></span></div>
+            <div class="log-line"><span class="log-ln">3</span><span class="log-code"><span style="color:#4DC478">  data</span><span style="color:#9C968E">:  </span><span style="color:#3D8EE8">[ ...users ]</span></span></div>
+            <div class="log-line"><span class="log-ln">4</span><span class="log-code"></span></div>
+            <div class="log-line"><span class="log-ln">5</span><span class="log-code"><span style="color:#4DC478">  meta</span><span style="color:#9C968E">:  </span><span style="color:#E8B74A">{ total, page }</span></span></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <a href="https://editors.kantoaplo.com/logos.html" class="mock-link" style="--tc:#3D8EE8;--tcr:61,142,232">Explorer ΛΌΓΟΣ · Logos →</a>
+  </div>
+
+  <!-- ═══ MANTIS ═══ -->
+  <div class="mock-panel" id="mp-mantis">
+    <div class="mock-header">
+      <div class="mock-bar" style="background:#8B5CF6"></div>
+      <div>
+        <div class="mock-greek" style="color:#8B5CF6">ΜΆΝΤΙΣ <span style="font-size:14px;opacity:.5;letter-spacing:4px">· Mantis</span></div>
+        <div class="mock-role">BI · ML Prédictif</div>
+      </div>
+    </div>
+    <div class="mock-box" style="border-color:rgba(139,92,246,.2)">
+      <div style="position:absolute;top:0;left:0;right:0;height:1.5px;background:linear-gradient(90deg,transparent,#8B5CF688,transparent)"></div>
+      <div class="man-wrap">
+        <div class="man-kpis">
+          <div class="man-kpi"><div class="man-kpi-lbl">Conversions</div><div class="man-kpi-val" id="M1" style="color:#8B5CF6">62.4%</div><div class="man-kpi-delta">↑ +4.2%</div></div>
+          <div class="man-kpi"><div class="man-kpi-lbl">Sessions</div><div class="man-kpi-val" id="M2" style="color:#A78BFA">12.4k</div><div class="man-kpi-delta">↑ +12%</div></div>
+          <div class="man-kpi"><div class="man-kpi-lbl">Précision ML</div><div class="man-kpi-val" id="M3" style="color:#7C3AED">91.2%</div><div class="man-kpi-delta">↑ +0.8%</div></div>
+        </div>
+        <div class="man-chart">
+          <div class="man-chart-head">
+            <div class="man-chart-title">Tendances temps réel</div>
+            <div class="man-legend">
+              <div class="man-leg"><div class="man-leg-line" style="background:#8B5CF6"></div>Variante A</div>
+              <div class="man-leg"><div class="man-leg-line" style="background:#A78BFA;border-top:1px dashed #A78BFA;height:0"></div>Variante B</div>
+            </div>
+          </div>
+          <svg id="MAN_SVG" width="100%" viewBox="0 0 400 120" preserveAspectRatio="none" style="display:block;height:140px">
+            <defs>
+              <linearGradient id="mga" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#8B5CF6" stop-opacity=".3"/><stop offset="100%" stop-color="#8B5CF6" stop-opacity="0"/></linearGradient>
+              <linearGradient id="mgb" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#A78BFA" stop-opacity=".2"/><stop offset="100%" stop-color="#A78BFA" stop-opacity="0"/></linearGradient>
+            </defs>
+            <line x1="0" y1="30" x2="400" y2="30" stroke="rgba(255,255,255,.04)" stroke-width="1"/>
+            <line x1="0" y1="60" x2="400" y2="60" stroke="rgba(255,255,255,.04)" stroke-width="1"/>
+            <line x1="0" y1="90" x2="400" y2="90" stroke="rgba(255,255,255,.04)" stroke-width="1"/>
+            <polygon id="MAN_AREA_A" fill="url(#mga)"/>
+            <polygon id="MAN_AREA_B" fill="url(#mgb)"/>
+            <polyline id="MAN_LINE_A" fill="none" stroke="#8B5CF6" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+            <polyline id="MAN_LINE_B" fill="none" stroke="#A78BFA" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round" stroke-dasharray="5 3"/>
+            <circle id="MAN_DOT" r="5" fill="#8B5CF6">
+              <animate attributeName="r" values="5;8;5" dur="1.4s" repeatCount="indefinite"/>
+              <animate attributeName="opacity" values="1;0.4;1" dur="1.4s" repeatCount="indefinite"/>
+            </circle>
+          </svg>
+        </div>
+      </div>
+    </div>
+    <a href="https://editors.kantoaplo.com/mantis.html" class="mock-link" style="--tc:#8B5CF6;--tcr:139,92,246">Explorer ΜΆΝΤΙΣ · Mantis →</a>
+  </div>
+
+  <!-- ═══ HERMES ═══ -->
+  <div class="mock-panel" id="mp-hermes">
+    <div class="mock-header">
+      <div class="mock-bar" style="background:#E8714A"></div>
+      <div>
+        <div class="mock-greek" style="color:#E8714A">ἙΡΜΗ͂Σ <span style="font-size:14px;opacity:.5;letter-spacing:4px">· Hermès</span></div>
+        <div class="mock-role">Workflows · Agent IA</div>
+      </div>
+    </div>
+    <div class="mock-box" style="border-color:rgba(232,113,74,.2)">
+      <div style="position:absolute;top:0;left:0;right:0;height:1.5px;background:linear-gradient(90deg,transparent,#E8714A88,transparent)"></div>
+      <div class="her-wrap">
+        <svg id="HER_SVG" width="100%" height="270" viewBox="0 0 700 260" style="position:absolute;inset:0;width:100%;height:100%">
+          <defs>
+            <pattern id="dotg" x="0" y="0" width="24" height="24" patternUnits="userSpaceOnUse">
+              <circle cx="12" cy="12" r="1" fill="rgba(232,113,74,0.14)"/>
+            </pattern>
+            <marker id="arrt" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
+              <path d="M0,0 L0,7 L7,3.5 z" fill="rgba(232,113,74,0.4)"/>
+            </marker>
+            <marker id="arract" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
+              <path d="M0,0 L0,7 L7,3.5 z" fill="#E8714A"/>
+            </marker>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#dotg)"/>
+          <!-- Edges -->
+          <g id="HER_EDGES">
+            <line id="e0" x1="108" y1="110" x2="210" y2="110" stroke="rgba(232,113,74,0.25)" stroke-width="1.5" marker-end="url(#arrt)"/>
+            <line id="e1" x1="360" y1="110" x2="430" y2="110" stroke="rgba(232,113,74,0.25)" stroke-width="1.5" marker-end="url(#arrt)"/>
+            <path id="e2" d="M480,98 C520,98 520,55 560,55" fill="none" stroke="rgba(232,113,74,0.25)" stroke-width="1.5" marker-end="url(#arrt)"/>
+            <path id="e3" d="M480,122 C520,122 520,175 560,175" fill="none" stroke="rgba(232,113,74,0.25)" stroke-width="1.5" marker-end="url(#arrt)"/>
+            <line id="e4" x1="265" y1="138" x2="240" y2="198" stroke="rgba(232,113,74,0.18)" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#arrt)"/>
+            <line id="e5" x1="310" y1="138" x2="345" y2="198" stroke="rgba(232,113,74,0.18)" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#arrt)"/>
+          </g>
+          <!-- Animated packet -->
+          <circle id="HER_PKT" r="5" fill="#E8714A" opacity="0"/>
+          <!-- Nodes -->
+          <!-- Trigger -->
+          <rect x="20" y="82" width="88" height="56" rx="10" fill="#141220" stroke="rgba(255,255,255,0.1)" stroke-width="1.5"/>
+          <text x="64" y="106" text-anchor="middle" font-size="16">⚡</text>
+          <text x="64" y="120" text-anchor="middle" font-size="9" fill="#E8714A" font-weight="700" font-family="DM Sans" letter-spacing="1">Déclencheur</text>
+          <text x="64" y="131" text-anchor="middle" font-size="8" fill="#524E48" font-family="DM Sans">Formulaire soumis</text>
+          <!-- Agent IA -->
+          <rect x="210" y="76" width="150" height="68" rx="10" fill="#1A1530" stroke="rgba(245,158,11,0.4)" stroke-width="1.5"/>
+          <text x="285" y="103" text-anchor="middle" font-size="18">🤖</text>
+          <text x="285" y="119" text-anchor="middle" font-size="10" fill="#F59E0B" font-weight="700" font-family="DM Sans" letter-spacing="1">Agent IA</text>
+          <text x="285" y="131" text-anchor="middle" font-size="8" fill="#524E48" font-family="DM Sans">Analyse la requête</text>
+          <!-- Condition -->
+          <rect x="430" y="82" width="90" height="56" rx="10" fill="#141220" stroke="rgba(255,255,255,0.1)" stroke-width="1.5"/>
+          <text x="475" y="106" text-anchor="middle" font-size="16">⊕</text>
+          <text x="475" y="120" text-anchor="middle" font-size="9" fill="#E8714A" font-weight="700" font-family="DM Sans" letter-spacing="1">Condition</text>
+          <text x="475" y="131" text-anchor="middle" font-size="8" fill="#524E48" font-family="DM Sans">Rôle = admin ?</text>
+          <!-- Slack -->
+          <rect x="558" y="28" width="80" height="52" rx="9" fill="#141220" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+          <text x="598" y="50" text-anchor="middle" font-size="15">◈</text>
+          <text x="598" y="63" text-anchor="middle" font-size="9" fill="#4A9EE8" font-weight="700" font-family="DM Sans">Slack</text>
+          <text x="598" y="73" text-anchor="middle" font-size="8" fill="#524E48" font-family="DM Sans">#notifications</text>
+          <!-- Email -->
+          <rect x="558" y="148" width="80" height="52" rx="9" fill="#141220" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+          <text x="598" y="170" text-anchor="middle" font-size="15">◉</text>
+          <text x="598" y="183" text-anchor="middle" font-size="9" fill="#2DD4A0" font-weight="700" font-family="DM Sans">Email</text>
+          <text x="598" y="193" text-anchor="middle" font-size="8" fill="#524E48" font-family="DM Sans">Confirmation</text>
+          <!-- Sub nodes -->
+          <circle cx="225" cy="225" r="24" fill="#0E0D18" stroke="rgba(139,92,246,0.3)" stroke-width="1.5"/>
+          <text x="225" y="221" text-anchor="middle" font-size="11">Λ</text>
+          <text x="225" y="233" text-anchor="middle" font-size="8" fill="#8B5CF6" font-weight="700" font-family="DM Sans">Claude</text>
+          <circle cx="360" cy="225" r="24" fill="#0E0D18" stroke="rgba(74,158,232,0.3)" stroke-width="1.5"/>
+          <text x="360" y="221" text-anchor="middle" font-size="11">🐘</text>
+          <text x="360" y="233" text-anchor="middle" font-size="8" fill="#4A9EE8" font-weight="700" font-family="DM Sans">PostgreSQL</text>
+          <!-- Labels -->
+          <text x="485" y="75" font-size="8" fill="#4DC478" font-family="DM Sans">vrai</text>
+          <text x="485" y="145" font-size="8" fill="#E87474" font-family="DM Sans">faux</text>
+          <text x="255" y="172" font-size="7" fill="#524E48" font-family="DM Sans">Modèle</text>
+          <text x="328" y="172" font-size="7" fill="#524E48" font-family="DM Sans">Mémoire</text>
+        </svg>
+        <div class="her-status" style="z-index:20">
+          <span class="her-stat" style="color:#4DC478">✓ Exécution</span>
+          <span class="her-stat" id="HER_TIME" style="color:#E8714A">⟳ 0.0s</span>
+          <span class="her-stat" style="color:#524E48">Hermès v1</span>
+          <span class="her-stat" id="HER_PKT_LBL" style="color:#524E48">En attente...</span>
+        </div>
+      </div>
+    </div>
+    <a href="https://editors.kantoaplo.com/hermes.html" class="mock-link" style="--tc:#E8714A;--tcr:232,113,74">Explorer ἙΡΜΗ͂Σ · Hermès →</a>
+  </div>
+
+  <!-- ═══ SYNERGOS ═══ -->
+  <div class="mock-panel" id="mp-synergos">
+    <div class="mock-header">
+      <div class="mock-bar" style="background:#2DD4A0"></div>
+      <div>
+        <div class="mock-greek" style="color:#2DD4A0">ΣΥΝΕΡΓΟΣ <span style="font-size:14px;opacity:.5;letter-spacing:4px">· Synergos</span></div>
+        <div class="mock-role">Connecteurs · Sources</div>
+      </div>
+    </div>
+    <div class="mock-box" style="border-color:rgba(45,212,160,.2)">
+      <div style="position:absolute;top:0;left:0;right:0;height:1.5px;background:linear-gradient(90deg,transparent,#2DD4A088,transparent)"></div>
+      <div class="syn-wrap">
+        <div class="syn-list">
+          <div class="syn-title">Sources connectées</div>
+          <div class="syn-row" onmouseenter="synActivate(0)" onmouseleave="synActivate(-1)"><span class="syn-icon">🐘</span><div class="syn-info"><div class="syn-name">PostgreSQL</div><div class="syn-type">Base SQL</div></div><div class="syn-status"><div class="syn-dot" style="background:#4DC478;box-shadow:0 0 6px #4DC478"></div><span class="syn-dot-lbl" style="color:#4DC478;font-size:9px">actif</span></div></div>
+          <div class="syn-row" onmouseenter="synActivate(1)" onmouseleave="synActivate(-1)"><span class="syn-icon">🍃</span><div class="syn-info"><div class="syn-name">MongoDB</div><div class="syn-type">NoSQL</div></div><div class="syn-status"><div class="syn-dot" style="background:#4DC478;box-shadow:0 0 6px #4DC478"></div><span class="syn-dot-lbl" style="color:#4DC478;font-size:9px">actif</span></div></div>
+          <div class="syn-row" onmouseenter="synActivate(2)" onmouseleave="synActivate(-1)"><span class="syn-icon">💳</span><div class="syn-info"><div class="syn-name">Stripe</div><div class="syn-type">Paiements</div></div><div class="syn-status"><div class="syn-dot" style="background:#4DC478;box-shadow:0 0 6px #4DC478"></div><span class="syn-dot-lbl" style="color:#4DC478;font-size:9px">actif</span></div></div>
+          <div class="syn-row" id="syn-s3" onmouseenter="synActivate(3)" onmouseleave="synActivate(-1)"><span class="syn-icon">☁️</span><div class="syn-info"><div class="syn-name">AWS S3</div><div class="syn-type">Stockage</div></div><div class="syn-status"><div class="syn-dot" id="syn-dot3" style="background:#4DC478;box-shadow:0 0 6px #4DC478"></div><span class="syn-dot-lbl" id="syn-lbl3" style="color:#4DC478;font-size:9px">actif</span></div></div>
+          <div class="syn-row" onmouseenter="synActivate(4)" onmouseleave="synActivate(-1)"><span class="syn-icon">📧</span><div class="syn-info"><div class="syn-name">SendGrid</div><div class="syn-type">Emails</div></div><div class="syn-status"><div class="syn-dot" style="background:#4DC478;box-shadow:0 0 6px #4DC478"></div><span class="syn-dot-lbl" style="color:#4DC478;font-size:9px">actif</span></div></div>
+        </div>
+        <div class="syn-hub">
+          <svg id="SYN_SVG" width="150" height="250" viewBox="0 0 150 250">
+            <circle cx="75" cy="125" r="60" fill="none" stroke="rgba(45,212,160,0.08)" stroke-width="1"/>
+            <circle cx="75" cy="125" r="40" fill="none" stroke="rgba(45,212,160,0.12)" stroke-width="1"/>
+            <circle cx="75" cy="125" r="60" fill="none" stroke="#2DD4A0" stroke-width="1.5" stroke-dasharray="20 360" stroke-linecap="round">
+              <animateTransform attributeName="transform" type="rotate" from="0 75 125" to="360 75 125" dur="7s" repeatCount="indefinite"/>
+            </circle>
+            <circle cx="75" cy="125" r="22" fill="#141220" stroke="rgba(45,212,160,0.3)" stroke-width="1.5"/>
+            <text x="75" y="121" text-anchor="middle" font-size="8" fill="#2DD4A0" font-weight="700" font-family="Cinzel">KANTO</text>
+            <text x="75" y="133" text-anchor="middle" font-size="7" fill="rgba(45,212,160,0.5)" font-family="Cinzel">APLO</text>
+            <g id="SYN_LINES"></g>
+            <g id="SYN_DOTS"></g>
+          </svg>
+        </div>
+      </div>
+    </div>
+    <a href="https://editors.kantoaplo.com/synergos.html" class="mock-link" style="--tc:#2DD4A0;--tcr:45,212,160">Explorer ΣΥΝΕΡΓΟΣ · Synergos →</a>
+  </div>
+
+  <!-- ═══ KAIROS ═══ -->
+  <div class="mock-panel" id="mp-kairos">
+    <div class="mock-header">
+      <div class="mock-bar" style="background:#F472B6"></div>
+      <div>
+        <div class="mock-greek" style="color:#F472B6">ΚΑΙΡΟΣ <span style="font-size:14px;opacity:.5;letter-spacing:4px">· Kairos</span></div>
+        <div class="mock-role">Split Testing A/B</div>
+      </div>
+    </div>
+    <div class="mock-box" style="border-color:rgba(244,114,182,.2)">
+      <div style="position:absolute;top:0;left:0;right:0;height:1.5px;background:linear-gradient(90deg,transparent,#F472B688,transparent)"></div>
+      <div class="kai-wrap">
+        <div class="kai-head">
+          <div class="kai-title">Expérience en cours · Bouton CTA</div>
+          <div class="kai-sig"><div class="kai-sig-dot" id="KAI_SIGDOT" style="background:#E8B74A"></div><span id="KAI_SIG_LBL" style="color:#E8B74A;font-size:9px">72% significance</span></div>
+        </div>
+        <div class="kai-cards">
+          <div class="kai-card" id="KAI_A" style="background:rgba(0,0,0,.28);border:1.5px solid rgba(255,255,255,.07)">
+            <div class="kai-card-bar" id="KAI_A_BAR" style="background:linear-gradient(90deg,transparent,#F472B688,transparent);opacity:0"></div>
+            <div class="kai-label" style="color:#F472B6">VARIANTE A</div>
+            <div class="kai-name" id="KAI_A_NAME">Bouton "Commencer"</div>
+            <div class="kai-val" id="KAI_A_VAL" style="color:#F472B6">0.0%</div>
+            <div class="kai-track"><div class="kai-fill" id="KAI_A_FILL" style="width:0%;background:linear-gradient(90deg,rgba(244,114,182,.7),#F472B6)"></div></div>
+            <div class="kai-info" id="KAI_A_INFO">0 conversions / 1000 visiteurs</div>
+          </div>
+          <div class="kai-card" id="KAI_B" style="background:rgba(0,0,0,.28);border:1.5px solid rgba(255,255,255,.07)">
+            <div class="kai-card-bar" id="KAI_B_BAR" style="background:linear-gradient(90deg,transparent,#3D8EE888,transparent);opacity:0"></div>
+            <div class="kai-label" style="color:#3D8EE8">VARIANTE B</div>
+            <div class="kai-name" id="KAI_B_NAME">Bouton "Essai gratuit"</div>
+            <div class="kai-val" id="KAI_B_VAL" style="color:#3D8EE8">0.0%</div>
+            <div class="kai-track"><div class="kai-fill" id="KAI_B_FILL" style="width:0%;background:linear-gradient(90deg,rgba(61,142,232,.7),#3D8EE8)"></div></div>
+            <div class="kai-info" id="KAI_B_INFO">0 conversions / 1000 visiteurs</div>
+          </div>
+        </div>
+        <div class="kai-sigbar">
+          <div class="kai-sigbar-head"><div class="kai-sigbar-lbl">Significance statistique</div><div class="kai-sigbar-val" id="KAI_SIG_VAL" style="color:#E8B74A">0% / 95% requis</div></div>
+          <div class="kai-sigbar-track"><div class="kai-sigbar-fill" id="KAI_SIG_FILL" style="width:0%;background:linear-gradient(90deg,#F472B688,#F472B6)"></div></div>
+        </div>
+      </div>
+    </div>
+    <a href="https://editors.kantoaplo.com/kairos.html" class="mock-link" style="--tc:#F472B6;--tcr:244,114,182">Explorer ΚΑΙΡΟΣ · Kairos →</a>
+  </div>
+
+</div><!-- end mockup-area -->
 
 <!-- CAROUSEL -->
 <section class="carsec">
-  <!-- Meander decorative -->
   <div class="meander">
-    <svg viewBox="0 0 900 18" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
-      <path d="M0 9 H15 V2 H30 V16 H45 V2 H60 V16 H75 V9 H90 V2 H105 V16 H120 V2 H135 V16 H150 V9 H165 V2 H180 V16 H195 V2 H210 V16 H225 V9 H240 V2 H255 V16 H270 V2 H285 V16 H300 V9 H315 V2 H330 V16 H345 V2 H360 V16 H375 V9 H390 V2 H405 V16 H420 V2 H435 V16 H450 V9 H465 V2 H480 V16 H495 V2 H510 V16 H525 V9 H540 V2 H555 V16 H570 V2 H585 V16 H600 V9 H615 V2 H630 V16 H645 V2 H660 V16 H675 V9 H690 V2 H705 V16 H720 V2 H735 V16 H750 V9 H765 V2 H780 V16 H795 V2 H810 V16 H825 V9 H840 V2 H855 V16 H870 V2 H885 V16 H900 V9" stroke="#C9963A" stroke-width="1.5"/>
+    <svg viewBox="0 0 900 16" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet" width="900" height="16">
+      <path d="M0 8H15V2H30V14H45V2H60V14H75V8H90V2H105V14H120V2H135V14H150V8H165V2H180V14H195V2H210V14H225V8H240V2H255V14H270V2H285V14H300V8H315V2H330V14H345V2H360V14H375V8H390V2H405V14H420V2H435V14H450V8H465V2H480V14H495V2H510V14H525V8H540V2H555V14H570V2H585V14H600V8H615V2H630V14H645V2H660V14H675V8H690V2H705V14H720V2H735V14H750V8H765V2H780V14H795V2H810V14H825V8H840V2H855V14H870V2H885V14H900" stroke="#C9963A" stroke-width="1.5"/>
     </svg>
   </div>
-
-  <div class="carinner" id="CI">
-    <div class="carbg">Κ</div>
-  </div>
-  <div class="cardots" id="CD"></div>
+  <div class="carinner" id="CI"><div class="carbg">Κ</div></div>
+  <div class="sdots" id="SD"></div>
 </section>
 
-<!-- EDITORS -->
-<section class="edsec" id="editeurs">
+<!-- EDITOR CARDS -->
+<section class="edsec">
   <div class="sechead">
-    <div class="seceye">Nomenclature Grecque · Cephalo Sophie</div>
-    <h2 class="sectit">Les Éditeurs de la Plateforme</h2>
-    <p class="secsub">Chaque éditeur porte un nom grec qui incarne sa fonction. Ensemble, ils forment un écosystème complet pour créer, automatiser et visualiser.</p>
+    <div class="seceye">Nomenclature Grecque · 6 Éditeurs</div>
+    <h2 class="sectit">L'Écosystème Complet</h2>
+    <p class="secsub">Six éditeurs, une plateforme. Chaque nom grec incarne une mission. Ensemble, ils couvrent l'intégralité du spectre no-code.</p>
   </div>
-
   <div class="edgrid">
-
-    <!-- TEKTÔN -->
-    <a class="edcard" href="tekton.html" style="--c:#C9963A;--cr:201,150,58">
-      <div class="ecbg">Τ</div>
-      <div class="ecicon">🏛️</div>
-      <div class="ecgreek">ΤΈΚΤΩΝ</div>
-      <div class="eclatin">Tektôn</div>
-      <div class="ectitle">Éditeur de Pages</div>
-      <div class="ecmeaning">« Le Bâtisseur · L'Artisan du visuel »</div>
-      <div class="ecdesc">Composez vos interfaces par glisser-déposer. Tekton transforme votre vision en pages responsives, sans écrire une seule ligne de code.</div>
-      <div class="ecarrow">Explorer Tektôn →</div>
-    </a>
-
-    <!-- LOGOS -->
-    <a class="edcard" href="logos.html" style="--c:#3D8EE8;--cr:61,142,232">
-      <div class="ecbg">Λ</div>
-      <div class="ecicon">⚡</div>
-      <div class="ecgreek">ΛΌΓΟΣ</div>
-      <div class="eclatin">Logos</div>
-      <div class="ectitle">Éditeur d'APIs</div>
-      <div class="ecmeaning">« La Raison · Le Gouverneur des échanges »</div>
-      <div class="ecdesc">Concevez vos APIs visuellement. Logos définit les routes, les règles métier et les flux de données qui gouvernent vos applications.</div>
-      <div class="ecarrow">Explorer Logos →</div>
-    </a>
-
-    <!-- MANTIS -->
-    <a class="edcard" href="mantis.html" style="--c:#8B5CF6;--cr:139,92,246">
-      <div class="ecbg">Μ</div>
-      <div class="ecicon">🔮</div>
-      <div class="ecgreek">ΜΆΝΤΙΣ</div>
-      <div class="eclatin">Mantis</div>
-      <div class="ectitle">BI &amp; ML Prédictif</div>
-      <div class="ecmeaning">« Le Prophète · Celui qui prédit »</div>
-      <div class="ecdesc">Visualisez vos données, construisez des modèles prédictifs. Mantis transforme les signaux en décisions éclairées.</div>
-      <div class="ecarrow">Explorer Mantis →</div>
-    </a>
-
-    <!-- HERMES -->
-    <a class="edcard" href="hermes.html" style="--c:#E8714A;--cr:232,113,74">
-      <div class="ecbg">Η</div>
-      <div class="ecicon">🌊</div>
-      <div class="ecgreek">ἙΡΜΗ͂Σ</div>
-      <div class="eclatin">Hermès</div>
-      <div class="ectitle">Workflows &amp; Agent IA</div>
-      <div class="ecmeaning">« Le Messager · Dieu des échanges »</div>
-      <div class="ecdesc">Orchestrez vos automatisations et déployez des agents IA. Hermès connecte les systèmes et fait circuler l'information.</div>
-      <div class="ecarrow">Explorer Hermès →</div>
-    </a>
-
-    <!-- SYNERGOS -->
-    <a class="edcard" href="synergos.html" style="--c:#2DD4A0;--cr:45,212,160">
-      <div class="ecbg">Σ</div>
-      <div class="ecicon">🔗</div>
-      <div class="ecgreek">ΣΥΝΕΡΓΟΣ</div>
-      <div class="eclatin">Synergos</div>
-      <div class="ectitle">Connecteurs &amp; Sources</div>
-      <div class="ecmeaning">« Celui qui œuvre ensemble · Le Collaborateur »</div>
-      <div class="ecdesc">Connectez bases de données, APIs tierces et services cloud. Synergos unifie vos sources de données en un écosystème cohérent.</div>
-      <div class="ecarrow">Explorer Synergos →</div>
-    </a>
-
-    <!-- KAIROS — soon -->
-    <div class="edcard edcard-soon" style="--c:#F472B6;--cr:244,114,182">
-      <div class="badgesoon">Bientôt</div>
-      <div class="ecbg">Κ</div>
-      <div class="ecicon">⚖️</div>
-      <div class="ecgreek">ΚΑΙΡΟΣ</div>
-      <div class="eclatin">Kairos</div>
-      <div class="ectitle">Split Testing A/B</div>
-      <div class="ecmeaning">« Le Bon Moment · L'Opportunité juste »</div>
-      <div class="ecdesc">Testez, mesurez, optimisez. Kairos identifie le bon chemin au bon moment, guidé par la donnée.</div>
-    </div>
-
+    <a class="edcard" href="https://editors.kantoaplo.com/tekton.html" style="--c:#C9963A;--cr:201,150,58"><span class="ec-letter">Τ</span><div class="ec-icon">🏛️</div><div class="ec-top"><div><div class="ec-greek">ΤΈΚΤΩΝ</div><div class="ec-latin">Tektôn</div></div><span class="ec-tag">Page Builder</span></div><div class="ec-title">Éditeur de Pages</div><div class="ec-meaning">« Le Bâtisseur · L'Artisan du visuel »</div><div class="ec-desc">Composez vos interfaces par glisser-déposer. Tekton génère un code propre, production-ready, sans compromis.</div><div class="ec-arrow">Explorer →</div></a>
+    <a class="edcard" href="https://editors.kantoaplo.com/logos.html" style="--c:#3D8EE8;--cr:61,142,232"><span class="ec-letter">Λ</span><div class="ec-icon">⚡</div><div class="ec-top"><div><div class="ec-greek">ΛΌΓΟΣ</div><div class="ec-latin">Logos</div></div><span class="ec-tag">API Builder</span></div><div class="ec-title">Éditeur d'APIs</div><div class="ec-meaning">« La Raison · Le Gouverneur des échanges »</div><div class="ec-desc">Définissez routes, règles métier et flux de données visuellement. Logos gouverne chaque échange.</div><div class="ec-arrow">Explorer →</div></a>
+    <a class="edcard" href="https://editors.kantoaplo.com/mantis.html" style="--c:#8B5CF6;--cr:139,92,246"><span class="ec-letter">Μ</span><div class="ec-icon">🔮</div><div class="ec-top"><div><div class="ec-greek">ΜΆΝΤΙΣ</div><div class="ec-latin">Mantis</div></div><span class="ec-tag">BI · ML</span></div><div class="ec-title">Analytique &amp; Prédiction</div><div class="ec-meaning">« Le Prophète · Celui qui prédit »</div><div class="ec-desc">Dashboards BI, modèles ML no-code, prédictions temps réel. L'oracle de vos données.</div><div class="ec-arrow">Explorer →</div></a>
+    <a class="edcard" href="https://editors.kantoaplo.com/hermes.html" style="--c:#E8714A;--cr:232,113,74"><span class="ec-letter">Η</span><div class="ec-icon">🌊</div><div class="ec-top"><div><div class="ec-greek">ἙΡΜΗ͂Σ</div><div class="ec-latin">Hermès</div></div><span class="ec-tag">Workflows · IA</span></div><div class="ec-title">Orchestrateur &amp; Agent IA</div><div class="ec-meaning">« Le Messager · Dieu des échanges »</div><div class="ec-desc">Automatisez vos flux, déployez des agents IA. Hermès relie tous vos systèmes sans repos.</div><div class="ec-arrow">Explorer →</div></a>
+    <a class="edcard" href="https://editors.kantoaplo.com/synergos.html" style="--c:#2DD4A0;--cr:45,212,160"><span class="ec-letter">Σ</span><div class="ec-icon">🔗</div><div class="ec-top"><div><div class="ec-greek">ΣΥΝΕΡΓΟΣ</div><div class="ec-latin">Synergos</div></div><span class="ec-tag">Connecteurs</span></div><div class="ec-title">Sources &amp; Connecteurs</div><div class="ec-meaning">« Celui qui œuvre ensemble »</div><div class="ec-desc">PostgreSQL, MongoDB, Stripe, S3 — Synergos unifie toutes vos sources en un écosystème cohérent.</div><div class="ec-arrow">Explorer →</div></a>
+    <a class="edcard" href="https://editors.kantoaplo.com/kairos.html" style="--c:#F472B6;--cr:244,114,182"><span class="ec-letter">Κ</span><div class="ec-icon">⚖️</div><div class="ec-top"><div><div class="ec-greek">ΚΑΙΡΟΣ</div><div class="ec-latin">Kairos</div></div><span class="ec-tag">Split Testing</span></div><div class="ec-title">Expérimentation A/B</div><div class="ec-meaning">« Le Bon Moment · L'Opportunité juste »</div><div class="ec-desc">Testez chaque décision. Kairos mesure, calcule la significance et déploie le gagnant automatiquement.</div><div class="ec-arrow">Explorer →</div></a>
   </div>
 </section>
 
 <!-- COMPANY -->
 <section class="comsec">
-  <div class="comtag">Une création</div>
   <a href="https://cephalosophie.com" target="_blank" class="comlink">
     <div class="comdot"></div>
     <span class="comname">ΚΕΦΑΛΗ ΣΟΦΙΑ</span>
@@ -288,22 +642,208 @@ footer{padding:40px 56px;border-top:1px solid rgba(255,255,255,.05);display:flex
     <span>Cephalo Sophie</span>
     <span style="color:var(--textd);font-size:11px">cephalosophie.com ↗</span>
   </a>
-  <p class="comdesc">15 ans d'expertise en architecture logicielle, Python, SQL, BI et développement mobile — au service d'une seule vision : que chaque entreprise puisse créer sans coder.</p>
+  <p class="comdesc">« L'Intelligence qui guide l'Action » — 15 ans d'architecture logicielle au service d'une seule vision : que chaque entreprise puisse créer sans coder.</p>
 </section>
 
-<!-- FOOTER -->
 <footer>
-  <div>
-    <div class="fbrand">KANTO APLO · ΚΆΝΤΟ ΑΠΛΌ</div>
-    <div class="fsub">kantoaplo.com</div>
-  </div>
-  <div class="fright">
-    © 2026 Cephalo Sophie<br>
-    ΚΕΦΑΛΗ ΣΟΦΙΑ · cephalosophie.com
-  </div>
+  <div><div class="fbrand">KANTO APLO · ΚΆΝΤΟ ΑΠΛΌ</div><div class="fsub">editors.kantoaplo.com</div></div>
+  <div class="fright">© 2026 Cephalo Sophie<br>ΚΕΦΑΛΗ ΣΟΦΙΑ · cephalosophie.com</div>
 </footer>
 
 <script>
+/* ── TABS ── */
+const EDITORS = ['tekton','logos','mantis','hermes','synergos','kairos'];
+const tabs = document.querySelectorAll('.tab');
+function switchEditor(ed) {
+  tabs.forEach(t => t.classList.toggle('active', t.dataset.ed === ed));
+  EDITORS.forEach(e => {
+    const p = document.getElementById('mp-'+e);
+    if (p) p.classList.toggle('active', e === ed);
+  });
+  if (ed === 'mantis')   startMantis();
+  if (ed === 'kairos')   startKairos();
+  if (ed === 'hermes')   startHermes();
+  if (ed === 'synergos') buildSynSVG();
+  document.getElementById('MOCK_AREA').scrollIntoView({behavior:'smooth',block:'start'});
+}
+tabs.forEach(t => t.addEventListener('click', () => switchEditor(t.dataset.ed)));
+
+/* ── TEKTON: add block ── */
+function tekAdd(label) {
+  const c = document.getElementById('TEK_CANVAS');
+  const row = document.createElement('div');
+  row.className = 'tek-row';
+  row.style.animation = 'fadeup .3s ease';
+  row.innerHTML = `<div class="tek-row-left"><span class="tek-drag">⠿</span>${label}</div><div class="tek-actions"><div class="tek-act">✎</div><div class="tek-act">⊞</div><div class="tek-act">×</div></div>`;
+  row.querySelector('.tek-act:last-child').addEventListener('click', e => { e.stopPropagation(); row.remove(); });
+  c.appendChild(row);
+}
+
+/* ── LOGOS: cascading panels ── */
+let logPos = [0,1,2];
+function logClick(idx) {
+  const panels = document.querySelectorAll('.log-panel');
+  const clickedPos = parseInt(panels[idx].dataset.pos);
+  if (clickedPos === 0) return;
+  // rotate so clicked becomes front
+  for (let step = 0; step < clickedPos; step++) {
+    const tmp = logPos[0];
+    logPos = [...logPos.slice(1), tmp];
+  }
+  panels.forEach((p,i) => p.dataset.pos = logPos.indexOf(i));
+}
+// Auto rotate logos
+setInterval(() => {
+  const tmp = logPos[0]; logPos = [...logPos.slice(1), tmp];
+  document.querySelectorAll('.log-panel').forEach((p,i) => p.dataset.pos = logPos.indexOf(i));
+}, 3000);
+
+/* ── MANTIS: live chart ── */
+let manData = Array.from({length:14},()=>({a:40+Math.random()*40,b:28+Math.random()*32}));
+let manTick = 0; let manIv = null;
+function startMantis() {
+  if (manIv) return;
+  manIv = setInterval(updateMantis, 1300);
+  updateMantis();
+}
+function updateMantis() {
+  manData = [...manData.slice(1), {a:40+Math.random()*40, b:28+Math.random()*32}];
+  manTick++;
+  const W=400, H=120, mx=90;
+  function poly(key) { return manData.map((d,i)=>`${(i/(manData.length-1))*W},${H-(d[key]/mx)*H}`).join(' '); }
+  const la = poly('a'), lb = poly('b');
+  const fa = `0,${H} ${la} ${W},${H}`;
+  const fb = `0,${H} ${lb} ${W},${H}`;
+  document.getElementById('MAN_AREA_A').setAttribute('points',fa);
+  document.getElementById('MAN_AREA_B').setAttribute('points',fb);
+  document.getElementById('MAN_LINE_A').setAttribute('points',la);
+  document.getElementById('MAN_LINE_B').setAttribute('points',lb);
+  const lastA = manData[manData.length-1].a;
+  document.getElementById('MAN_DOT').setAttribute('cx',W);
+  document.getElementById('MAN_DOT').setAttribute('cy',H-(lastA/mx)*H);
+  document.getElementById('M1').textContent = (62.4+(manTick%8)*1.1).toFixed(1)+'%';
+  document.getElementById('M2').textContent = (12.4+(manTick%5)*.3).toFixed(1)+'k';
+  document.getElementById('M3').textContent = (91.2+(manTick%4)*.5).toFixed(1)+'%';
+}
+
+/* ── HERMES: animated workflow ── */
+const herEdges = [
+  {x1:108,y1:110,x2:210,y2:110,label:'Formulaire → Agent'},
+  {x1:360,y1:110,x2:430,y2:110,label:'Agent → Condition'},
+  {cx:'M480,98 C520,98 520,55 560,55',label:'Condition → Slack'},
+  {cx:'M480,122 C520,122 520,175 560,175',label:'Condition → Email'},
+  {x1:265,y1:138,x2:240,y2:198,label:'Agent → Claude'},
+  {x1:310,y1:138,x2:345,y2:198,label:'Agent → PostgreSQL'},
+];
+let herCur=0, herIv=null, herTime=0;
+function startHermes() {
+  if (herIv) return;
+  herIv = setInterval(stepHermes, 950);
+}
+function stepHermes() {
+  herTime += .95;
+  document.getElementById('HER_TIME').textContent = '⟳ '+herTime.toFixed(1)+'s';
+  const allEdgeEls = document.querySelectorAll('#HER_EDGES line, #HER_EDGES path');
+  allEdgeEls.forEach(e => {
+    e.setAttribute('stroke','rgba(232,113,74,0.25)');
+    e.setAttribute('stroke-width','1.5');
+    e.setAttribute('marker-end','url(#arrt)');
+  });
+  const act = allEdgeEls[herCur];
+  if (act) {
+    act.setAttribute('stroke','#E8714A');
+    act.setAttribute('stroke-width','2.5');
+    act.setAttribute('marker-end','url(#arract)');
+  }
+  document.getElementById('HER_PKT_LBL').textContent = herEdges[herCur].label || '';
+  herCur = (herCur+1) % herEdges.length;
+}
+
+/* ── SYNERGOS: hub SVG ── */
+const synSrcs = [{icon:'🐘',color:'#4A9EE8'},{icon:'🍃',color:'#4DC478'},{icon:'💳',color:'#6B7CF8'},{icon:'☁️',color:'#F59E0B'},{icon:'📧',color:'#2DD4A0'}];
+let synActive = -1;
+function synActivate(i) { synActive=i; buildSynSVG(); }
+function buildSynSVG() {
+  const lines = document.getElementById('SYN_LINES');
+  const dots  = document.getElementById('SYN_DOTS');
+  if (!lines) return;
+  lines.innerHTML = ''; dots.innerHTML = '';
+  synSrcs.forEach((s,i) => {
+    const angle = (i/synSrcs.length)*2*Math.PI - Math.PI/2;
+    const x = 75+Math.cos(angle)*60, y = 125+Math.sin(angle)*60;
+    const isA = synActive===i;
+    const ln = document.createElementNS('http://www.w3.org/2000/svg','line');
+    ln.setAttribute('x1',75); ln.setAttribute('y1',125);
+    ln.setAttribute('x2',x);  ln.setAttribute('y2',y);
+    ln.setAttribute('stroke',isA?'#2DD4A0':'rgba(45,212,160,0.15)');
+    ln.setAttribute('stroke-width',isA?'2':'1');
+    if(!isA) ln.setAttribute('stroke-dasharray','3 3');
+    lines.appendChild(ln);
+    const c = document.createElementNS('http://www.w3.org/2000/svg','circle');
+    c.setAttribute('cx',x); c.setAttribute('cy',y); c.setAttribute('r',isA?'8':'5');
+    c.setAttribute('fill',isA?'#2DD4A0':'#0E0D18');
+    c.setAttribute('stroke','#2DD4A0'); c.setAttribute('stroke-width','1.5');
+    dots.appendChild(c);
+  });
+}
+buildSynSVG();
+
+/* ── SYNERGOS: S3 sync blink ── */
+setInterval(()=>{
+  const d=document.getElementById('syn-dot3'), l=document.getElementById('syn-lbl3');
+  if(!d) return;
+  const isSync = Math.random()>.7;
+  d.style.background=isSync?'#F59E0B':'#4DC478';
+  d.style.boxShadow=isSync?'0 0 6px #F59E0B':'0 0 6px #4DC478';
+  if(l){l.style.color=isSync?'#F59E0B':'#4DC478'; l.textContent=isSync?'sync...':'actif';}
+},2200);
+
+/* ── KAIROS: A/B test ── */
+let kaiTick=0, kaiDecided=false, kaiIv=null;
+function startKairos() {
+  kaiTick=0; kaiDecided=false;
+  if(kaiIv) clearInterval(kaiIv);
+  kaiIv = setInterval(stepKairos, 260);
+}
+function stepKairos() {
+  if(kaiDecided) return;
+  kaiTick = Math.min(kaiTick+1, 20);
+  const a = Math.min(72, 30+kaiTick*2.1);
+  const b = Math.min(48, 22+kaiTick*1.3);
+  const s = Math.min(97, 58+kaiTick*2.0);
+  document.getElementById('KAI_A_VAL').textContent = a.toFixed(1)+'%';
+  document.getElementById('KAI_B_VAL').textContent = b.toFixed(1)+'%';
+  document.getElementById('KAI_A_FILL').style.width = a+'%';
+  document.getElementById('KAI_B_FILL').style.width = b+'%';
+  document.getElementById('KAI_A_INFO').textContent = Math.round(a*14)+' conversions / 1000 visiteurs';
+  document.getElementById('KAI_B_INFO').textContent = Math.round(b*14)+' conversions / 1000 visiteurs';
+  const sigEl = document.getElementById('KAI_SIG_VAL');
+  const sigDot = document.getElementById('KAI_SIGDOT');
+  const sigLbl = document.getElementById('KAI_SIG_LBL');
+  const sigFill = document.getElementById('KAI_SIG_FILL');
+  sigEl.textContent = s.toFixed(0)+'% / 95% requis';
+  sigLbl.textContent = s.toFixed(0)+'% significance';
+  const sigColor = s>=95?'#4DC478':'#E8B74A';
+  sigEl.style.color=sigColor; sigDot.style.background=sigColor; sigLbl.style.color=sigColor;
+  sigFill.style.width = s+'%';
+  sigFill.style.background = s>=95?'linear-gradient(90deg,#4DC478,#2DD4A0)':'linear-gradient(90deg,#F472B688,#F472B6)';
+  if(s>=95 && !kaiDecided) {
+    kaiDecided=true;
+    // Winner
+    const wa=document.getElementById('KAI_A'), ba=document.getElementById('KAI_A_BAR');
+    wa.style.background='rgba(244,114,182,0.1)'; wa.style.borderColor='rgba(244,114,182,0.6)';
+    wa.style.boxShadow='0 0 30px rgba(244,114,182,0.18)';
+    ba.style.opacity='1';
+    document.getElementById('KAI_A_INFO').innerHTML='🏆 <span style="color:#F472B6">Déploiement automatique...</span>';
+    document.getElementById('KAI_B_INFO').innerHTML='<span style="color:#3A3630">✗ Variante retirée</span>';
+    setTimeout(()=>{ kaiTick=0; kaiDecided=false;
+      wa.style.background='rgba(0,0,0,.28)'; wa.style.borderColor='rgba(255,255,255,.07)'; wa.style.boxShadow='none'; ba.style.opacity='0';
+    },3800);
+  }
+}
+startKairos();
+
+/* ── CAROUSEL ── */
 const slogans=[
   {p1:"La plus belle musique ne naît pas de celui qui règle les câbles — elle naît de celui qui ferme les yeux et joue.",p3:"c'est tout ce qui est entre les deux.",c:"#C9963A"},
   {p1:"Les grandes maisons ne se construisent pas brique par brique. Elles se dessinent d'abord.",p3:"— dessine, le reste se construit.",c:"#3D8EE8"},
@@ -313,30 +853,27 @@ const slogans=[
   {p1:"On a mis 18 ans à comprendre que le meilleur code est celui qu'on n'écrit pas.",p3:"— on génère, automatise et visualise. Toi, tu rentres à l'heure.",c:"#F472B6"}
 ];
 const shuffled=[...slogans].sort(()=>Math.random()-.5);
-let cur=0;
-const CI=document.getElementById('CI'),CD=document.getElementById('CD');
+let carCur=0;
+const CI=document.getElementById('CI'), SD=document.getElementById('SD');
 shuffled.forEach((s,i)=>{
   const d=document.createElement('div');
   d.className='slogan'+(i===0?' active':'');
-  d.innerHTML=`<div class="slogtxt">
-    <span class="slogp1">${s.p1}</span>
-    <span style="display:block;margin:10px 0">
-      <span class="slogbrand" style="color:${s.c};text-shadow:0 0 40px ${s.c}55">&nbsp;ΚΆΝΤΟ ΑΠΛΌ&nbsp;</span>
-    </span>
-    <span class="slogp3">${s.p3}</span>
-  </div>`;
+  d.innerHTML='<div class="slogtxt"><span class="sp1">'+s.p1+'</span><span class="sbrand" style="color:'+s.c+';background:'+s.c+'18;box-shadow:0 0 28px '+s.c+'28">&nbsp;ΚΆΝΤΟ ΑΠΛΌ&nbsp;</span><span class="sp3">'+s.p3+'</span></div>';
   CI.appendChild(d);
   const dot=document.createElement('div');
-  dot.className='cdot'+(i===0?' active':'');
-  dot.onclick=()=>go(i);
-  CD.appendChild(dot);
+  dot.className='sdot'+(i===0?' active':'');
+  dot.onclick=()=>goCar(i);
+  SD.appendChild(dot);
 });
-const items=CI.querySelectorAll('.slogan'),dots=CD.querySelectorAll('.cdot');
-function go(n){items[cur].classList.remove('active');dots[cur].classList.remove('active');cur=n;items[cur].classList.add('active');dots[cur].classList.add('active')}
-function nxt(){go((cur+1)%shuffled.length)}
-let t=setInterval(nxt,5500);
-CI.addEventListener('mouseenter',()=>clearInterval(t));
-CI.addEventListener('mouseleave',()=>{t=setInterval(nxt,5500)});
+const cItems=CI.querySelectorAll('.slogan'), cDots=SD.querySelectorAll('.sdot');
+function goCar(n){cItems[carCur].classList.remove('active');cDots[carCur].classList.remove('active');carCur=n;cItems[carCur].classList.add('active');cDots[carCur].classList.add('active')}
+let carT=setInterval(()=>goCar((carCur+1)%shuffled.length),5500);
+CI.addEventListener('mouseenter',()=>clearInterval(carT));
+CI.addEventListener('mouseleave',()=>{carT=setInterval(()=>goCar((carCur+1)%shuffled.length),5500)});
+
+/* ── Init first tab ── */
+startMantis();
+buildSynSVG();
 </script>
 </body>
 </html>
