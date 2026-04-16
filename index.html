@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KANTO APLO · ΚΆΝΤΟ ΑΠΛΌ · Rends-le Simple</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#08070B;--bg2:#0E0C14;--bg3:#141220;
+  --gold:#C9963A;--goldl:#E8BE6A;--goldd:rgba(201,150,58,.12);--goldb:rgba(201,150,58,.32);
+  --text:#EDE7DB;--textm:#9C968E;--textd:#524E48;
+  --tekton:#C9963A;--logos:#3D8EE8;--mantis:#8B5CF6;--hermes:#E8714A;--synergos:#2DD4A0;--kairos:#F472B6;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;line-height:1.65;overflow-x:hidden}
+
+/* GRAIN */
+body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");opacity:.025;pointer-events:none;z-index:9999}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;padding:20px 56px;display:flex;align-items:center;justify-content:space-between;background:linear-gradient(180deg,rgba(8,7,11,.92) 0%,rgba(8,7,11,0) 100%);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+.nlogo{display:flex;align-items:center;gap:11px;text-decoration:none}
+.nmark{width:36px;height:36px;background:linear-gradient(135deg,#C9963A,#7A5618);border-radius:9px;display:flex;align-items:center;justify-content:center;font-family:'Cinzel',serif;font-size:16px;font-weight:900;color:#fff}
+.nname{font-family:'Cinzel',serif;font-size:13px;font-weight:700;color:var(--text);letter-spacing:2.5px}
+.nsub{font-size:9.5px;color:var(--textd);letter-spacing:3px;text-transform:uppercase;margin-top:1px}
+.nright{display:flex;align-items:center;gap:28px}
+.nlink{font-size:12px;letter-spacing:1.5px;text-transform:uppercase;color:var(--textm);text-decoration:none;transition:color .2s}
+.nlink:hover{color:var(--gold)}
+.nbtn{font-size:12px;letter-spacing:.5px;font-weight:600;color:var(--bg);background:var(--gold);padding:9px 22px;border-radius:7px;text-decoration:none;transition:all .2s}
+.nbtn:hover{background:var(--goldl)}
+
+/* HERO */
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:130px 48px 80px;position:relative;overflow:hidden}
+.hero-glow{position:absolute;top:50%;left:50%;transform:translate(-50%,-60%);width:900px;height:600px;background:radial-gradient(ellipse,rgba(201,150,58,.07) 0%,transparent 68%);pointer-events:none}
+.hero-line{position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--goldb),transparent)}
+
+.hero-eye{font-size:10.5px;letter-spacing:4px;text-transform:uppercase;color:var(--gold);margin-bottom:32px;opacity:0;animation:fu .8s ease forwards .3s}
+
+.hero-title{position:relative;margin-bottom:12px;opacity:0;animation:fu .9s ease forwards .55s}
+.htmain{font-family:'Cinzel',serif;font-size:clamp(44px,7.5vw,88px);font-weight:900;line-height:1.02;letter-spacing:-1px;background:linear-gradient(125deg,#F0EAE0 0%,#E8BE6A 40%,#C9963A 60%,#F0EAE0 100%);background-size:300% 300%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:shimmer 5s ease-in-out infinite 1.8s;display:block}
+.htgreek{display:block;font-family:'Cinzel',serif;font-size:clamp(13px,1.8vw,20px);color:var(--textd);letter-spacing:9px;font-weight:400;-webkit-text-fill-color:var(--textd);margin-top:10px}
+
+.hero-tag{font-family:'Cormorant Garamond',serif;font-size:clamp(18px,2.4vw,24px);font-weight:300;font-style:italic;color:var(--textm);margin:22px 0 44px;opacity:0;animation:fu .9s ease forwards .85s}
+
+.hctag{display:flex;gap:14px;justify-content:center;opacity:0;animation:fu .9s ease forwards 1.1s}
+.btnp{padding:14px 34px;background:var(--gold);color:var(--bg);border-radius:8px;font-size:13px;font-weight:600;letter-spacing:.5px;text-decoration:none;transition:all .25s}
+.btnp:hover{background:var(--goldl);transform:translateY(-2px)}
+.btns{padding:14px 34px;background:transparent;color:var(--textm);border-radius:8px;font-size:13px;font-weight:500;letter-spacing:.5px;text-decoration:none;border:1px solid var(--goldb);transition:all .25s}
+.btns:hover{color:var(--gold);border-color:var(--gold);transform:translateY(-2px)}
+
+.hstats{display:flex;gap:52px;margin-top:68px;padding-top:44px;border-top:1px solid var(--goldd);opacity:0;animation:fu .9s ease forwards 1.4s}
+.stat-val{font-family:'Cinzel',serif;font-size:30px;font-weight:700;color:var(--gold);display:block;line-height:1}
+.stat-lbl{font-size:10.5px;letter-spacing:2.5px;text-transform:uppercase;color:var(--textd);margin-top:6px}
+
+/* CAROUSEL */
+.carsec{padding:110px 0;position:relative;overflow:hidden}
+.carsec::before,.carsec::after{content:'';position:absolute;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--goldb),transparent)}
+.carsec::before{top:0}.carsec::after{bottom:0}
+
+/* Greek meander decorative top */
+.meander{position:absolute;top:14px;left:0;right:0;display:flex;justify-content:center;opacity:.12;pointer-events:none;overflow:hidden;height:18px}
+.meander svg{width:100%;max-width:900px;height:18px}
+
+.carinner{max-width:860px;margin:0 auto;padding:0 56px;position:relative;min-height:220px;display:flex;align-items:center;justify-content:center}
+.carbg{position:absolute;font-family:'Cinzel',serif;font-size:260px;font-weight:900;color:rgba(201,150,58,.025);pointer-events:none;user-select:none;top:50%;left:50%;transform:translate(-50%,-50%);line-height:1;letter-spacing:-12px}
+.slogan{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .9s ease;padding:24px 56px}
+.slogan.active{opacity:1}
+.slogtxt{text-align:center;max-width:760px}
+.slogp1{font-family:'Cormorant Garamond',serif;font-size:clamp(17px,2.2vw,22px);font-weight:400;color:#EDE7DB;line-height:1.55;display:block;margin-bottom:6px}
+.slogbrand{font-family:'Cinzel',serif;font-size:clamp(17px,2.2vw,22px);font-weight:700;letter-spacing:3px;display:inline-block;padding:0 10px;position:relative}
+.slogbrand::before,.slogbrand::after{content:'◆';font-size:8px;position:absolute;top:50%;transform:translateY(-50%);opacity:.5}
+.slogbrand::before{left:-2px}.slogbrand::after{right:-2px}
+.slogp3{font-family:'Cormorant Garamond',serif;font-size:clamp(17px,2.2vw,22px);font-weight:400;font-style:italic;color:#D4AB5E;line-height:1.55;display:block;margin-top:6px}
+
+.cardots{max-width:860px;margin:44px auto 0;padding:0 56px;display:flex;gap:8px;justify-content:center}
+.cdot{width:20px;height:2px;background:var(--goldd);border-radius:2px;cursor:pointer;transition:all .4s}
+.cdot.active{background:var(--gold);width:44px}
+
+/* EDITORS */
+.edsec{padding:110px 56px;max-width:1240px;margin:0 auto}
+.sechead{text-align:center;margin-bottom:70px}
+.seceye{font-size:10.5px;letter-spacing:4px;text-transform:uppercase;color:var(--gold);margin-bottom:14px}
+.sectit{font-family:'Cinzel',serif;font-size:clamp(24px,3.5vw,38px);font-weight:700;color:var(--text);margin-bottom:14px;letter-spacing:.5px}
+.secsub{font-size:15px;color:var(--textm);max-width:540px;margin:0 auto;line-height:1.75}
+
+.edgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+
+.edcard{position:relative;background:linear-gradient(150deg,var(--bg2),var(--bg3));border-radius:18px;padding:34px;text-decoration:none;color:inherit;border:1px solid rgba(255,255,255,.055);transition:all .38s ease;overflow:hidden;display:block}
+.edcard::before{content:'';position:absolute;top:0;left:0;right:0;height:2.5px;background:linear-gradient(90deg,transparent,var(--c,#888) 40%,var(--c,#888) 60%,transparent);opacity:0;transition:opacity .38s}
+.edcard::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at top,rgba(var(--cr,200,150,58),.06) 0%,transparent 60%);opacity:0;transition:opacity .38s}
+.edcard:hover{border-color:rgba(255,255,255,.11);transform:translateY(-5px);box-shadow:0 24px 64px rgba(0,0,0,.45)}
+.edcard:hover::before,.edcard:hover::after{opacity:1}
+.edcard-soon{opacity:.45;cursor:default;pointer-events:none}
+
+.ecbg{position:absolute;bottom:-14px;right:-8px;font-family:'Cinzel',serif;font-size:100px;font-weight:900;color:var(--c,#888);opacity:.04;pointer-events:none;line-height:1;transition:opacity .38s;user-select:none}
+.edcard:hover .ecbg{opacity:.09}
+
+.ecicon{width:46px;height:46px;border-radius:12px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);display:flex;align-items:center;justify-content:center;margin-bottom:22px;font-size:20px;flex-shrink:0}
+.ecgreek{font-family:'Cinzel',serif;font-size:23px;font-weight:900;letter-spacing:2px;color:var(--c,#888);margin-bottom:3px;line-height:1.2}
+.eclatin{font-size:11px;letter-spacing:4px;text-transform:uppercase;color:var(--textd);margin-bottom:15px}
+.ectitle{font-size:15px;font-weight:600;color:var(--text);margin-bottom:7px}
+.ecmeaning{font-family:'Cormorant Garamond',serif;font-size:13.5px;font-style:italic;color:var(--textd);margin-bottom:14px;line-height:1.5}
+.ecdesc{font-size:13px;color:var(--textm);line-height:1.72}
+.ecarrow{margin-top:22px;font-size:11.5px;letter-spacing:2px;color:var(--c,#888);opacity:0;transition:opacity .3s,transform .3s;transform:translateX(-8px);font-weight:500}
+.edcard:hover .ecarrow{opacity:1;transform:translateX(0)}
+.badgesoon{position:absolute;top:14px;right:14px;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--textd);background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);padding:4px 11px;border-radius:20px}
+
+/* COMPANY */
+.comsec{padding:90px 56px;border-top:1px solid var(--goldd);text-align:center}
+.comtag{font-size:11px;letter-spacing:3.5px;color:var(--textd);text-transform:uppercase;margin-bottom:28px}
+.comlink{display:inline-flex;align-items:center;gap:14px;text-decoration:none;color:var(--text);font-size:14px;letter-spacing:.5px;padding:18px 32px;border-radius:12px;border:1px solid var(--goldd);transition:all .3s;background:var(--bg2)}
+.comlink:hover{border-color:var(--goldb);color:var(--gold);background:rgba(201,150,58,.05)}
+.comdot{width:8px;height:8px;border-radius:50%;background:var(--gold);animation:pulsedot 2s ease-in-out infinite}
+.comname{font-family:'Cinzel',serif;letter-spacing:3px;font-weight:700}
+.comdesc{margin-top:22px;font-size:14px;color:var(--textm);max-width:480px;margin-left:auto;margin-right:auto;line-height:1.75}
+
+/* FOOTER */
+footer{padding:40px 56px;border-top:1px solid rgba(255,255,255,.05);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px}
+.fbrand{font-family:'Cinzel',serif;font-size:13px;color:var(--gold);letter-spacing:2px}
+.fsub{font-size:10.5px;color:var(--textd);margin-top:4px;letter-spacing:1px}
+.fright{font-size:10.5px;color:var(--textd);text-align:right;letter-spacing:.5px;line-height:1.8}
+
+/* KEYFRAMES */
+@keyframes fu{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+@keyframes shimmer{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+@keyframes pulsedot{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.5);opacity:.55}}
+
+@media(max-width:960px){.edgrid{grid-template-columns:1fr 1fr}nav{padding:16px 28px}}
+@media(max-width:620px){.edgrid{grid-template-columns:1fr}.hstats{flex-wrap:wrap;gap:24px;justify-content:center}.nright .nlink{display:none}}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="nlogo">
+    <div class="nmark">Κ</div>
+    <div>
+      <div class="nname">KANTO APLO</div>
+      <div class="nsub">ΚΆΝΤΟ ΑΠΛΌ</div>
+    </div>
+  </a>
+  <div class="nright">
+    <a href="#editeurs" class="nlink">Éditeurs</a>
+    <a href="https://cephalosophie.com" target="_blank" class="nlink">Cephalo Sophie</a>
+    <a href="https://kantoaplo.com" target="_blank" class="nbtn">Accéder →</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-line"></div>
+
+  <div class="hero-eye">Plateforme No-Code &amp; Low-Code · by Cephalo Sophie</div>
+
+  <h1 class="hero-title">
+    <span class="htmain">KANTO APLO</span>
+    <span class="htgreek">ΚΆΝΤΟ ΑΠΛΌ</span>
+  </h1>
+
+  <p class="hero-tag">« Rends-le Simple »</p>
+
+  <div class="hctag">
+    <a href="#editeurs" class="btnp">Découvrir les éditeurs</a>
+    <a href="https://kantoaplo.com" target="_blank" class="btns">Accéder à la plateforme →</a>
+  </div>
+
+  <div class="hstats">
+    <div><span class="stat-val">6+</span><div class="stat-lbl">Éditeurs</div></div>
+    <div><span class="stat-val">∞</span><div class="stat-lbl">Possibilités</div></div>
+    <div><span class="stat-val">0</span><div class="stat-lbl">Ligne de code</div></div>
+    <div><span class="stat-val">15+</span><div class="stat-lbl">Ans d'expertise</div></div>
+  </div>
+</section>
+
+<!-- CAROUSEL -->
+<section class="carsec">
+  <!-- Meander decorative -->
+  <div class="meander">
+    <svg viewBox="0 0 900 18" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+      <path d="M0 9 H15 V2 H30 V16 H45 V2 H60 V16 H75 V9 H90 V2 H105 V16 H120 V2 H135 V16 H150 V9 H165 V2 H180 V16 H195 V2 H210 V16 H225 V9 H240 V2 H255 V16 H270 V2 H285 V16 H300 V9 H315 V2 H330 V16 H345 V2 H360 V16 H375 V9 H390 V2 H405 V16 H420 V2 H435 V16 H450 V9 H465 V2 H480 V16 H495 V2 H510 V16 H525 V9 H540 V2 H555 V16 H570 V2 H585 V16 H600 V9 H615 V2 H630 V16 H645 V2 H660 V16 H675 V9 H690 V2 H705 V16 H720 V2 H735 V16 H750 V9 H765 V2 H780 V16 H795 V2 H810 V16 H825 V9 H840 V2 H855 V16 H870 V2 H885 V16 H900 V9" stroke="#C9963A" stroke-width="1.5"/>
+    </svg>
+  </div>
+
+  <div class="carinner" id="CI">
+    <div class="carbg">Κ</div>
+  </div>
+  <div class="cardots" id="CD"></div>
+</section>
+
+<!-- EDITORS -->
+<section class="edsec" id="editeurs">
+  <div class="sechead">
+    <div class="seceye">Nomenclature Grecque · Cephalo Sophie</div>
+    <h2 class="sectit">Les Éditeurs de la Plateforme</h2>
+    <p class="secsub">Chaque éditeur porte un nom grec qui incarne sa fonction. Ensemble, ils forment un écosystème complet pour créer, automatiser et visualiser.</p>
+  </div>
+
+  <div class="edgrid">
+
+    <!-- TEKTÔN -->
+    <a class="edcard" href="tekton.html" style="--c:#C9963A;--cr:201,150,58">
+      <div class="ecbg">Τ</div>
+      <div class="ecicon">🏛️</div>
+      <div class="ecgreek">ΤΈΚΤΩΝ</div>
+      <div class="eclatin">Tektôn</div>
+      <div class="ectitle">Éditeur de Pages</div>
+      <div class="ecmeaning">« Le Bâtisseur · L'Artisan du visuel »</div>
+      <div class="ecdesc">Composez vos interfaces par glisser-déposer. Tekton transforme votre vision en pages responsives, sans écrire une seule ligne de code.</div>
+      <div class="ecarrow">Explorer Tektôn →</div>
+    </a>
+
+    <!-- LOGOS -->
+    <a class="edcard" href="logos.html" style="--c:#3D8EE8;--cr:61,142,232">
+      <div class="ecbg">Λ</div>
+      <div class="ecicon">⚡</div>
+      <div class="ecgreek">ΛΌΓΟΣ</div>
+      <div class="eclatin">Logos</div>
+      <div class="ectitle">Éditeur d'APIs</div>
+      <div class="ecmeaning">« La Raison · Le Gouverneur des échanges »</div>
+      <div class="ecdesc">Concevez vos APIs visuellement. Logos définit les routes, les règles métier et les flux de données qui gouvernent vos applications.</div>
+      <div class="ecarrow">Explorer Logos →</div>
+    </a>
+
+    <!-- MANTIS -->
+    <a class="edcard" href="mantis.html" style="--c:#8B5CF6;--cr:139,92,246">
+      <div class="ecbg">Μ</div>
+      <div class="ecicon">🔮</div>
+      <div class="ecgreek">ΜΆΝΤΙΣ</div>
+      <div class="eclatin">Mantis</div>
+      <div class="ectitle">BI &amp; ML Prédictif</div>
+      <div class="ecmeaning">« Le Prophète · Celui qui prédit »</div>
+      <div class="ecdesc">Visualisez vos données, construisez des modèles prédictifs. Mantis transforme les signaux en décisions éclairées.</div>
+      <div class="ecarrow">Explorer Mantis →</div>
+    </a>
+
+    <!-- HERMES -->
+    <a class="edcard" href="hermes.html" style="--c:#E8714A;--cr:232,113,74">
+      <div class="ecbg">Η</div>
+      <div class="ecicon">🌊</div>
+      <div class="ecgreek">ἙΡΜΗ͂Σ</div>
+      <div class="eclatin">Hermès</div>
+      <div class="ectitle">Workflows &amp; Agent IA</div>
+      <div class="ecmeaning">« Le Messager · Dieu des échanges »</div>
+      <div class="ecdesc">Orchestrez vos automatisations et déployez des agents IA. Hermès connecte les systèmes et fait circuler l'information.</div>
+      <div class="ecarrow">Explorer Hermès →</div>
+    </a>
+
+    <!-- SYNERGOS -->
+    <a class="edcard" href="synergos.html" style="--c:#2DD4A0;--cr:45,212,160">
+      <div class="ecbg">Σ</div>
+      <div class="ecicon">🔗</div>
+      <div class="ecgreek">ΣΥΝΕΡΓΟΣ</div>
+      <div class="eclatin">Synergos</div>
+      <div class="ectitle">Connecteurs &amp; Sources</div>
+      <div class="ecmeaning">« Celui qui œuvre ensemble · Le Collaborateur »</div>
+      <div class="ecdesc">Connectez bases de données, APIs tierces et services cloud. Synergos unifie vos sources de données en un écosystème cohérent.</div>
+      <div class="ecarrow">Explorer Synergos →</div>
+    </a>
+
+    <!-- KAIROS — soon -->
+    <div class="edcard edcard-soon" style="--c:#F472B6;--cr:244,114,182">
+      <div class="badgesoon">Bientôt</div>
+      <div class="ecbg">Κ</div>
+      <div class="ecicon">⚖️</div>
+      <div class="ecgreek">ΚΑΙΡΟΣ</div>
+      <div class="eclatin">Kairos</div>
+      <div class="ectitle">Split Testing A/B</div>
+      <div class="ecmeaning">« Le Bon Moment · L'Opportunité juste »</div>
+      <div class="ecdesc">Testez, mesurez, optimisez. Kairos identifie le bon chemin au bon moment, guidé par la donnée.</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- COMPANY -->
+<section class="comsec">
+  <div class="comtag">Une création</div>
+  <a href="https://cephalosophie.com" target="_blank" class="comlink">
+    <div class="comdot"></div>
+    <span class="comname">ΚΕΦΑΛΗ ΣΟΦΙΑ</span>
+    <span style="color:var(--textd)">·</span>
+    <span>Cephalo Sophie</span>
+    <span style="color:var(--textd);font-size:11px">cephalosophie.com ↗</span>
+  </a>
+  <p class="comdesc">15 ans d'expertise en architecture logicielle, Python, SQL, BI et développement mobile — au service d'une seule vision : que chaque entreprise puisse créer sans coder.</p>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div>
+    <div class="fbrand">KANTO APLO · ΚΆΝΤΟ ΑΠΛΌ</div>
+    <div class="fsub">kantoaplo.com</div>
+  </div>
+  <div class="fright">
+    © 2026 Cephalo Sophie<br>
+    ΚΕΦΑΛΗ ΣΟΦΙΑ · cephalosophie.com
+  </div>
+</footer>
+
+<script>
+const slogans=[
+  {p1:"La plus belle musique ne naît pas de celui qui règle les câbles — elle naît de celui qui ferme les yeux et joue.",p3:"c'est tout ce qui est entre les deux.",c:"#C9963A"},
+  {p1:"Les grandes maisons ne se construisent pas brique par brique. Elles se dessinent d'abord.",p3:"— dessine, le reste se construit.",c:"#3D8EE8"},
+  {p1:"Tu n'as pas besoin de savoir comment fonctionne l'électricité pour allumer une lampe.",p3:"— tu appuies, ça brille.",c:"#8B5CF6"},
+  {p1:"Avant, tu regardais l'heure en te demandant où était passée ta journée.",p3:"ta journée se passe pendant que tu regardes l'heure.",c:"#E8714A"},
+  {p1:"Les applications se construisent. Les tâches s'automatisent. Les données se visualisent. Et toi ? Tu appuies sur un bouton.",p3:"— faire simple, simplement.",c:"#2DD4A0"},
+  {p1:"On a mis 18 ans à comprendre que le meilleur code est celui qu'on n'écrit pas.",p3:"— on génère, automatise et visualise. Toi, tu rentres à l'heure.",c:"#F472B6"}
+];
+const shuffled=[...slogans].sort(()=>Math.random()-.5);
+let cur=0;
+const CI=document.getElementById('CI'),CD=document.getElementById('CD');
+shuffled.forEach((s,i)=>{
+  const d=document.createElement('div');
+  d.className='slogan'+(i===0?' active':'');
+  d.innerHTML=`<div class="slogtxt">
+    <span class="slogp1">${s.p1}</span>
+    <span style="display:block;margin:10px 0">
+      <span class="slogbrand" style="color:${s.c};text-shadow:0 0 40px ${s.c}55">&nbsp;ΚΆΝΤΟ ΑΠΛΌ&nbsp;</span>
+    </span>
+    <span class="slogp3">${s.p3}</span>
+  </div>`;
+  CI.appendChild(d);
+  const dot=document.createElement('div');
+  dot.className='cdot'+(i===0?' active':'');
+  dot.onclick=()=>go(i);
+  CD.appendChild(dot);
+});
+const items=CI.querySelectorAll('.slogan'),dots=CD.querySelectorAll('.cdot');
+function go(n){items[cur].classList.remove('active');dots[cur].classList.remove('active');cur=n;items[cur].classList.add('active');dots[cur].classList.add('active')}
+function nxt(){go((cur+1)%shuffled.length)}
+let t=setInterval(nxt,5500);
+CI.addEventListener('mouseenter',()=>clearInterval(t));
+CI.addEventListener('mouseleave',()=>{t=setInterval(nxt,5500)});
+</script>
+</body>
+</html>
