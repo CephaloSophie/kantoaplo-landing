@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ΣΥΝΕΡΓΟΣ · Synergos · Connecteurs &amp; Sources · KANTO APLO</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#060F0C;--bg2:#0A1812;--bg3:#0E2018;--c:#2DD4A0;--cl:rgba(45,212,160,.14);--cb:rgba(45,212,160,.35);--text:#EDE7DB;--textm:#9C968E;--textd:#524E48;}
+html{scroll-behavior:smooth}body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;line-height:1.65;overflow-x:hidden}
+body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");opacity:.025;pointer-events:none;z-index:9999}
+nav{position:fixed;top:0;left:0;right:0;z-index:200;padding:20px 56px;display:flex;align-items:center;justify-content:space-between;background:linear-gradient(180deg,rgba(6,15,12,.92) 0%,rgba(6,15,12,0) 100%);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+.nlogo{display:flex;align-items:center;gap:11px;text-decoration:none}.nmark{width:36px;height:36px;background:linear-gradient(135deg,#C9963A,#7A5618);border-radius:9px;display:flex;align-items:center;justify-content:center;font-family:'Cinzel',serif;font-size:16px;font-weight:900;color:#fff}
+.nname{font-family:'Cinzel',serif;font-size:13px;font-weight:700;color:var(--text);letter-spacing:2.5px}.nsub{font-size:9.5px;color:var(--textd);letter-spacing:3px;text-transform:uppercase;margin-top:1px}
+.nright{display:flex;align-items:center;gap:22px}.nlink{font-size:12px;letter-spacing:1.5px;text-transform:uppercase;color:var(--textm);text-decoration:none;transition:color .2s}.nlink:hover{color:var(--c)}
+.nbtn{font-size:12px;font-weight:600;color:var(--bg);background:var(--c);padding:9px 22px;border-radius:7px;text-decoration:none;transition:all .2s}.nbtn:hover{filter:brightness(1.1)}
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:140px 56px 90px;position:relative;overflow:hidden}
+.hglow{position:absolute;top:50%;left:50%;transform:translate(-50%,-55%);width:1100px;height:700px;background:radial-gradient(ellipse,rgba(45,212,160,.09) 0%,transparent 65%);pointer-events:none}
+.hbg{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:'Cinzel',serif;font-size:clamp(180px,28vw,340px);font-weight:900;color:rgba(45,212,160,.03);pointer-events:none;user-select:none;line-height:1;letter-spacing:-20px}
+.hline{position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--cb),transparent)}
+.hbadge{display:inline-flex;align-items:center;gap:9px;border:1px solid var(--cb);border-radius:30px;padding:6px 18px;margin-bottom:36px;font-size:10.5px;letter-spacing:3px;text-transform:uppercase;color:var(--c);opacity:0;animation:fu .8s ease forwards .3s}
+.hbadge-dot{width:6px;height:6px;border-radius:50%;background:var(--c);animation:pulsedot 2s ease-in-out infinite}
+.htitle{position:relative;margin-bottom:16px;opacity:0;animation:fu .9s ease forwards .55s}
+.htgreek{font-family:'Cinzel',serif;font-size:clamp(42px,7.5vw,90px);font-weight:900;line-height:1;letter-spacing:-2px;display:block;background:linear-gradient(125deg,#E8FFF8 0%,var(--c) 45%,#E8FFF8 100%);background-size:300% 300%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:shimmer 5s ease-in-out infinite 1.8s}
+.htlatin{display:block;font-family:'Cinzel',serif;font-size:clamp(16px,2.5vw,26px);letter-spacing:12px;font-weight:400;-webkit-text-fill-color:var(--textd);margin-top:10px;text-transform:uppercase}
+.htrole{display:block;font-size:clamp(13px,1.5vw,16px);letter-spacing:5px;color:var(--c);text-transform:uppercase;margin-top:14px;-webkit-text-fill-color:var(--c)}
+.hmeaning{font-family:'Cormorant Garamond',serif;font-size:clamp(18px,2.4vw,24px);font-weight:300;font-style:italic;color:var(--textm);margin:28px 0 48px;opacity:0;animation:fu .9s ease forwards .85s}
+.hctas{display:flex;gap:14px;justify-content:center;opacity:0;animation:fu .9s ease forwards 1.1s}
+.btnp{padding:14px 34px;background:var(--c);color:var(--bg);border-radius:8px;font-size:13px;font-weight:700;text-decoration:none;transition:all .25s}.btnp:hover{filter:brightness(1.1);transform:translateY(-2px)}
+.btns{padding:14px 34px;background:transparent;color:var(--textm);border-radius:8px;font-size:13px;font-weight:500;text-decoration:none;border:1px solid var(--cb);transition:all .25s}.btns:hover{color:var(--c);border-color:var(--c);transform:translateY(-2px)}
+.featsec{padding:100px 56px;max-width:1200px;margin:0 auto}.sechead{text-align:center;margin-bottom:64px}
+.seceye{font-size:10.5px;letter-spacing:4px;text-transform:uppercase;color:var(--c);margin-bottom:14px}
+.sectit{font-family:'Cinzel',serif;font-size:clamp(22px,3vw,34px);font-weight:700;color:var(--text);margin-bottom:14px;letter-spacing:.5px}
+.secsub{font-size:15px;color:var(--textm);max-width:520px;margin:0 auto;line-height:1.75}
+.featgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.feat{background:linear-gradient(150deg,var(--bg2),var(--bg3));border-radius:14px;padding:28px;border:1px solid rgba(255,255,255,.055);transition:all .3s}
+.feat:hover{border-color:var(--cb);transform:translateY(-3px)}.feat-icon{font-size:26px;margin-bottom:16px}
+.feat-title{font-size:15px;font-weight:600;color:var(--text);margin-bottom:8px}.feat-desc{font-size:13px;color:var(--textm);line-height:1.72}
+.showsec{padding:80px 56px;background:linear-gradient(180deg,transparent,var(--bg2),transparent);border-top:1px solid rgba(45,212,160,.08);border-bottom:1px solid rgba(45,212,160,.08)}
+.showinner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center}
+.show-visual{border-radius:16px;background:var(--bg3);border:1px solid var(--cl);padding:28px;aspect-ratio:16/10;display:flex;flex-direction:column;gap:10px;justify-content:center;position:relative;overflow:hidden}
+.conn-item{display:flex;align-items:center;gap:12px;background:rgba(45,212,160,.07);border:1px solid var(--cl);border-radius:8px;padding:10px 16px}
+.conn-icon{font-size:18px;flex-shrink:0}
+.conn-info{flex:1}.conn-name{font-size:12px;font-weight:600;color:var(--text)}.conn-type{font-size:10px;letter-spacing:1px;color:var(--textd);text-transform:uppercase;margin-top:1px}
+.conn-status{width:7px;height:7px;border-radius:50%;background:var(--c);animation:pulsedot 2s ease-in-out infinite;flex-shrink:0}
+.show-eye{font-size:10.5px;letter-spacing:4px;text-transform:uppercase;color:var(--c);margin-bottom:16px}
+.show-title{font-family:'Cinzel',serif;font-size:28px;font-weight:700;color:var(--text);margin-bottom:16px;line-height:1.25}
+.show-text{font-size:14px;color:var(--textm);line-height:1.8}
+.ednavsec{padding:80px 56px;max-width:1200px;margin:0 auto}.ednav-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:32px}
+.ednav-card{background:var(--bg2);border-radius:12px;padding:20px;border:1px solid rgba(255,255,255,.055);text-decoration:none;color:inherit;transition:all .3s;display:block}
+.ednav-card:hover{border-color:rgba(255,255,255,.12);transform:translateY(-3px)}
+.enc-greek{font-family:'Cinzel',serif;font-size:16px;font-weight:700;letter-spacing:1.5px;margin-bottom:3px}.enc-role{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--textd)}
+.comsec{padding:80px 56px;border-top:1px solid rgba(45,212,160,.1);text-align:center}
+.comlink{display:inline-flex;align-items:center;gap:14px;text-decoration:none;color:var(--text);font-size:14px;padding:16px 30px;border-radius:12px;border:1px solid var(--cl);transition:all .3s;background:var(--bg2)}
+.comlink:hover{border-color:var(--cb);color:var(--c)}.comdot{width:8px;height:8px;border-radius:50%;background:var(--c);animation:pulsedot 2s ease-in-out infinite}
+.comname{font-family:'Cinzel',serif;letter-spacing:3px;font-weight:700}
+footer{padding:36px 56px;border-top:1px solid rgba(255,255,255,.05);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px}
+.fbrand{font-family:'Cinzel',serif;font-size:13px;color:var(--c);letter-spacing:2px}.fsub{font-size:10.5px;color:var(--textd);margin-top:3px;letter-spacing:1px}.fright{font-size:10.5px;color:var(--textd);text-align:right;line-height:1.8}
+@keyframes fu{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+@keyframes shimmer{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+@keyframes pulsedot{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.5);opacity:.55}}
+@media(max-width:900px){nav{padding:16px 24px}.featgrid{grid-template-columns:1fr 1fr}.showinner{grid-template-columns:1fr}.ednav-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){.featgrid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="nlogo"><div class="nmark">Κ</div><div><div class="nname">KANTO APLO</div><div class="nsub">ΚΆΝΤΟ ΑΠΛΌ</div></div></a>
+  <div class="nright">
+    <a href="index.html" class="nlink">← Accueil</a>
+    <a href="https://cephalosophie.com" target="_blank" class="nlink">Cephalo Sophie</a>
+    <a href="https://synergos.kantoaplo.com" target="_blank" class="nbtn">Ouvrir Synergos →</a>
+  </div>
+</nav>
+<section class="hero">
+  <div class="hglow"></div><div class="hbg">Σ</div><div class="hline"></div>
+  <div class="hbadge"><div class="hbadge-dot"></div>Connecteurs &amp; Sources · KANTO APLO</div>
+  <div class="htitle">
+    <span class="htgreek">ΣΥΝΕΡΓΟΣ</span>
+    <span class="htlatin">Synergos</span>
+    <span class="htrole">Celui qui Œuvre Ensemble · Le Collaborateur</span>
+  </div>
+  <p class="hmeaning">« De σύν (ensemble) + ἔργον (travail) — celui qui unit les forces pour accomplir ce qu'aucun ne pourrait faire seul. »</p>
+  <div class="hctas">
+    <a href="https://synergos.kantoaplo.com" target="_blank" class="btnp">Ouvrir l'éditeur</a>
+    <a href="index.html" class="btns">← Tous les éditeurs</a>
+  </div>
+</section>
+<section class="featsec">
+  <div class="sechead">
+    <div class="seceye">Capacités</div>
+    <h2 class="sectit">Toutes vos sources. Un seul écosystème.</h2>
+    <p class="secsub">Synergos est le pont universel entre vos données et la plateforme KANTO APLO. Aucune source ne lui résiste.</p>
+  </div>
+  <div class="featgrid">
+    <div class="feat"><div class="feat-icon">🗄️</div><div class="feat-title">Bases de Données</div><div class="feat-desc">PostgreSQL, MySQL, MongoDB, Redis, Supabase, Firebase — Synergos se connecte à toute base de données en quelques clics.</div></div>
+    <div class="feat"><div class="feat-icon">☁️</div><div class="feat-title">Services Cloud</div><div class="feat-desc">AWS, GCP, Azure, Stripe, Twilio, SendGrid — les connecteurs cloud certifiés de Synergos sont prêts à l'emploi.</div></div>
+    <div class="feat"><div class="feat-icon">🔌</div><div class="feat-title">APIs Tierces</div><div class="feat-desc">Importez n'importe quelle API REST ou GraphQL. Synergos normalise les réponses et les rend disponibles dans tous les éditeurs.</div></div>
+    <div class="feat"><div class="feat-icon">📂</div><div class="feat-title">Fichiers &amp; Stockage</div><div class="feat-desc">CSV, Excel, JSON, S3, Google Drive — Synergos ingère vos fichiers et les transforme en sources de données exploitables.</div></div>
+    <div class="feat"><div class="feat-icon">🔐</div><div class="feat-title">Gestion des Credentials</div><div class="feat-desc">Coffre-fort de credentials chiffré. Vos clés API, mots de passe et tokens ne quittent jamais l'environnement sécurisé de Synergos.</div></div>
+    <div class="feat"><div class="feat-icon">🔄</div><div class="feat-title">Synchronisation Temps Réel</div><div class="feat-desc">Synergos maintient vos sources synchronisées en temps réel. Chaque changement de données se propage instantanément dans la plateforme.</div></div>
+  </div>
+</section>
+<section class="showsec">
+  <div class="showinner">
+    <div class="show-visual">
+      <div class="conn-item"><div class="conn-icon">🐘</div><div class="conn-info"><div class="conn-name">PostgreSQL · prod-db</div><div class="conn-type">Base de données</div></div><div class="conn-status"></div></div>
+      <div class="conn-item"><div class="conn-icon">🍃</div><div class="conn-info"><div class="conn-name">MongoDB · analytics</div><div class="conn-type">NoSQL</div></div><div class="conn-status"></div></div>
+      <div class="conn-item"><div class="conn-icon">💳</div><div class="conn-info"><div class="conn-name">Stripe · payments</div><div class="conn-type">API Tierce</div></div><div class="conn-status"></div></div>
+      <div class="conn-item"><div class="conn-icon">📦</div><div class="conn-info"><div class="conn-name">AWS S3 · storage</div><div class="conn-type">Cloud Storage</div></div><div class="conn-status"></div></div>
+    </div>
+    <div class="show-content">
+      <div class="show-eye">Pourquoi Synergos ?</div>
+      <h3 class="show-title">Le collaborateur qui unit toutes vos données</h3>
+      <p class="show-text">Une plateforme no-code sans connecteurs solides n'est qu'une coquille vide. Synergos est la couche fondamentale qui nourrit tous les autres éditeurs — Tektôn, Logos, Mantis, Hermès — avec des données vivantes et fiables.<br><br>Syn-ergos. Ensemble, on travaille. Ensemble, on crée.</p>
+    </div>
+  </div>
+</section>
+<section class="ednavsec">
+  <div class="sechead" style="text-align:left;margin-bottom:0"><div class="seceye">Écosystème KANTO APLO</div><h3 class="sectit" style="font-size:22px">Autres éditeurs</h3></div>
+  <div class="ednav-grid">
+    <a class="ednav-card" href="tekton.html"><div class="enc-greek" style="color:#C9963A">ΤΈΚΤΩΝ · Tektôn</div><div class="enc-role">Éditeur de Pages</div></a>
+    <a class="ednav-card" href="logos.html"><div class="enc-greek" style="color:#3D8EE8">ΛΌΓΟΣ · Logos</div><div class="enc-role">Éditeur d'APIs</div></a>
+    <a class="ednav-card" href="mantis.html"><div class="enc-greek" style="color:#8B5CF6">ΜΆΝΤΙΣ · Mantis</div><div class="enc-role">BI &amp; ML Prédictif</div></a>
+    <a class="ednav-card" href="hermes.html"><div class="enc-greek" style="color:#E8714A">ἙΡΜΗ͂Σ · Hermès</div><div class="enc-role">Workflows &amp; Agent IA</div></a>
+  </div>
+</section>
+<section class="comsec"><a href="https://cephalosophie.com" target="_blank" class="comlink"><div class="comdot"></div><span class="comname">ΚΕΦΑΛΗ ΣΟΦΙΑ</span><span style="color:var(--textd)">·</span><span>Cephalo Sophie</span><span style="color:var(--textd);font-size:11px">cephalosophie.com ↗</span></a></section>
+<footer><div><div class="fbrand">ΣΥΝΕΡΓΟΣ · Synergos</div><div class="fsub">synergos.kantoaplo.com</div></div><div class="fright">© 2026 Cephalo Sophie · KANTO APLO<br>ΚΕΦΑΛΗ ΣΟΦΙΑ · cephalosophie.com</div></footer>
+</body>
+</html>
