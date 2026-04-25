@@ -1,1 +1,2697 @@
 
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KANTO APLO — Héphaïstos · Atelier de Blocs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,500;0,700;1,500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-0: #0b0f17;
+    --bg-1: #11161f;
+    --bg-2: #161c27;
+    --bg-3: #1d2532;
+    --bg-4: #252e3d;
+    --bg-5: #2d3849;
+    --line: #2a3445;
+    --line-2: #364154;
+    --text-0: #e6ebf2;
+    --text-1: #a8b3c4;
+    --text-2: #6b7689;
+    --text-3: #4a5468;
+    --accent: #f5a524;
+    --accent-2: #f59e0b;
+    --accent-dim: rgba(245, 165, 36, 0.12);
+    --forge: #ff6b35;
+    --blue: #3b82f6;
+    --green: #10b981;
+    --orange: #f97316;
+    --red: #ef4444;
+    --purple: #a855f7;
+    --dummy: #3b82f6;
+    --value: #10b981;
+    --statement: #f97316;
+    --mono: 'JetBrains Mono', ui-monospace, 'SF Mono', monospace;
+    --sans: 'IBM Plex Sans', system-ui, sans-serif;
+    --serif: 'Cormorant Garamond', serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; overflow: hidden; }
+  body {
+    font-family: var(--sans);
+    background: var(--bg-0);
+    color: var(--text-0);
+    font-size: 13px;
+    line-height: 1.45;
+    display: flex;
+    flex-direction: column;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ============ HEADER + TABS ============ */
+  header {
+    display: flex;
+    align-items: stretch;
+    background: linear-gradient(180deg, var(--bg-2) 0%, var(--bg-1) 100%);
+    border-bottom: 1px solid var(--line);
+    flex-shrink: 0;
+    position: relative;
+    z-index: 10;
+  }
+  header::after {
+    content: '';
+    position: absolute;
+    left: 0; right: 0; bottom: -1px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent 0%, var(--accent) 15%, var(--forge) 30%, transparent 70%);
+    opacity: 0.5;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 20px;
+    border-right: 1px solid var(--line);
+    background: var(--bg-2);
+  }
+  .brand-mark {
+    width: 28px; height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--accent) 0%, var(--forge) 100%);
+    border-radius: 4px;
+    color: var(--bg-0);
+    font-weight: 700;
+    font-size: 14px;
+    box-shadow: 0 2px 8px rgba(245, 165, 36, 0.3);
+  }
+  .brand-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.1;
+  }
+  .brand-text .name {
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-0);
+    letter-spacing: 0.5px;
+  }
+  .brand-text .greek {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 11px;
+    color: var(--text-2);
+    letter-spacing: 0.5px;
+  }
+  .tabs {
+    display: flex;
+    align-items: stretch;
+  }
+  .tab {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 22px;
+    background: transparent;
+    border: none;
+    border-right: 1px solid var(--line);
+    color: var(--text-2);
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.15s;
+  }
+  .tab:hover { color: var(--text-1); background: var(--bg-2); }
+  .tab.active {
+    color: var(--text-0);
+    background: var(--bg-0);
+  }
+  .tab.active::after {
+    content: '';
+    position: absolute;
+    left: 0; right: 0; bottom: -1px;
+    height: 2px;
+    background: var(--accent);
+    z-index: 2;
+  }
+  .tab .tab-icon {
+    font-family: var(--serif);
+    font-size: 18px;
+    font-style: italic;
+    font-weight: 700;
+  }
+  .tab.tab-editor .tab-icon { color: var(--blue); }
+  .tab.tab-builder .tab-icon { color: var(--accent); }
+  .tab .tab-badge {
+    font-family: var(--mono);
+    font-size: 10px;
+    padding: 1px 6px;
+    background: var(--bg-3);
+    color: var(--text-1);
+    border-radius: 8px;
+    font-weight: 400;
+  }
+  .tab.active .tab-badge { background: var(--accent-dim); color: var(--accent); }
+
+  .header-tools {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 16px;
+  }
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 9px;
+    background: var(--bg-3);
+    border: 1px solid var(--line-2);
+    border-radius: 12px;
+    color: var(--text-1);
+    font-size: 10px;
+    font-family: var(--mono);
+  }
+  .pill .dot {
+    width: 5px; height: 5px; border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 5px var(--green);
+  }
+  .header-action {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 10px;
+    background: var(--bg-3);
+    border: 1px solid var(--line-2);
+    border-radius: 4px;
+    color: var(--text-1);
+    font-size: 11px;
+    font-family: var(--mono);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .header-action:hover {
+    background: var(--bg-4);
+    color: var(--text-0);
+    border-color: var(--accent);
+  }
+
+  /* ============ MAIN ============ */
+  main {
+    flex: 1;
+    display: flex;
+    min-height: 0;
+    position: relative;
+  }
+  .tab-panel {
+    position: absolute;
+    inset: 0;
+    display: none;
+    flex-direction: column;
+  }
+  .tab-panel.active { display: flex; }
+
+  /* ============ EDITOR PANEL ============ */
+  .editor-bar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 16px;
+    background: var(--bg-2);
+    border-bottom: 1px solid var(--line);
+    font-family: var(--mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: var(--text-1);
+    flex-shrink: 0;
+  }
+  .editor-bar .marker {
+    width: 4px; height: 12px;
+    background: var(--blue);
+    border-radius: 1px;
+  }
+  .editor-bar .count {
+    margin-left: auto;
+    color: var(--text-2);
+    font-weight: 400;
+    text-transform: none;
+    letter-spacing: 0.5px;
+  }
+  #blocklyMain { flex: 1; min-height: 0; }
+
+  /* ============ HÉPHAÏSTOS LAYOUT ============ */
+  .hephaistos {
+    flex: 1;
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+    min-height: 0;
+    background: var(--bg-0);
+  }
+  .heph-col {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    overflow-y: auto;
+    padding: 14px;
+    gap: 12px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--line-2) transparent;
+  }
+  .heph-col-left { border-right: 1px solid var(--line); }
+  .heph-col::-webkit-scrollbar { width: 8px; }
+  .heph-col::-webkit-scrollbar-thumb { background: var(--line-2); border-radius: 4px; }
+  .heph-col::-webkit-scrollbar-thumb:hover { background: var(--text-2); }
+
+  .section {
+    background: var(--bg-2);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  .section.flex-grow { flex: 1; display: flex; flex-direction: column; min-height: 0; }
+  .section.flex-grow .section-body { flex: 1; display: flex; flex-direction: column; min-height: 0; }
+
+  .section-head {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    background: var(--bg-3);
+    border-bottom: 1px solid var(--line);
+  }
+  .section-head .num {
+    font-family: var(--mono);
+    font-size: 9px;
+    font-weight: 700;
+    color: var(--accent);
+    background: var(--accent-dim);
+    padding: 2px 6px;
+    border-radius: 3px;
+    border: 1px solid rgba(245, 165, 36, 0.3);
+    letter-spacing: 0.5px;
+  }
+  .section-head h3 {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-0);
+  }
+  .section-head .meta {
+    margin-left: auto;
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-2);
+  }
+  .section-body { padding: 12px; }
+
+  /* ============ PALETTES ============ */
+  .palette-group { margin-bottom: 10px; }
+  .palette-group:last-child { margin-bottom: 0; }
+  .palette-label {
+    font-family: var(--mono);
+    font-size: 9px;
+    color: var(--text-2);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .palette-label::before {
+    content: '';
+    width: 16px; height: 1px;
+    background: var(--line-2);
+  }
+  .palette {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 10px;
+    background: var(--bg-3);
+    border: 1px solid var(--line-2);
+    border-radius: 4px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-0);
+    cursor: grab;
+    user-select: none;
+    transition: transform 0.1s, border-color 0.15s, background 0.15s;
+  }
+  .chip:hover {
+    background: var(--bg-4);
+    border-color: var(--text-2);
+    transform: translateY(-1px);
+  }
+  .chip:active { cursor: grabbing; transform: translateY(0); }
+  .chip .swatch { width: 8px; height: 8px; border-radius: 1px; flex-shrink: 0; }
+  .chip[data-input-type="dummy"] .swatch { background: var(--dummy); }
+  .chip[data-input-type="value"] .swatch { background: var(--value); }
+  .chip[data-input-type="statement"] .swatch { background: var(--statement); }
+  .chip[data-field-type] .swatch { background: var(--accent); }
+
+  /* ============ CONSTRUCTION ZONE ============ */
+  .construction-zone {
+    flex: 1;
+    min-height: 220px;
+    padding: 14px;
+    background:
+      linear-gradient(var(--bg-1), var(--bg-1)) padding-box,
+      repeating-linear-gradient(45deg, transparent 0 12px, rgba(245,165,36,0.03) 12px 13px) padding-box;
+    border: 1px dashed var(--line-2);
+    border-radius: 4px;
+    transition: border-color 0.15s, background 0.15s;
+    overflow-y: auto;
+  }
+  .construction-zone.drag-over {
+    border-color: var(--accent);
+    background: rgba(245, 165, 36, 0.04);
+  }
+  .construction-zone.empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-2);
+    font-size: 12px;
+    font-family: var(--mono);
+    flex-direction: column;
+    gap: 8px;
+  }
+  .empty-hint {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 18px;
+    color: var(--text-3);
+  }
+  .empty-sub {
+    font-family: var(--mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-3);
+  }
+
+  .input-row {
+    background: var(--bg-2);
+    border: 1px solid var(--line);
+    border-left-width: 3px;
+    border-radius: 4px;
+    padding: 9px;
+    margin-bottom: 8px;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  .input-row:last-child { margin-bottom: 0; }
+  .input-row.dummy { border-left-color: var(--dummy); }
+  .input-row.value { border-left-color: var(--value); }
+  .input-row.statement { border-left-color: var(--statement); }
+  .input-row.sortable-ghost { opacity: 0.4; }
+  .input-row.sortable-chosen { box-shadow: 0 4px 12px rgba(0,0,0,0.4); }
+
+  .input-head {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 7px;
+  }
+  .input-grip {
+    color: var(--text-2);
+    cursor: grab;
+    font-family: var(--mono);
+    font-size: 11px;
+    user-select: none;
+    padding: 0 2px;
+  }
+  .input-type {
+    font-family: var(--mono);
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 2px 7px;
+    border-radius: 2px;
+  }
+  .input-row.dummy .input-type { background: rgba(59,130,246,0.18); color: var(--dummy); }
+  .input-row.value .input-type { background: rgba(16,185,129,0.18); color: var(--value); }
+  .input-row.statement .input-type { background: rgba(249,115,22,0.18); color: var(--statement); }
+
+  .input-name {
+    flex: 1;
+    padding: 4px 8px;
+    background: var(--bg-1);
+    border: 1px solid var(--line);
+    color: var(--text-0);
+    border-radius: 3px;
+    font-family: var(--mono);
+    font-size: 11px;
+    min-width: 0;
+  }
+  .input-name:focus { outline: none; border-color: var(--accent); }
+  .input-name:disabled {
+    background: transparent;
+    border-color: transparent;
+    color: var(--text-3);
+    cursor: not-allowed;
+  }
+
+  .icon-btn {
+    width: 22px; height: 22px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: 1px solid var(--line);
+    color: var(--text-1);
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 11px;
+    line-height: 1;
+    transition: all 0.15s;
+    flex-shrink: 0;
+  }
+  .icon-btn:hover { background: var(--bg-4); color: var(--text-0); border-color: var(--text-2); }
+  .icon-btn.danger:hover {
+    background: rgba(239,68,68,0.15);
+    color: var(--red);
+    border-color: var(--red);
+  }
+
+  .field-zone {
+    min-height: 32px;
+    padding: 6px;
+    background: var(--bg-1);
+    border: 1px dashed var(--line);
+    border-radius: 3px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    align-items: center;
+    transition: border-color 0.15s, background 0.15s;
+  }
+  .field-zone.drag-over { border-color: var(--accent); background: rgba(245,165,36,0.04); }
+  .field-zone .placeholder {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-3);
+    padding: 0 4px;
+    font-style: italic;
+  }
+
+  .field-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 6px 4px 8px;
+    background: rgba(245,165,36,0.1);
+    border: 1px solid rgba(245,165,36,0.35);
+    border-radius: 3px;
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--accent);
+    cursor: pointer;
+    transition: all 0.15s;
+    line-height: 1.3;
+  }
+  .field-chip:hover { background: rgba(245,165,36,0.18); border-color: var(--accent); }
+  .field-chip .field-icon { font-size: 11px; }
+  .field-chip .field-name { font-weight: 600; }
+  .field-chip .field-label-preview {
+    color: var(--text-2);
+    font-style: italic;
+    font-weight: 400;
+    border-left: 1px solid rgba(245,165,36,0.3);
+    padding-left: 5px;
+    margin-left: 2px;
+  }
+  .field-chip .field-remove {
+    margin-left: 3px;
+    padding: 0 4px;
+    color: var(--text-2);
+    border-radius: 2px;
+    line-height: 14px;
+  }
+  .field-chip .field-remove:hover { background: rgba(239,68,68,0.2); color: var(--red); }
+
+  /* ============ PROPERTIES ============ */
+  .props-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .prop { display: flex; flex-direction: column; gap: 4px; }
+  .prop.full { grid-column: span 2; }
+  .prop label.prop-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-2);
+  }
+  .prop input[type="text"],
+  .prop select {
+    padding: 5px 8px;
+    background: var(--bg-1);
+    border: 1px solid var(--line-2);
+    color: var(--text-0);
+    border-radius: 3px;
+    font-family: var(--sans);
+    font-size: 12px;
+  }
+  .prop select { font-family: var(--mono); font-size: 11px; cursor: pointer; }
+  .prop input[type="text"]:focus,
+  .prop select:focus { outline: none; border-color: var(--accent); }
+  .color-row { display: flex; align-items: center; gap: 6px; }
+  .prop input[type="color"] {
+    width: 36px; height: 28px;
+    padding: 2px;
+    background: var(--bg-1);
+    border: 1px solid var(--line-2);
+    border-radius: 3px;
+    cursor: pointer;
+  }
+  .color-hex {
+    flex: 1;
+    padding: 5px 8px;
+    background: var(--bg-1);
+    border: 1px solid var(--line-2);
+    color: var(--text-0);
+    border-radius: 3px;
+    font-family: var(--mono);
+    font-size: 11px;
+    min-width: 0;
+  }
+  .checkbox-stack { display: flex; flex-direction: column; gap: 6px; }
+  .check-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    user-select: none;
+  }
+  .check-row input[type="checkbox"] {
+    appearance: none;
+    width: 14px; height: 14px;
+    background: var(--bg-1);
+    border: 1px solid var(--line-2);
+    border-radius: 2px;
+    cursor: pointer;
+    position: relative;
+    flex-shrink: 0;
+  }
+  .check-row input[type="checkbox"]:checked {
+    background: var(--accent);
+    border-color: var(--accent);
+  }
+  .check-row input[type="checkbox"]:checked::after {
+    content: '✓';
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--bg-0);
+    font-size: 10px;
+    font-weight: 700;
+  }
+  .check-row input[type="checkbox"]:disabled { opacity: 0.4; cursor: not-allowed; }
+  .check-row span {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-1);
+  }
+  .check-row input:disabled + span { color: var(--text-3); }
+
+  /* ============ PREVIEW + JSON SIDE BY SIDE ============ */
+  .preview-json-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .preview-pane {
+    border-right: 1px solid var(--line);
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+  .preview-pane-head, .json-pane-head {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 10px;
+    background: var(--bg-2);
+    border-bottom: 1px solid var(--line);
+    font-family: var(--mono);
+    font-size: 9px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-2);
+  }
+  .preview-pane-head .left-marker {
+    width: 3px; height: 10px;
+    background: var(--green);
+    border-radius: 1px;
+  }
+  .json-pane-head .left-marker {
+    width: 3px; height: 10px;
+    background: var(--purple);
+    border-radius: 1px;
+  }
+  .preview-pane-head .ext, .json-pane-head .ext {
+    margin-left: auto;
+    color: var(--text-3);
+    font-weight: 400;
+  }
+
+  .preview-wrap {
+    position: relative;
+    flex: 1;
+    min-height: 280px;
+    background: var(--bg-1);
+  }
+  #blocklyPreview {
+    position: absolute;
+    inset: 0;
+  }
+  .preview-edit-btn {
+    position: absolute;
+    top: 8px; right: 8px;
+    z-index: 5;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 9px;
+    background: var(--bg-3);
+    border: 1px solid var(--line-2);
+    color: var(--text-0);
+    border-radius: 4px;
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+  }
+  .preview-edit-btn:hover {
+    background: var(--accent);
+    color: var(--bg-0);
+    border-color: var(--accent);
+  }
+  .preview-edit-btn .badge {
+    background: var(--accent);
+    color: var(--bg-0);
+    padding: 0 4px;
+    border-radius: 6px;
+    font-size: 9px;
+    font-weight: 700;
+    min-width: 14px;
+    text-align: center;
+  }
+  .preview-edit-btn:hover .badge {
+    background: var(--bg-0);
+    color: var(--accent);
+  }
+  .preview-edit-btn.no-methods .badge { display: none; }
+
+  .preview-zoom {
+    position: absolute;
+    bottom: 8px; right: 8px;
+    z-index: 5;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 6px;
+    background: rgba(11,15,23,0.85);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    font-family: var(--mono);
+    font-size: 9px;
+    color: var(--text-2);
+  }
+  .preview-zoom button {
+    background: transparent;
+    border: none;
+    color: var(--text-1);
+    cursor: pointer;
+    padding: 0 4px;
+    font-size: 11px;
+  }
+  .preview-zoom button:hover { color: var(--accent); }
+  .preview-zoom .zoom-val { min-width: 32px; text-align: center; }
+
+  .json-pane {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+  .json-display {
+    flex: 1;
+    margin: 0;
+    padding: 10px;
+    background: var(--bg-0);
+    color: var(--text-0);
+    font-family: var(--mono);
+    font-size: 10.5px;
+    line-height: 1.5;
+    overflow: auto;
+    white-space: pre;
+    min-height: 280px;
+    max-height: 320px;
+  }
+  .json-display .json-key { color: #f5a524; }
+  .json-display .json-string { color: #10b981; }
+  .json-display .json-number { color: #3b82f6; }
+  .json-display .json-bool { color: #a855f7; }
+  .json-display .json-null { color: #ef4444; }
+  .json-display .json-punct { color: var(--text-2); }
+  .json-display::-webkit-scrollbar { width: 8px; height: 8px; }
+  .json-display::-webkit-scrollbar-thumb { background: var(--line-2); border-radius: 4px; }
+
+  .json-actions {
+    display: flex;
+    gap: 4px;
+  }
+  .json-action-btn {
+    background: transparent;
+    border: 1px solid var(--line-2);
+    color: var(--text-1);
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-family: var(--mono);
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .json-action-btn:hover {
+    background: var(--accent);
+    color: var(--bg-0);
+    border-color: var(--accent);
+  }
+  .json-action-btn.copied {
+    background: var(--green);
+    color: var(--bg-0);
+    border-color: var(--green);
+  }
+
+  /* ============ METHODS SECTION ============ */
+  .methods-summary {
+    padding: 10px 12px;
+    color: var(--text-2);
+    font-family: var(--mono);
+    font-size: 11px;
+    background: var(--bg-1);
+    border-radius: 4px;
+    border: 1px dashed var(--line-2);
+    text-align: center;
+  }
+  .methods-summary strong {
+    color: var(--accent);
+    font-weight: 600;
+  }
+  .methods-cta {
+    display: inline-block;
+    margin-top: 6px;
+    padding: 4px 10px;
+    background: var(--accent);
+    color: var(--bg-0);
+    border-radius: 3px;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border: none;
+    cursor: pointer;
+    font-family: var(--mono);
+    font-weight: 600;
+  }
+  .methods-cta:hover { background: var(--accent-2); }
+
+  .methods-list {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-top: 8px;
+  }
+  .method-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 7px;
+    background: var(--bg-1);
+    border: 1px solid var(--line-2);
+    border-left-width: 2px;
+    border-radius: 3px;
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-1);
+  }
+  .method-tag.fn { border-left-color: var(--purple); }
+  .method-tag.val { border-left-color: var(--blue); }
+  .method-tag .kind {
+    font-size: 8px;
+    color: var(--text-2);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  /* ============ CODE GENERATOR ============ */
+  .code-wrap { position: relative; }
+  textarea.code-area {
+    width: 100%;
+    min-height: 130px;
+    padding: 10px;
+    background: var(--bg-0);
+    border: 1px solid var(--line-2);
+    color: var(--text-0);
+    border-radius: 4px;
+    font-family: var(--mono);
+    font-size: 11px;
+    line-height: 1.6;
+    resize: vertical;
+    tab-size: 2;
+    outline: none;
+  }
+  textarea.code-area:focus { border-color: var(--accent); }
+  .code-reset {
+    position: absolute;
+    top: 6px; right: 6px;
+    padding: 3px 8px;
+    background: var(--bg-3);
+    border: 1px solid var(--line-2);
+    color: var(--text-1);
+    border-radius: 3px;
+    font-family: var(--mono);
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    opacity: 0.7;
+  }
+  .code-reset:hover { opacity: 1; color: var(--accent); }
+
+  .save-btn {
+    width: 100%;
+    margin-top: 10px;
+    padding: 12px;
+    background: linear-gradient(180deg, var(--accent) 0%, var(--accent-2) 100%);
+    color: var(--bg-0);
+    border: none;
+    border-radius: 4px;
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    cursor: pointer;
+    transition: transform 0.1s, box-shadow 0.15s;
+    box-shadow: 0 2px 0 rgba(0,0,0,0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  .save-btn::before {
+    content: '';
+    display: inline-block;
+    width: 8px; height: 8px;
+    background: var(--bg-0);
+    transform: rotate(45deg);
+  }
+  .save-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 3px 8px rgba(245,165,36,0.3);
+  }
+  .save-btn:active { transform: translateY(0); }
+
+  /* ============ MODAL ============ */
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    backdrop-filter: blur(4px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    animation: fadeIn 0.15s;
+  }
+  .modal-backdrop.show { display: flex; }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  .modal {
+    background: var(--bg-2);
+    border: 1px solid var(--line-2);
+    border-radius: 8px;
+    width: 460px;
+    max-width: 92vw;
+    max-height: 90vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.6);
+    animation: slideUp 0.2s;
+  }
+  .modal.large { width: 720px; }
+  @keyframes slideUp { from { transform: translateY(8px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+  .modal-head {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .modal-head .marker { width: 4px; height: 14px; background: var(--accent); border-radius: 1px; }
+  .modal-head h2 {
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .modal-head .sub {
+    margin-left: auto;
+    font-family: var(--serif);
+    font-style: italic;
+    color: var(--text-2);
+    font-size: 13px;
+  }
+  .modal-body {
+    padding: 16px;
+    overflow-y: auto;
+    max-height: calc(90vh - 110px);
+  }
+  .form-group { margin-bottom: 12px; }
+  .form-group label.field-label {
+    display: block;
+    font-family: var(--mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-2);
+    margin-bottom: 4px;
+  }
+  .form-group input[type="text"],
+  .form-group input[type="number"],
+  .form-group textarea,
+  .form-group select {
+    width: 100%;
+    padding: 6px 9px;
+    background: var(--bg-1);
+    border: 1px solid var(--line-2);
+    color: var(--text-0);
+    border-radius: 3px;
+    font-family: var(--sans);
+    font-size: 12px;
+  }
+  .form-group select { font-family: var(--mono); cursor: pointer; }
+  .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+    outline: none; border-color: var(--accent);
+  }
+  .form-row { display: flex; gap: 8px; }
+  .form-row > * { flex: 1; }
+  .modal-foot {
+    padding: 12px 16px;
+    border-top: 1px solid var(--line);
+    display: flex;
+    justify-content: flex-end;
+    gap: 6px;
+    background: var(--bg-1);
+  }
+  .modal-foot .left-spacer { margin-right: auto; }
+  .btn {
+    padding: 6px 14px;
+    background: var(--bg-3);
+    border: 1px solid var(--line-2);
+    color: var(--text-0);
+    border-radius: 3px;
+    cursor: pointer;
+    font-family: var(--mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 500;
+    transition: all 0.15s;
+  }
+  .btn:hover { background: var(--bg-4); border-color: var(--text-2); }
+  .btn.primary {
+    background: var(--accent);
+    color: var(--bg-0);
+    border-color: var(--accent);
+    font-weight: 700;
+  }
+  .btn.primary:hover { background: var(--accent-2); border-color: var(--accent-2); }
+
+  .dropdown-options-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 28px;
+    gap: 4px;
+    margin-bottom: 4px;
+  }
+  .dropdown-options-row input { padding: 4px 6px; font-size: 11px; }
+  #modalAddOption {
+    margin-top: 6px;
+    padding: 4px 10px;
+    background: var(--bg-1);
+    border: 1px dashed var(--line-2);
+    color: var(--text-1);
+    border-radius: 3px;
+    font-family: var(--mono);
+    font-size: 10px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  #modalAddOption:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* ============ METHODS MODAL ============ */
+  .methods-tabs {
+    display: flex;
+    gap: 0;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+  }
+  .method-tab {
+    padding: 8px 14px;
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: var(--text-2);
+    font-family: var(--mono);
+    font-size: 11px;
+    cursor: pointer;
+    transition: all 0.15s;
+    position: relative;
+  }
+  .method-tab:hover { color: var(--text-0); }
+  .method-tab.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+  }
+  .method-tab.active.enabled { color: var(--accent); }
+  .method-tab.enabled::before {
+    content: '';
+    position: absolute;
+    top: 4px; right: 4px;
+    width: 5px; height: 5px;
+    background: var(--green);
+    border-radius: 50%;
+    box-shadow: 0 0 4px var(--green);
+  }
+  .method-tab.custom { font-style: italic; }
+  .method-tab.add-tab {
+    color: var(--text-2);
+    font-weight: 600;
+  }
+  .method-tab.add-tab:hover { color: var(--accent); }
+
+  .method-panel { display: none; }
+  .method-panel.active { display: block; }
+  .method-panel-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+  }
+  .method-panel-head .toggle-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .method-panel-head .signature {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent);
+    background: var(--accent-dim);
+    padding: 3px 8px;
+    border-radius: 3px;
+    border: 1px solid rgba(245,165,36,0.3);
+  }
+  .method-panel-head .desc {
+    flex: 1;
+    font-size: 11px;
+    color: var(--text-2);
+    font-style: italic;
+  }
+  .method-panel-head .delete-method {
+    background: transparent;
+    border: 1px solid var(--line-2);
+    color: var(--red);
+    padding: 3px 8px;
+    border-radius: 3px;
+    font-family: var(--mono);
+    font-size: 10px;
+    cursor: pointer;
+  }
+  .method-panel-head .delete-method:hover { background: rgba(239,68,68,0.15); }
+  .method-panel textarea.method-code {
+    width: 100%;
+    min-height: 200px;
+    padding: 10px;
+    background: var(--bg-0);
+    border: 1px solid var(--line-2);
+    color: var(--text-0);
+    border-radius: 3px;
+    font-family: var(--mono);
+    font-size: 11.5px;
+    line-height: 1.6;
+    resize: vertical;
+    tab-size: 2;
+    outline: none;
+  }
+  .method-panel textarea.method-code:focus { border-color: var(--accent); }
+  .method-panel textarea.method-code:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  .method-panel input.method-value {
+    width: 100%;
+    padding: 8px 10px;
+    background: var(--bg-0);
+    border: 1px solid var(--line-2);
+    color: var(--text-0);
+    border-radius: 3px;
+    font-family: var(--mono);
+    font-size: 12px;
+    outline: none;
+  }
+  .method-panel input.method-value:focus { border-color: var(--accent); }
+
+  .add-custom-form {
+    display: grid;
+    grid-template-columns: 110px 1fr;
+    gap: 8px;
+    align-items: end;
+    margin-bottom: 14px;
+  }
+
+  /* ============ TOAST ============ */
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    padding: 10px 16px;
+    background: var(--bg-2);
+    border: 1px solid var(--green);
+    border-left-width: 3px;
+    color: var(--text-0);
+    border-radius: 4px;
+    font-family: var(--mono);
+    font-size: 12px;
+    opacity: 0;
+    transition: opacity 0.2s, transform 0.2s;
+    pointer-events: none;
+    z-index: 2000;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  .toast.error { border-color: var(--red); }
+  .toast.error::before { content: '✕'; color: var(--red); font-weight: 700; }
+  .toast.success::before { content: '✓'; color: var(--green); font-weight: 700; }
+  .toast.info { border-color: var(--blue); }
+  .toast.info::before { content: 'ⓘ'; color: var(--blue); font-weight: 700; }
+
+  /* ============ Blockly tweaks ============ */
+  .blocklyMainBackground { stroke: none !important; }
+  .blocklyToolboxDiv { background: var(--bg-2) !important; border-right: 1px solid var(--line) !important; }
+  .blocklyTreeRow { color: var(--text-0) !important; }
+  .blocklyFlyoutBackground { fill: var(--bg-1) !important; fill-opacity: 1 !important; }
+  .blocklyText { font-family: var(--mono) !important; }
+</style>
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <div class="brand-mark">▲</div>
+      <div class="brand-text">
+        <span class="name">KANTO APLO</span>
+        <span class="greek">ΚΆΝΤΟ ΑΠΛΌ · l'atelier</span>
+      </div>
+    </div>
+
+    <nav class="tabs">
+      <button class="tab tab-editor active" data-tab="editor">
+        <span class="tab-icon">B</span>
+        <span>Éditeur Blockly</span>
+        <span class="tab-badge" id="editorBadge">0</span>
+      </button>
+      <button class="tab tab-builder" data-tab="builder">
+        <span class="tab-icon">Ἥ</span>
+        <span>Héphaïstos</span>
+        <span class="tab-badge" id="builderBadge">0</span>
+      </button>
+    </nav>
+
+    <div class="header-tools">
+      <span class="pill">
+        <span class="dot"></span> Blockly v10
+      </span>
+      <button class="header-action" id="resetBuilderBtn" title="Réinitialiser le constructeur">
+        <span>↺</span> Nouveau bloc
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <!-- TAB 1: BLOCKLY EDITOR -->
+    <section class="tab-panel active" id="panel-editor">
+      <div class="editor-bar">
+        <span class="marker"></span>
+        Éditeur principal
+        <span class="count" id="editorCount">0 blocs</span>
+      </div>
+      <div id="blocklyMain"></div>
+    </section>
+
+    <!-- TAB 2: HÉPHAÏSTOS -->
+    <section class="tab-panel" id="panel-builder">
+      <div class="hephaistos">
+
+        <!-- ============= LEFT COLUMN ============= -->
+        <div class="heph-col heph-col-left">
+
+          <!-- 01 PALETTE -->
+          <div class="section">
+            <div class="section-head">
+              <span class="num">01</span>
+              <h3>Palette · Forge</h3>
+              <span class="meta">drag → structure</span>
+            </div>
+            <div class="section-body">
+              <div class="palette-group">
+                <div class="palette-label">Entrées</div>
+                <div class="palette" id="inputsPalette">
+                  <div class="chip" data-input-type="dummy" draggable="true"><span class="swatch"></span>dummy</div>
+                  <div class="chip" data-input-type="value" draggable="true"><span class="swatch"></span>value</div>
+                  <div class="chip" data-input-type="statement" draggable="true"><span class="swatch"></span>statement</div>
+                </div>
+              </div>
+              <div class="palette-group">
+                <div class="palette-label">Champs</div>
+                <div class="palette" id="fieldsPalette">
+                  <div class="chip" data-field-type="text" draggable="true"><span class="swatch"></span>📝 texte</div>
+                  <div class="chip" data-field-type="checkbox" draggable="true"><span class="swatch"></span>☑ checkbox</div>
+                  <div class="chip" data-field-type="dropdown" draggable="true"><span class="swatch"></span>▾ dropdown</div>
+                  <div class="chip" data-field-type="image" draggable="true"><span class="swatch"></span>🖼 image</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 02 STRUCTURE -->
+          <div class="section flex-grow">
+            <div class="section-head">
+              <span class="num">02</span>
+              <h3>Structure · Enclume</h3>
+              <span class="meta" id="structureMeta">0 entrée · 0 champ</span>
+            </div>
+            <div class="section-body">
+              <div class="construction-zone empty" id="constructionZone">
+                <span class="empty-hint">Forge ton bloc ici</span>
+                <span class="empty-sub">→ glisse une entrée</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 05 GENERATOR CODE -->
+          <div class="section">
+            <div class="section-head">
+              <span class="num">05</span>
+              <h3>Générateur JavaScript</h3>
+              <span class="meta">code émis</span>
+            </div>
+            <div class="section-body">
+              <div class="code-wrap">
+                <textarea id="codeGenerator" class="code-area" spellcheck="false" placeholder="// Le code par défaut sera généré automatiquement"></textarea>
+                <button class="code-reset" id="codeReset" title="Régénérer le code par défaut">Auto</button>
+              </div>
+              <button class="save-btn" id="saveBlockBtn">Sceller dans la boîte à outils</button>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- ============= RIGHT COLUMN ============= -->
+        <div class="heph-col">
+
+          <!-- 03+04 PREVIEW + JSON -->
+          <div class="section">
+            <div class="section-head">
+              <span class="num">03</span>
+              <h3>Aperçu temps réel · Squelette JSON</h3>
+            </div>
+            <div class="preview-json-grid">
+              <!-- Preview -->
+              <div class="preview-pane">
+                <div class="preview-pane-head">
+                  <span class="left-marker"></span>
+                  Aperçu
+                  <span class="ext">live · SVG</span>
+                </div>
+                <div class="preview-wrap">
+                  <div id="blocklyPreview"></div>
+                  <button class="preview-edit-btn no-methods" id="previewEditBtn" title="Configurer init / onChange / mutator…">
+                    ✎ Méthodes <span class="badge" id="methodsBadge">0</span>
+                  </button>
+                  <div class="preview-zoom">
+                    <button id="zoomOut" title="Dézoomer">−</button>
+                    <span class="zoom-val" id="zoomVal">100%</span>
+                    <button id="zoomIn" title="Zoomer">+</button>
+                  </div>
+                </div>
+              </div>
+              <!-- JSON -->
+              <div class="json-pane">
+                <div class="json-pane-head">
+                  <span class="left-marker"></span>
+                  Définition JSON
+                  <span class="ext json-actions">
+                    <button class="json-action-btn" id="copyJsonBtn">Copier</button>
+                  </span>
+                </div>
+                <pre class="json-display" id="jsonDisplay">{}</pre>
+              </div>
+            </div>
+          </div>
+
+          <!-- 06 PROPERTIES -->
+          <div class="section">
+            <div class="section-head">
+              <span class="num">04</span>
+              <h3>Propriétés du bloc</h3>
+            </div>
+            <div class="section-body">
+              <div class="props-grid">
+                <div class="prop">
+                  <label class="prop-label">Couleur</label>
+                  <div class="color-row">
+                    <input type="color" id="propColor" value="#5b80a5">
+                    <input type="text" class="color-hex" id="propColorHex" value="#5b80a5" maxlength="7">
+                  </div>
+                </div>
+                <div class="prop">
+                  <label class="prop-label">Taille / Disposition</label>
+                  <select id="propSize">
+                    <option value="auto">Auto (par défaut)</option>
+                    <option value="inline">Compact (inputs en ligne)</option>
+                    <option value="external">Étiré (inputs externes)</option>
+                  </select>
+                </div>
+                <div class="prop full">
+                  <label class="prop-label">Info-bulle</label>
+                  <input type="text" id="propTooltip" placeholder="Description affichée au survol…">
+                </div>
+                <div class="prop full">
+                  <label class="prop-label">Connexions</label>
+                  <div class="checkbox-stack">
+                    <label class="check-row">
+                      <input type="checkbox" id="propOutput" checked>
+                      <span>Bloc valeur (setOutput)</span>
+                    </label>
+                    <label class="check-row">
+                      <input type="checkbox" id="propPrev" disabled>
+                      <span>Connexion haut (setPreviousStatement)</span>
+                    </label>
+                    <label class="check-row">
+                      <input type="checkbox" id="propNext" disabled>
+                      <span>Connexion bas (setNextStatement)</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 06 METHODS -->
+          <div class="section">
+            <div class="section-head">
+              <span class="num">05</span>
+              <h3>Méthodes & propriétés JS</h3>
+              <span class="meta" id="methodsMeta">0 actives</span>
+            </div>
+            <div class="section-body">
+              <div class="methods-summary" id="methodsSummary">
+                Aucune méthode du cycle de vie attachée.<br>
+                <button class="methods-cta" id="openMethodsBtn">✎ Ouvrir l'éditeur de méthodes</button>
+              </div>
+              <div class="methods-list" id="methodsList"></div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============= FIELD CONFIG MODAL ============= -->
+  <div class="modal-backdrop" id="fieldModal">
+    <div class="modal">
+      <div class="modal-head">
+        <span class="marker"></span>
+        <h2 id="fieldModalTitle">Configuration du champ</h2>
+      </div>
+      <div class="modal-body" id="fieldModalBody"></div>
+      <div class="modal-foot">
+        <button class="btn" id="fieldModalCancel">Annuler</button>
+        <button class="btn primary" id="fieldModalSave">Enregistrer</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============= SAVE BLOCK NAME MODAL ============= -->
+  <div class="modal-backdrop" id="saveModal">
+    <div class="modal">
+      <div class="modal-head">
+        <span class="marker"></span>
+        <h2>Sceller le bloc</h2>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="field-label">Identifiant unique du bloc</label>
+          <input type="text" id="saveBlockName" placeholder="ex: my_custom_block">
+          <div style="font-family: var(--mono); font-size: 10px; color: var(--text-2); margin-top: 4px;">
+            Lettres minuscules, chiffres et underscores uniquement.
+          </div>
+        </div>
+      </div>
+      <div class="modal-foot">
+        <button class="btn" id="saveModalCancel">Annuler</button>
+        <button class="btn primary" id="saveModalConfirm">Sceller</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============= METHODS MODAL ============= -->
+  <div class="modal-backdrop" id="methodsModal">
+    <div class="modal large">
+      <div class="modal-head">
+        <span class="marker"></span>
+        <h2>Méthodes & Propriétés du bloc</h2>
+        <span class="sub">Cycle de vie & extensions</span>
+      </div>
+      <div class="modal-body">
+        <div class="methods-tabs" id="methodsTabs"></div>
+        <div id="methodsPanels"></div>
+
+        <div style="margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--line);">
+          <label class="field-label" style="display: block; font-family: var(--mono); font-size: 10px; text-transform: uppercase; color: var(--text-2); margin-bottom: 6px;">Ajouter une entrée personnalisée</label>
+          <div class="add-custom-form">
+            <select id="customKind">
+              <option value="function">function</option>
+              <option value="value">propriété</option>
+            </select>
+            <input type="text" id="customName" placeholder="ex: myHelper, myProperty…">
+          </div>
+          <button class="btn primary" id="addCustomMethod" style="width: 100%;">+ Ajouter au bloc</button>
+        </div>
+      </div>
+      <div class="modal-foot">
+        <span class="left-spacer" style="font-family: var(--mono); font-size: 10px; color: var(--text-2); align-self: center;">
+          Les méthodes sont ré-attachées à chaque sauvegarde.
+        </span>
+        <button class="btn primary" id="methodsModalDone">Terminé</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast success" id="toast"></div>
+
+  <!-- Libraries -->
+  <script src="https://unpkg.com/blockly@10.4.3/blockly.min.js"></script>
+  <script src="https://unpkg.com/blockly@10.4.3/msg/fr.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
+
+  <script>
+  // ============================================================
+  //  KANTO APLO — Héphaïstos
+  //  Block Constructor with tabs, methods, live JSON
+  // ============================================================
+
+  Blockly.setLocale(Blockly.Msg);
+
+  // -------- Constants --------
+  const PREVIEW_TYPE = '__heph_preview_block__';
+
+  const FIELD_DEFAULT_LABELS = {
+    text: 'texte',
+    checkbox: 'coché',
+    dropdown: 'choix',
+    image: '',
+  };
+
+  const PREDEFINED_METHODS = [
+    {
+      key: 'init',
+      label: 'init',
+      kind: 'function',
+      args: [],
+      signature: 'init: function()',
+      desc: "Code additionnel exécuté juste après l'initialisation JSON.",
+      template: "// 'this' = instance du bloc.\n// jsonInit() est déjà appelé.\n",
+    },
+    {
+      key: 'onchange',
+      label: 'onchange',
+      kind: 'function',
+      args: ['event'],
+      signature: 'onchange: function(event)',
+      desc: 'Réagit aux modifications du workspace (création, déplacement, valeur de champ…).',
+      template: "// Inspecte event.type, event.blockId, etc.\n// Ne rien faire si pendant un drag :\nif (this.workspace.isDragging && this.workspace.isDragging()) return;\n\n",
+    },
+    {
+      key: 'mutationToDom',
+      label: 'mutationToDom',
+      kind: 'function',
+      args: [],
+      signature: 'mutationToDom: function()',
+      desc: "Sérialise l'état additionnel du bloc en élément XML.",
+      template: "var container = Blockly.utils.xml.createElement('mutation');\n// container.setAttribute('myAttr', this.myAttr_);\nreturn container;\n",
+    },
+    {
+      key: 'domToMutation',
+      label: 'domToMutation',
+      kind: 'function',
+      args: ['xmlElement'],
+      signature: 'domToMutation: function(xmlElement)',
+      desc: "Restaure l'état additionnel depuis un élément XML.",
+      template: "// this.myAttr_ = xmlElement.getAttribute('myAttr');\n// this.updateShape_();\n",
+    },
+    {
+      key: 'saveExtraState',
+      label: 'saveExtraState',
+      kind: 'function',
+      args: [],
+      signature: 'saveExtraState: function()',
+      desc: "API moderne (v9+) : retourne un objet sérialisable avec l'état additionnel.",
+      template: "return {\n  // myAttr: this.myAttr_,\n};\n",
+    },
+    {
+      key: 'loadExtraState',
+      label: 'loadExtraState',
+      kind: 'function',
+      args: ['state'],
+      signature: 'loadExtraState: function(state)',
+      desc: "API moderne : restaure l'état depuis l'objet retourné par saveExtraState.",
+      template: "// this.myAttr_ = state['myAttr'];\n// this.updateShape_();\n",
+    },
+    {
+      key: 'customContextMenu',
+      label: 'customContextMenu',
+      kind: 'function',
+      args: ['options'],
+      signature: 'customContextMenu: function(options)',
+      desc: 'Personnalise le menu contextuel (clic droit) du bloc.',
+      template: "options.push({\n  text: 'Mon action',\n  enabled: true,\n  callback: function() {\n    console.log('clic !');\n  }\n});\n",
+    },
+  ];
+
+  // -------- State --------
+  let inputCounter = 0;
+  let fieldCounter = 0;
+  const customBlocks = {};
+  const state = {
+    inputs: [],
+    methods: {},     // key -> { kind, args, code, enabled, custom }
+    previewScale: 1.0,
+  };
+  let draggedInputType = null;
+  let draggedFieldType = null;
+  let modalContext = null;
+  let activeMethodTab = null;
+
+  // Initialize predefined methods (disabled by default)
+  PREDEFINED_METHODS.forEach(m => {
+    state.methods[m.key] = {
+      key: m.key,
+      kind: m.kind,
+      args: m.args.slice(),
+      code: m.template,
+      enabled: false,
+      custom: false,
+      signature: m.signature,
+      desc: m.desc,
+    };
+  });
+
+  // ============================================================
+  //  TAB SWITCHING
+  // ============================================================
+  document.querySelectorAll('.tab').forEach(t => {
+    t.addEventListener('click', () => {
+      const target = t.dataset.tab;
+      document.querySelectorAll('.tab').forEach(x => x.classList.toggle('active', x === t));
+      document.querySelectorAll('.tab-panel').forEach(p => {
+        p.classList.toggle('active', p.id === `panel-${target}`);
+      });
+      // Resize Blockly workspaces after switching
+      setTimeout(() => {
+        if (target === 'editor') Blockly.svgResize(mainWorkspace);
+        if (target === 'builder') Blockly.svgResize(previewWorkspace);
+      }, 50);
+    });
+  });
+
+  // ============================================================
+  //  TOOLBOX
+  // ============================================================
+  function buildToolboxXml() {
+    const customBlocksXml = Object.keys(customBlocks)
+      .map(t => `<block type="${t}"></block>`)
+      .join('');
+    return `
+      <xml id="toolbox" style="display:none">
+        <category name="Logique" colour="210">
+          <block type="controls_if"></block>
+          <block type="logic_compare"></block>
+          <block type="logic_operation"></block>
+          <block type="logic_negate"></block>
+          <block type="logic_boolean"></block>
+          <block type="logic_null"></block>
+          <block type="logic_ternary"></block>
+        </category>
+        <category name="Boucles" colour="120">
+          <block type="controls_repeat_ext">
+            <value name="TIMES"><shadow type="math_number"><field name="NUM">10</field></shadow></value>
+          </block>
+          <block type="controls_whileUntil"></block>
+          <block type="controls_for">
+            <value name="FROM"><shadow type="math_number"><field name="NUM">1</field></shadow></value>
+            <value name="TO"><shadow type="math_number"><field name="NUM">10</field></shadow></value>
+            <value name="BY"><shadow type="math_number"><field name="NUM">1</field></shadow></value>
+          </block>
+          <block type="controls_flow_statements"></block>
+        </category>
+        <category name="Math" colour="230">
+          <block type="math_number"><field name="NUM">0</field></block>
+          <block type="math_arithmetic"></block>
+          <block type="math_single"></block>
+          <block type="math_round"></block>
+          <block type="math_modulo"></block>
+        </category>
+        <category name="Texte" colour="160">
+          <block type="text"></block>
+          <block type="text_join"></block>
+          <block type="text_print"></block>
+          <block type="text_length"></block>
+        </category>
+        <category name="Variables" colour="330" custom="VARIABLE"></category>
+        <category name="Fonctions" colour="290" custom="PROCEDURE"></category>
+        <sep></sep>
+        <category name="Personnalisé" colour="20">
+          ${customBlocksXml || '<label text="Forge un bloc dans Héphaïstos →"></label>'}
+        </category>
+      </xml>
+    `;
+  }
+
+  // ============================================================
+  //  WORKSPACES
+  // ============================================================
+  const mainWorkspace = Blockly.inject('blocklyMain', {
+    toolbox: buildToolboxXml(),
+    trashcan: true,
+    grid: { spacing: 22, length: 3, colour: '#cbd5e1', snap: true },
+    zoom: { controls: true, wheel: true, startScale: 0.95, maxScale: 2, minScale: 0.4 },
+    move: { scrollbars: true, drag: true, wheel: false },
+    renderer: 'thrasos',
+  });
+
+  const previewWorkspace = Blockly.inject('blocklyPreview', {
+    toolbox: null,
+    trashcan: false,
+    scrollbars: true,
+    sounds: false,
+    move: { scrollbars: true, drag: false, wheel: false },
+    zoom: { controls: false, wheel: false, startScale: 1.0 },
+    renderer: 'thrasos',
+  });
+
+  mainWorkspace.addChangeListener(() => {
+    const count = mainWorkspace.getAllBlocks(false).length;
+    const txt = `${count} bloc${count > 1 ? 's' : ''}`;
+    document.getElementById('editorCount').textContent = txt;
+    document.getElementById('editorBadge').textContent = String(count);
+  });
+
+  // ============================================================
+  //  FIELD HELPERS
+  // ============================================================
+  function defaultFieldConfig(type) {
+    const id = ++fieldCounter;
+    const name = `${type.toUpperCase()}${id}`;
+    const label = FIELD_DEFAULT_LABELS[type] ? `${FIELD_DEFAULT_LABELS[type]} :` : '';
+    if (type === 'text')     return { id, type, name, label, defaultValue: 'défaut' };
+    if (type === 'checkbox') return { id, type, name, label, checked: true };
+    if (type === 'dropdown') return { id, type, name, label, options: [['Option A', 'A'], ['Option B', 'B']] };
+    if (type === 'image')    return { id, type, name, label, src: 'https://www.gstatic.com/codesite/ph/images/star_on.gif', width: 16, height: 16, alt: '*' };
+  }
+
+  function fieldToBlocklyJson(field) {
+    if (field.type === 'text')     return { type: 'field_input',    name: field.name, text: field.defaultValue || '' };
+    if (field.type === 'checkbox') return { type: 'field_checkbox', name: field.name, checked: !!field.checked };
+    if (field.type === 'dropdown') return { type: 'field_dropdown', name: field.name, options: field.options };
+    if (field.type === 'image')    return { type: 'field_image',    src: field.src, width: field.width || 16, height: field.height || 16, alt: field.alt || '*' };
+  }
+
+  function fieldIcon(type) {
+    return { text: '📝', checkbox: '☑', dropdown: '▾', image: '🖼' }[type] || '?';
+  }
+
+  // ============================================================
+  //  BUILD BLOCK JSON DEFINITION
+  // ============================================================
+  function buildBlockJson(typeName) {
+    const messageParts = [];
+    const args = [];
+    let argIdx = 1;
+
+    for (const input of state.inputs) {
+      // For each field, optionally prepend a label, then the field itself
+      for (const field of input.fields) {
+        if (field.label && field.label.trim()) {
+          messageParts.push(`%${argIdx++}`);
+          args.push({ type: 'field_label', text: field.label });
+        }
+        messageParts.push(`%${argIdx++}`);
+        args.push(fieldToBlocklyJson(field));
+      }
+      // Then the input slot
+      if (input.type === 'value') {
+        messageParts.push(`%${argIdx++}`);
+        args.push({ type: 'input_value', name: input.name });
+      } else if (input.type === 'statement') {
+        messageParts.push(`%${argIdx++}`);
+        args.push({ type: 'input_statement', name: input.name });
+      } else {
+        messageParts.push(`%${argIdx++}`);
+        args.push({ type: 'input_dummy' });
+      }
+    }
+
+    const def = {
+      type: typeName,
+      message0: messageParts.join(' ') || 'bloc vide',
+      args0: args,
+      colour: document.getElementById('propColor').value,
+      tooltip: document.getElementById('propTooltip').value || '',
+      helpUrl: '',
+    };
+
+    // Size/layout
+    const size = document.getElementById('propSize').value;
+    if (size === 'inline') def.inputsInline = true;
+    else if (size === 'external') def.inputsInline = false;
+
+    // Connections
+    if (document.getElementById('propOutput').checked) {
+      def.output = null;
+    } else {
+      if (document.getElementById('propPrev').checked) def.previousStatement = null;
+      if (document.getElementById('propNext').checked) def.nextStatement = null;
+    }
+
+    return def;
+  }
+
+  // ============================================================
+  //  DEFAULT GENERATOR CODE
+  // ============================================================
+  function generateDefaultCode() {
+    const lines = ['// Récupération des champs et entrées'];
+    const seen = new Set();
+    for (const input of state.inputs) {
+      for (const field of input.fields) {
+        if (field.type === 'image') continue;
+        if (seen.has(field.name)) continue;
+        seen.add(field.name);
+        const varName = field.name.toLowerCase();
+        lines.push(`var ${varName} = block.getFieldValue('${field.name}');`);
+      }
+      if (input.type === 'value') {
+        lines.push(`var ${input.name.toLowerCase()} = Blockly.JavaScript.valueToCode(block, '${input.name}', Blockly.JavaScript.ORDER_ATOMIC);`);
+      } else if (input.type === 'statement') {
+        lines.push(`var ${input.name.toLowerCase()} = Blockly.JavaScript.statementToCode(block, '${input.name}');`);
+      }
+    }
+    lines.push('');
+    if (document.getElementById('propOutput').checked) {
+      lines.push('// Bloc valeur — retourne [code, ordre]');
+      lines.push('var code = "/* TODO: générer la valeur */";');
+      lines.push('return [code, Blockly.JavaScript.ORDER_NONE];');
+    } else {
+      lines.push('// Bloc commande — retourne une chaîne terminée par "\\n"');
+      lines.push('var code = "/* TODO: générer la commande */\\n";');
+      lines.push('return code;');
+    }
+    return lines.join('\n');
+  }
+
+  // ============================================================
+  //  JSON SYNTAX HIGHLIGHTING
+  // ============================================================
+  function syntaxHighlightJson(json) {
+    json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function(match) {
+      let cls = 'json-number';
+      if (/^"/.test(match)) {
+        cls = /:$/.test(match) ? 'json-key' : 'json-string';
+      } else if (/true|false/.test(match)) {
+        cls = 'json-bool';
+      } else if (/null/.test(match)) {
+        cls = 'json-null';
+      }
+      return `<span class="${cls}">${match}</span>`;
+    });
+  }
+
+  // ============================================================
+  //  PREVIEW + JSON UPDATE
+  // ============================================================
+  function updatePreviewAndJson() {
+    if (state.inputs.length === 0) {
+      previewWorkspace.clear();
+      const emptyDef = { ...buildBlockJson('your_block_type'), args0: [], message0: '' };
+      document.getElementById('jsonDisplay').innerHTML = syntaxHighlightJson(JSON.stringify(emptyDef, null, 2));
+      updateMetaCounts();
+      return;
+    }
+
+    const def = buildBlockJson(PREVIEW_TYPE);
+
+    // Update preview
+    try {
+      Blockly.defineBlocksWithJsonArray([def]);
+      previewWorkspace.clear();
+      const block = previewWorkspace.newBlock(PREVIEW_TYPE);
+      block.initSvg();
+      block.render();
+      block.moveBy(20, 20);
+    } catch (e) {
+      console.error('Preview error:', e);
+    }
+
+    // Update JSON view (with display name, not preview type)
+    const displayDef = { ...def, type: 'your_block_type' };
+    document.getElementById('jsonDisplay').innerHTML = syntaxHighlightJson(JSON.stringify(displayDef, null, 2));
+
+    // Auto-update generator code unless user edited it
+    const codeArea = document.getElementById('codeGenerator');
+    if (codeArea.dataset.userModified !== '1') {
+      codeArea.value = generateDefaultCode();
+    }
+
+    updateMetaCounts();
+  }
+
+  function updateMetaCounts() {
+    const totalFields = state.inputs.reduce((s, i) => s + i.fields.length, 0);
+    document.getElementById('structureMeta').textContent =
+      `${state.inputs.length} entrée${state.inputs.length > 1 ? 's' : ''} · ${totalFields} champ${totalFields > 1 ? 's' : ''}`;
+
+    const enabledMethods = Object.values(state.methods).filter(m => m.enabled);
+    const cnt = enabledMethods.length;
+    document.getElementById('methodsMeta').textContent = `${cnt} active${cnt > 1 ? 's' : ''}`;
+    document.getElementById('methodsBadge').textContent = String(cnt);
+    const editBtn = document.getElementById('previewEditBtn');
+    editBtn.classList.toggle('no-methods', cnt === 0);
+
+    // Methods summary
+    const summary = document.getElementById('methodsSummary');
+    const list = document.getElementById('methodsList');
+    if (cnt === 0) {
+      summary.style.display = 'block';
+      list.innerHTML = '';
+    } else {
+      summary.style.display = 'none';
+      list.innerHTML = enabledMethods.map(m => `
+        <span class="method-tag ${m.kind === 'function' ? 'fn' : 'val'}">
+          <span class="kind">${m.kind === 'function' ? 'fn' : 'val'}</span>
+          <strong>${escapeHtml(m.key)}</strong>${m.kind === 'function' ? `(${(m.args || []).join(', ')})` : ''}
+        </span>
+      `).join('');
+    }
+  }
+
+  // ============================================================
+  //  RENDER CONSTRUCTION ZONE
+  // ============================================================
+  function renderConstructionZone() {
+    const zone = document.getElementById('constructionZone');
+    zone.innerHTML = '';
+
+    if (state.inputs.length === 0) {
+      zone.classList.add('empty');
+      zone.innerHTML = `
+        <span class="empty-hint">Forge ton bloc ici</span>
+        <span class="empty-sub">→ glisse une entrée</span>
+      `;
+      return;
+    }
+    zone.classList.remove('empty');
+
+    for (const input of state.inputs) {
+      const row = document.createElement('div');
+      row.className = `input-row ${input.type}`;
+      row.dataset.inputId = String(input.id);
+
+      const head = document.createElement('div');
+      head.className = 'input-head';
+
+      const grip = document.createElement('span');
+      grip.className = 'input-grip';
+      grip.textContent = '⋮⋮';
+      grip.title = 'Glisser pour réorganiser';
+      head.appendChild(grip);
+
+      const typeBadge = document.createElement('span');
+      typeBadge.className = 'input-type';
+      typeBadge.textContent = input.type;
+      head.appendChild(typeBadge);
+
+      const nameInput = document.createElement('input');
+      nameInput.type = 'text';
+      nameInput.className = 'input-name';
+      nameInput.value = input.name;
+      nameInput.placeholder = input.type === 'dummy' ? '— pas de nom requis —' : 'NOM_INTERNE';
+      if (input.type === 'dummy') nameInput.disabled = true;
+      nameInput.addEventListener('change', () => {
+        const v = nameInput.value.trim().toUpperCase().replace(/[^A-Z0-9_]/g, '_');
+        input.name = v || `INPUT${input.id}`;
+        nameInput.value = input.name;
+        updatePreviewAndJson();
+      });
+      head.appendChild(nameInput);
+
+      const removeBtn = document.createElement('button');
+      removeBtn.className = 'icon-btn danger';
+      removeBtn.innerHTML = '✕';
+      removeBtn.title = 'Supprimer cette entrée';
+      removeBtn.addEventListener('click', () => {
+        state.inputs = state.inputs.filter(i => i.id !== input.id);
+        renderConstructionZone();
+        updatePreviewAndJson();
+      });
+      head.appendChild(removeBtn);
+
+      row.appendChild(head);
+
+      const fieldZone = document.createElement('div');
+      fieldZone.className = 'field-zone';
+      fieldZone.dataset.inputId = String(input.id);
+
+      if (input.fields.length === 0) {
+        const placeholder = document.createElement('span');
+        placeholder.className = 'placeholder';
+        placeholder.textContent = '↓ glisse des champs ici';
+        fieldZone.appendChild(placeholder);
+      }
+
+      for (const field of input.fields) {
+        const chip = document.createElement('span');
+        chip.className = 'field-chip';
+        chip.title = 'Cliquer pour configurer';
+
+        const icon = document.createElement('span');
+        icon.className = 'field-icon';
+        icon.textContent = fieldIcon(field.type);
+        chip.appendChild(icon);
+
+        const nameSpan = document.createElement('span');
+        nameSpan.className = 'field-name';
+        nameSpan.textContent = field.name;
+        chip.appendChild(nameSpan);
+
+        if (field.label && field.label.trim()) {
+          const labelSpan = document.createElement('span');
+          labelSpan.className = 'field-label-preview';
+          labelSpan.textContent = `« ${field.label} »`;
+          chip.appendChild(labelSpan);
+        }
+
+        const removeFieldBtn = document.createElement('span');
+        removeFieldBtn.className = 'field-remove';
+        removeFieldBtn.textContent = '✕';
+        removeFieldBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          input.fields = input.fields.filter(f => f.id !== field.id);
+          renderConstructionZone();
+          updatePreviewAndJson();
+        });
+        chip.appendChild(removeFieldBtn);
+
+        chip.addEventListener('click', () => openFieldModal(input, field));
+
+        fieldZone.appendChild(chip);
+      }
+
+      fieldZone.addEventListener('dragover', (e) => {
+        if (draggedFieldType) {
+          e.preventDefault();
+          fieldZone.classList.add('drag-over');
+        }
+      });
+      fieldZone.addEventListener('dragleave', () => fieldZone.classList.remove('drag-over'));
+      fieldZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        fieldZone.classList.remove('drag-over');
+        if (!draggedFieldType) return;
+        const newField = defaultFieldConfig(draggedFieldType);
+        input.fields.push(newField);
+        renderConstructionZone();
+        updatePreviewAndJson();
+        if (newField.type === 'dropdown' || newField.type === 'image') {
+          openFieldModal(input, newField);
+        }
+      });
+
+      row.appendChild(fieldZone);
+      zone.appendChild(row);
+    }
+
+    if (window.Sortable) {
+      Sortable.create(zone, {
+        animation: 150,
+        handle: '.input-grip',
+        ghostClass: 'sortable-ghost',
+        chosenClass: 'sortable-chosen',
+        onEnd: () => {
+          const newOrder = [...zone.querySelectorAll('.input-row')].map(r => parseInt(r.dataset.inputId, 10));
+          state.inputs.sort((a, b) => newOrder.indexOf(a.id) - newOrder.indexOf(b.id));
+          updatePreviewAndJson();
+        },
+      });
+    }
+  }
+
+  // ============================================================
+  //  PALETTE DRAG SOURCES
+  // ============================================================
+  document.querySelectorAll('#inputsPalette .chip').forEach(el => {
+    el.addEventListener('dragstart', (e) => {
+      draggedInputType = el.dataset.inputType;
+      e.dataTransfer.effectAllowed = 'copy';
+    });
+    el.addEventListener('dragend', () => { draggedInputType = null; });
+  });
+
+  document.querySelectorAll('#fieldsPalette .chip').forEach(el => {
+    el.addEventListener('dragstart', (e) => {
+      draggedFieldType = el.dataset.fieldType;
+      e.dataTransfer.effectAllowed = 'copy';
+    });
+    el.addEventListener('dragend', () => { draggedFieldType = null; });
+  });
+
+  const constructionZone = document.getElementById('constructionZone');
+  constructionZone.addEventListener('dragover', (e) => {
+    if (draggedInputType) {
+      e.preventDefault();
+      constructionZone.classList.add('drag-over');
+    }
+  });
+  constructionZone.addEventListener('dragleave', () => constructionZone.classList.remove('drag-over'));
+  constructionZone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    constructionZone.classList.remove('drag-over');
+    if (!draggedInputType) return;
+    const id = ++inputCounter;
+    state.inputs.push({
+      id,
+      type: draggedInputType,
+      name: draggedInputType === 'dummy' ? '' : `INPUT${id}`,
+      fields: [],
+    });
+    renderConstructionZone();
+    updatePreviewAndJson();
+  });
+
+  // ============================================================
+  //  PROPERTIES LISTENERS
+  // ============================================================
+  const propColor = document.getElementById('propColor');
+  const propColorHex = document.getElementById('propColorHex');
+  propColor.addEventListener('input', () => {
+    propColorHex.value = propColor.value;
+    updatePreviewAndJson();
+  });
+  propColorHex.addEventListener('change', () => {
+    if (/^#[0-9a-fA-F]{6}$/.test(propColorHex.value)) {
+      propColor.value = propColorHex.value;
+      updatePreviewAndJson();
+    } else {
+      propColorHex.value = propColor.value;
+    }
+  });
+
+  document.getElementById('propTooltip').addEventListener('input', updatePreviewAndJson);
+  document.getElementById('propSize').addEventListener('change', updatePreviewAndJson);
+
+  document.getElementById('propOutput').addEventListener('change', (e) => {
+    const checked = e.target.checked;
+    document.getElementById('propPrev').disabled = checked;
+    document.getElementById('propNext').disabled = checked;
+    if (checked) {
+      document.getElementById('propPrev').checked = false;
+      document.getElementById('propNext').checked = false;
+    }
+    updatePreviewAndJson();
+  });
+  document.getElementById('propPrev').addEventListener('change', updatePreviewAndJson);
+  document.getElementById('propNext').addEventListener('change', updatePreviewAndJson);
+
+  // ============================================================
+  //  GENERATOR CODE
+  // ============================================================
+  const codeArea = document.getElementById('codeGenerator');
+  codeArea.addEventListener('input', () => { codeArea.dataset.userModified = '1'; });
+  document.getElementById('codeReset').addEventListener('click', () => {
+    codeArea.dataset.userModified = '0';
+    codeArea.value = generateDefaultCode();
+  });
+
+  // ============================================================
+  //  PREVIEW ZOOM
+  // ============================================================
+  function applyPreviewZoom() {
+    previewWorkspace.setScale(state.previewScale);
+    document.getElementById('zoomVal').textContent = `${Math.round(state.previewScale * 100)}%`;
+  }
+  document.getElementById('zoomIn').addEventListener('click', () => {
+    state.previewScale = Math.min(2.5, state.previewScale + 0.15);
+    applyPreviewZoom();
+  });
+  document.getElementById('zoomOut').addEventListener('click', () => {
+    state.previewScale = Math.max(0.4, state.previewScale - 0.15);
+    applyPreviewZoom();
+  });
+
+  // ============================================================
+  //  COPY JSON
+  // ============================================================
+  document.getElementById('copyJsonBtn').addEventListener('click', async () => {
+    const text = document.getElementById('jsonDisplay').innerText;
+    try {
+      await navigator.clipboard.writeText(text);
+      const btn = document.getElementById('copyJsonBtn');
+      btn.textContent = 'Copié ✓';
+      btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = 'Copier'; btn.classList.remove('copied'); }, 1500);
+    } catch (e) {
+      showToast("Échec de la copie : " + e.message, 'error');
+    }
+  });
+
+  // ============================================================
+  //  FIELD CONFIG MODAL
+  // ============================================================
+  function openFieldModal(input, field) {
+    modalContext = { input, field };
+    const body = document.getElementById('fieldModalBody');
+    document.getElementById('fieldModalTitle').textContent = `Configuration · ${field.type}`;
+
+    let html = `
+      <div class="form-group">
+        <label class="field-label">Nom interne (utilisé dans le code généré)</label>
+        <input type="text" id="modalFieldName" value="${escapeAttr(field.name)}">
+      </div>
+      <div class="form-group">
+        <label class="field-label">Étiquette affichée dans le bloc (avant le champ)</label>
+        <input type="text" id="modalFieldLabel" value="${escapeAttr(field.label || '')}" placeholder="Laisse vide pour pas d'étiquette">
+      </div>
+    `;
+
+    if (field.type === 'text') {
+      html += `
+        <div class="form-group">
+          <label class="field-label">Valeur par défaut</label>
+          <input type="text" id="modalFieldDefault" value="${escapeAttr(field.defaultValue || '')}">
+        </div>
+      `;
+    } else if (field.type === 'checkbox') {
+      html += `
+        <div class="form-group">
+          <label class="field-label">État initial</label>
+          <label class="check-row" style="margin-top: 4px;">
+            <input type="checkbox" id="modalFieldChecked" ${field.checked ? 'checked' : ''}>
+            <span>Coché par défaut</span>
+          </label>
+        </div>
+      `;
+    } else if (field.type === 'dropdown') {
+      html += `
+        <div class="form-group">
+          <label class="field-label">Options (texte affiché → valeur)</label>
+          <div id="modalDropdownOptions"></div>
+          <button type="button" id="modalAddOption">+ Ajouter une option</button>
+        </div>
+      `;
+    } else if (field.type === 'image') {
+      html += `
+        <div class="form-group">
+          <label class="field-label">URL de l'image</label>
+          <input type="text" id="modalFieldSrc" value="${escapeAttr(field.src || '')}">
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="field-label">Largeur (px)</label>
+            <input type="number" id="modalFieldWidth" min="8" max="200" value="${field.width || 16}">
+          </div>
+          <div class="form-group">
+            <label class="field-label">Hauteur (px)</label>
+            <input type="number" id="modalFieldHeight" min="8" max="200" value="${field.height || 16}">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="field-label">Texte alternatif</label>
+          <input type="text" id="modalFieldAlt" value="${escapeAttr(field.alt || '*')}">
+        </div>
+      `;
+    }
+
+    body.innerHTML = html;
+
+    if (field.type === 'dropdown') {
+      renderDropdownOptions(field.options || [['Option A', 'A']]);
+      document.getElementById('modalAddOption').addEventListener('click', () => {
+        const opts = collectDropdownOptions();
+        opts.push([`Option ${opts.length + 1}`, `value${opts.length + 1}`]);
+        renderDropdownOptions(opts);
+      });
+    }
+
+    document.getElementById('fieldModal').classList.add('show');
+    setTimeout(() => document.getElementById('modalFieldName').focus(), 50);
+  }
+
+  function renderDropdownOptions(options) {
+    const container = document.getElementById('modalDropdownOptions');
+    container.innerHTML = '';
+    options.forEach((opt, idx) => {
+      const row = document.createElement('div');
+      row.className = 'dropdown-options-row';
+      row.innerHTML = `
+        <input type="text" placeholder="Texte affiché" value="${escapeAttr(opt[0])}">
+        <input type="text" placeholder="Valeur" value="${escapeAttr(opt[1])}">
+        <button type="button" class="icon-btn danger" data-idx="${idx}" title="Supprimer">✕</button>
+      `;
+      row.querySelector('button').addEventListener('click', () => {
+        const opts = collectDropdownOptions();
+        opts.splice(idx, 1);
+        if (opts.length === 0) opts.push(['Option', 'value']);
+        renderDropdownOptions(opts);
+      });
+      container.appendChild(row);
+    });
+  }
+
+  function collectDropdownOptions() {
+    return [...document.querySelectorAll('#modalDropdownOptions .dropdown-options-row')]
+      .map(row => {
+        const inputs = row.querySelectorAll('input');
+        return [inputs[0].value, inputs[1].value];
+      });
+  }
+
+  function escapeAttr(s) {
+    return String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+  function escapeHtml(s) {
+    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  document.getElementById('fieldModalCancel').addEventListener('click', closeFieldModal);
+  function closeFieldModal() {
+    document.getElementById('fieldModal').classList.remove('show');
+    modalContext = null;
+  }
+
+  document.getElementById('fieldModalSave').addEventListener('click', () => {
+    if (!modalContext) return;
+    const { field } = modalContext;
+    const newName = document.getElementById('modalFieldName').value.trim()
+      .toUpperCase().replace(/[^A-Z0-9_]/g, '_');
+    field.name = newName || field.name;
+    field.label = document.getElementById('modalFieldLabel').value;
+
+    if (field.type === 'text') {
+      field.defaultValue = document.getElementById('modalFieldDefault').value;
+    } else if (field.type === 'checkbox') {
+      field.checked = document.getElementById('modalFieldChecked').checked;
+    } else if (field.type === 'dropdown') {
+      const opts = collectDropdownOptions().filter(o => o[0].trim() && o[1].trim());
+      field.options = opts.length ? opts : [['Option', 'value']];
+    } else if (field.type === 'image') {
+      field.src = document.getElementById('modalFieldSrc').value || field.src;
+      field.width = parseInt(document.getElementById('modalFieldWidth').value, 10) || 16;
+      field.height = parseInt(document.getElementById('modalFieldHeight').value, 10) || 16;
+      field.alt = document.getElementById('modalFieldAlt').value || '*';
+    }
+
+    closeFieldModal();
+    renderConstructionZone();
+    updatePreviewAndJson();
+  });
+
+  // ============================================================
+  //  METHODS MODAL
+  // ============================================================
+  function openMethodsModal() {
+    renderMethodsTabs();
+    document.getElementById('methodsModal').classList.add('show');
+  }
+
+  function renderMethodsTabs() {
+    const tabsEl = document.getElementById('methodsTabs');
+    const panelsEl = document.getElementById('methodsPanels');
+    tabsEl.innerHTML = '';
+    panelsEl.innerHTML = '';
+
+    const allMethods = Object.values(state.methods);
+
+    if (!activeMethodTab || !state.methods[activeMethodTab]) {
+      activeMethodTab = allMethods[0]?.key || null;
+    }
+
+    allMethods.forEach(m => {
+      const tab = document.createElement('button');
+      tab.className = `method-tab ${m.enabled ? 'enabled' : ''} ${m.custom ? 'custom' : ''}`;
+      tab.textContent = m.key;
+      if (m.key === activeMethodTab) tab.classList.add('active');
+      tab.addEventListener('click', () => {
+        activeMethodTab = m.key;
+        renderMethodsTabs();
+      });
+      tabsEl.appendChild(tab);
+
+      const panel = document.createElement('div');
+      panel.className = `method-panel ${m.key === activeMethodTab ? 'active' : ''}`;
+
+      const head = document.createElement('div');
+      head.className = 'method-panel-head';
+      head.innerHTML = `
+        <label class="check-row">
+          <input type="checkbox" ${m.enabled ? 'checked' : ''} data-method-enabled="${escapeAttr(m.key)}">
+          <span>Activer</span>
+        </label>
+        <span class="signature">${escapeHtml(m.signature || (m.kind === 'function' ? `${m.key}: function(${(m.args || []).join(', ')})` : `${m.key}: <valeur>`))}</span>
+        <span class="desc">${escapeHtml(m.desc || '')}</span>
+        ${m.custom ? `<button class="delete-method" data-method-delete="${escapeAttr(m.key)}">Supprimer</button>` : ''}
+      `;
+      panel.appendChild(head);
+
+      if (m.kind === 'function') {
+        const ta = document.createElement('textarea');
+        ta.className = 'method-code';
+        ta.spellcheck = false;
+        ta.value = m.code;
+        ta.disabled = !m.enabled;
+        ta.addEventListener('input', () => {
+          m.code = ta.value;
+        });
+        panel.appendChild(ta);
+      } else {
+        const inp = document.createElement('input');
+        inp.type = 'text';
+        inp.className = 'method-value';
+        inp.value = m.code;
+        inp.placeholder = 'ex: 42, "hello", { foo: 1 }';
+        inp.disabled = !m.enabled;
+        inp.addEventListener('input', () => {
+          m.code = inp.value;
+        });
+        panel.appendChild(inp);
+      }
+
+      panelsEl.appendChild(panel);
+    });
+
+    // Attach toggle/delete listeners
+    panelsEl.querySelectorAll('[data-method-enabled]').forEach(cb => {
+      cb.addEventListener('change', (e) => {
+        const key = cb.dataset.methodEnabled;
+        state.methods[key].enabled = e.target.checked;
+        renderMethodsTabs();
+        updateMetaCounts();
+      });
+    });
+    panelsEl.querySelectorAll('[data-method-delete]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const key = btn.dataset.methodDelete;
+        if (confirm(`Supprimer l'entrée "${key}" ?`)) {
+          delete state.methods[key];
+          if (activeMethodTab === key) activeMethodTab = null;
+          renderMethodsTabs();
+          updateMetaCounts();
+        }
+      });
+    });
+  }
+
+  document.getElementById('previewEditBtn').addEventListener('click', openMethodsModal);
+  document.getElementById('openMethodsBtn').addEventListener('click', openMethodsModal);
+  document.getElementById('methodsModalDone').addEventListener('click', () => {
+    document.getElementById('methodsModal').classList.remove('show');
+    updateMetaCounts();
+  });
+
+  document.getElementById('addCustomMethod').addEventListener('click', () => {
+    const kind = document.getElementById('customKind').value;
+    const rawName = document.getElementById('customName').value.trim();
+    const name = rawName.replace(/[^a-zA-Z0-9_$]/g, '');
+    if (!name) {
+      showToast("Nom invalide.", 'error');
+      return;
+    }
+    if (state.methods[name]) {
+      showToast(`"${name}" existe déjà.`, 'error');
+      return;
+    }
+    state.methods[name] = {
+      key: name,
+      kind: kind,
+      args: kind === 'function' ? [] : null,
+      code: kind === 'function'
+        ? `// Méthode personnalisée: ${name}\n// 'this' = instance du bloc.\n`
+        : 'null',
+      enabled: true,
+      custom: true,
+      signature: kind === 'function' ? `${name}: function()` : `${name}: <valeur>`,
+      desc: kind === 'function' ? 'Méthode personnalisée du bloc.' : 'Propriété personnalisée du bloc.',
+    };
+    document.getElementById('customName').value = '';
+    activeMethodTab = name;
+    renderMethodsTabs();
+    updateMetaCounts();
+  });
+
+  // ============================================================
+  //  ATTACH METHODS TO BLOCK PROTOTYPE
+  // ============================================================
+  function attachMethodsToBlock(typeName) {
+    const proto = Blockly.Blocks[typeName];
+    if (!proto) return;
+
+    const originalInit = proto.init;
+    const enabled = Object.values(state.methods).filter(m => m.enabled);
+
+    if (enabled.length === 0) return;
+
+    enabled.forEach(m => {
+      try {
+        if (m.kind === 'function') {
+          if (m.key === 'init') {
+            // Wrap original init
+            proto.init = function() {
+              originalInit.call(this);
+              try {
+                new Function(m.code).call(this);
+              } catch (err) {
+                console.error(`[${typeName}] init error:`, err);
+              }
+            };
+          } else {
+            const args = m.args || [];
+            proto[m.key] = new Function(...args, m.code);
+          }
+        } else {
+          // Property: evaluate the code as expression
+          try {
+            proto[m.key] = (new Function(`return (${m.code});`))();
+          } catch (err) {
+            console.error(`[${typeName}] property "${m.key}" error:`, err);
+            proto[m.key] = m.code; // fallback to raw string
+          }
+        }
+      } catch (err) {
+        console.error(`[${typeName}] failed to attach "${m.key}":`, err);
+      }
+    });
+  }
+
+  // ============================================================
+  //  SAVE BLOCK
+  // ============================================================
+  document.getElementById('saveBlockBtn').addEventListener('click', () => {
+    if (state.inputs.length === 0) {
+      showToast("Ajoute au moins une entrée avant de sceller le bloc.", 'error');
+      return;
+    }
+    const defaultName = `custom_block_${Object.keys(customBlocks).length + 1}`;
+    document.getElementById('saveBlockName').value = defaultName;
+    document.getElementById('saveModal').classList.add('show');
+    setTimeout(() => {
+      const inp = document.getElementById('saveBlockName');
+      inp.focus(); inp.select();
+    }, 50);
+  });
+
+  document.getElementById('saveModalCancel').addEventListener('click', () => {
+    document.getElementById('saveModal').classList.remove('show');
+  });
+
+  document.getElementById('saveBlockName').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') document.getElementById('saveModalConfirm').click();
+    if (e.key === 'Escape') document.getElementById('saveModalCancel').click();
+  });
+
+  document.getElementById('saveModalConfirm').addEventListener('click', () => {
+    const raw = document.getElementById('saveBlockName').value.trim();
+    const cleanName = raw.toLowerCase().replace(/[^a-z0-9_]/g, '_');
+    if (!cleanName) { showToast("Identifiant invalide.", 'error'); return; }
+    if (cleanName.startsWith('__')) { showToast("Identifiant réservé.", 'error'); return; }
+    if (customBlocks[cleanName]) {
+      if (!confirm(`Le bloc "${cleanName}" existe déjà. Le remplacer ?`)) return;
+    }
+
+    const def = buildBlockJson(cleanName);
+    Blockly.defineBlocksWithJsonArray([def]);
+
+    // Attach lifecycle methods
+    attachMethodsToBlock(cleanName);
+
+    // Generator
+    const code = document.getElementById('codeGenerator').value || generateDefaultCode();
+    let generatorFn;
+    try {
+      generatorFn = new Function('block', code);
+    } catch (e) {
+      showToast("Erreur dans le code générateur : " + e.message, 'error');
+      return;
+    }
+    if (Blockly.JavaScript.forBlock) Blockly.JavaScript.forBlock[cleanName] = generatorFn;
+    Blockly.JavaScript[cleanName] = generatorFn;
+
+    customBlocks[cleanName] = {
+      def,
+      code,
+      methods: JSON.parse(JSON.stringify(state.methods)),
+    };
+    mainWorkspace.updateToolbox(buildToolboxXml());
+    document.getElementById('saveModal').classList.remove('show');
+    document.getElementById('builderBadge').textContent = String(Object.keys(customBlocks).length);
+    showToast(`Bloc "${cleanName}" scellé dans la catégorie Personnalisé.`, 'success');
+
+    // Switch to editor tab to show
+    setTimeout(() => {
+      document.querySelector('.tab[data-tab="editor"]').click();
+    }, 400);
+
+    resetBuilder();
+  });
+
+  // ============================================================
+  //  RESET BUILDER
+  // ============================================================
+  function resetBuilder() {
+    state.inputs = [];
+    state.previewScale = 1.0;
+    document.getElementById('propColor').value = '#5b80a5';
+    document.getElementById('propColorHex').value = '#5b80a5';
+    document.getElementById('propTooltip').value = '';
+    document.getElementById('propSize').value = 'auto';
+    document.getElementById('propOutput').checked = true;
+    document.getElementById('propPrev').checked = false;
+    document.getElementById('propNext').checked = false;
+    document.getElementById('propPrev').disabled = true;
+    document.getElementById('propNext').disabled = true;
+    codeArea.value = '';
+    codeArea.dataset.userModified = '0';
+    // Reset methods to disabled defaults
+    Object.keys(state.methods).forEach(k => {
+      if (state.methods[k].custom) {
+        delete state.methods[k];
+      } else {
+        state.methods[k].enabled = false;
+        const pre = PREDEFINED_METHODS.find(p => p.key === k);
+        if (pre) state.methods[k].code = pre.template;
+      }
+    });
+    activeMethodTab = null;
+    applyPreviewZoom();
+    renderConstructionZone();
+    updatePreviewAndJson();
+  }
+  document.getElementById('resetBuilderBtn').addEventListener('click', () => {
+    if (state.inputs.length > 0 && !confirm('Réinitialiser le constructeur ? La structure courante sera perdue.')) return;
+    resetBuilder();
+  });
+
+  // ============================================================
+  //  TOAST
+  // ============================================================
+  let toastTimeout = null;
+  function showToast(msg, kind = 'success') {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = `toast show ${kind}`;
+    if (toastTimeout) clearTimeout(toastTimeout);
+    toastTimeout = setTimeout(() => { t.classList.remove('show'); }, 3500);
+  }
+
+  // ============================================================
+  //  WINDOW RESIZE & MODAL CLOSE
+  // ============================================================
+  window.addEventListener('resize', () => {
+    Blockly.svgResize(mainWorkspace);
+    Blockly.svgResize(previewWorkspace);
+  });
+
+  document.querySelectorAll('.modal-backdrop').forEach(bd => {
+    bd.addEventListener('click', (e) => {
+      if (e.target === bd) bd.classList.remove('show');
+    });
+  });
+
+  // ============================================================
+  //  INITIAL RENDER
+  // ============================================================
+  renderConstructionZone();
+  updatePreviewAndJson();
+  setTimeout(() => {
+    Blockly.svgResize(mainWorkspace);
+    Blockly.svgResize(previewWorkspace);
+  }, 100);
+
+  </script>
+</body>
+</html>
