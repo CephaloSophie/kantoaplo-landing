@@ -1,0 +1,2933 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KANTO APLO — Atelier · Héphaïstos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Cinzel:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-0: #0b0f17;
+    --bg-1: #11161f;
+    --bg-2: #161c27;
+    --bg-3: #1d2532;
+    --bg-4: #252e3d;
+    --bg-5: #2d3849;
+    --line: #2a3445;
+    --line-2: #364154;
+    --line-3: #455066;
+    --text-0: #e6ebf2;
+    --text-1: #a8b3c4;
+    --text-2: #6b7689;
+    --text-3: #4a5468;
+    --accent: #f5a524;
+    --accent-2: #f59e0b;
+    --accent-soft: rgba(245, 165, 36, 0.12);
+    --accent-line: rgba(245, 165, 36, 0.35);
+    --bronze: #cd7f32;
+    --blue: #3b82f6;
+    --green: #10b981;
+    --orange: #f97316;
+    --red: #ef4444;
+    --purple: #a855f7;
+    --dummy: #3b82f6;
+    --value: #10b981;
+    --statement: #f97316;
+    --mono: 'JetBrains Mono', ui-monospace, 'SF Mono', monospace;
+    --sans: 'IBM Plex Sans', system-ui, sans-serif;
+    --display: 'Cinzel', 'IBM Plex Sans', serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; overflow: hidden; }
+  body {
+    font-family: var(--sans);
+    background: var(--bg-0);
+    color: var(--text-0);
+    font-size: 13px;
+    line-height: 1.45;
+    display: flex;
+    flex-direction: column;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ============ HEADER ============ */
+  header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 16px;
+    background: linear-gradient(180deg, var(--bg-2) 0%, var(--bg-1) 100%);
+    border-bottom: 1px solid var(--line);
+    flex-shrink: 0;
+    position: relative;
+    flex-wrap: wrap;
+  }
+  header::after {
+    content: '';
+    position: absolute;
+    left: 0; right: 0; bottom: -1px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent 0%, var(--accent) 20%, var(--bronze) 50%, transparent 80%);
+    opacity: 0.5;
+  }
+  .brand {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    font-family: var(--mono);
+    flex-shrink: 0;
+  }
+  .brand .mark {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--accent);
+    letter-spacing: 0.5px;
+  }
+  .brand .sep { color: var(--text-2); }
+  .brand .title { font-size: 12px; color: var(--text-0); font-weight: 500; }
+
+  .tabs {
+    display: flex;
+    gap: 2px;
+    margin-left: 12px;
+    padding: 3px;
+    background: var(--bg-1);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+  }
+  .tab-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    color: var(--text-2);
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .tab-btn:hover { color: var(--text-0); background: var(--bg-3); }
+  .tab-btn.active {
+    background: var(--bg-3);
+    color: var(--accent);
+    border-color: var(--line-2);
+  }
+  .tab-btn .tab-icon { font-size: 13px; line-height: 1; }
+  header .spacer { flex: 1; }
+  .header-action {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 10px;
+    background: var(--bg-3);
+    border: 1px solid var(--line-2);
+    border-radius: 4px;
+    color: var(--text-1);
+    font-size: 11px;
+    font-family: var(--mono);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .header-action:hover {
+    background: var(--bg-4);
+    color: var(--text-0);
+    border-color: var(--accent);
+  }
+  .header-action .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 6px var(--green);
+  }
+
+  /* ============ MAIN ============ */
+  main { flex: 1; display: flex; min-height: 0; position: relative; }
+  .tab-pane {
+    flex: 1;
+    display: none;
+    flex-direction: column;
+    min-height: 0;
+    min-width: 0;
+  }
+  .tab-pane.active { display: flex; }
+
+  .pane-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    background: var(--bg-2);
+    border-bottom: 1px solid var(--line);
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: var(--text-1);
+    flex-shrink: 0;
+  }
+  .pane-header .marker {
+    width: 4px; height: 12px;
+    background: var(--accent);
+    border-radius: 1px;
+  }
+  .pane-header .count {
+    margin-left: auto;
+    color: var(--text-2);
+    font-weight: 400;
+  }
+  #blocklyMain { flex: 1; min-height: 0; }
+
+  /* ============ HEPHAISTOS LAYOUT ============ */
+  .hephaistos-grid {
+    flex: 1;
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+    min-height: 0;
+  }
+  @media (max-width: 1100px) {
+    .hephaistos-grid {
+      grid-template-columns: 1fr;
+      grid-template-rows: auto auto;
+      overflow-y: auto;
+    }
+    .heph-col { max-height: none !important; }
+  }
+
+  .heph-col {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    min-width: 0;
+    overflow-y: auto;
+    padding: 12px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--line-2) transparent;
+  }
+  .heph-col::-webkit-scrollbar { width: 8px; }
+  .heph-col::-webkit-scrollbar-thumb { background: var(--line-2); border-radius: 4px; }
+  .heph-col::-webkit-scrollbar-thumb:hover { background: var(--text-2); }
+  .heph-col-left { border-right: 1px solid var(--line); background: var(--bg-1); }
+  @media (max-width: 1100px) {
+    .heph-col-left { border-right: none; border-bottom: 1px solid var(--line); }
+  }
+  .heph-col-right { background: var(--bg-1); }
+
+  .heph-banner {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+    padding: 10px 12px;
+    background: linear-gradient(135deg, var(--bg-3) 0%, var(--bg-2) 100%);
+    border: 1px solid var(--line-2);
+    border-left: 3px solid var(--accent);
+    border-radius: 6px;
+    position: relative;
+    overflow: hidden;
+  }
+  .heph-banner::before {
+    content: '';
+    position: absolute;
+    top: -20px; right: -20px;
+    width: 80px; height: 80px;
+    background: radial-gradient(circle, var(--accent-soft) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .heph-banner .heph-emblem {
+    font-size: 22px;
+    color: var(--accent);
+    line-height: 1;
+  }
+  .heph-banner .heph-text { flex: 1; min-width: 0; }
+  .heph-banner .heph-name {
+    font-family: var(--display);
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    color: var(--accent);
+  }
+  .heph-banner .heph-tag {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-2);
+    letter-spacing: 0.5px;
+    margin-top: 1px;
+  }
+
+  /* ============ SECTIONS ============ */
+  .section {
+    background: var(--bg-2);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    margin-bottom: 10px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  .section-head {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 10px;
+    background: var(--bg-3);
+    border-bottom: 1px solid var(--line);
+    flex-shrink: 0;
+    cursor: default;
+  }
+  .section-head .num {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--accent);
+    background: var(--accent-soft);
+    padding: 1px 6px;
+    border-radius: 3px;
+    border: 1px solid var(--accent-line);
+  }
+  .section-head h3 {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-0);
+  }
+  .section-head .head-action {
+    margin-left: auto;
+    padding: 3px 8px;
+    background: var(--bg-2);
+    border: 1px solid var(--line-2);
+    color: var(--text-1);
+    border-radius: 3px;
+    font-family: var(--mono);
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .section-head .head-action:hover { color: var(--accent); border-color: var(--accent); }
+  .section-head .collapse-toggle {
+    margin-left: auto;
+    padding: 0 6px;
+    background: transparent;
+    border: none;
+    color: var(--text-2);
+    cursor: pointer;
+    font-size: 11px;
+    transition: color 0.15s;
+  }
+  .section-head .collapse-toggle:hover { color: var(--text-0); }
+  .section.collapsed .section-body-wrap { display: none; }
+  .section.collapsed .section-resize { display: none; }
+
+  .section-body-wrap {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .section-body { padding: 10px; overflow: auto; }
+  .section[data-resizable] .section-body {
+    min-height: 100px;
+    height: var(--body-height, auto);
+  }
+
+  /* Resize handle */
+  .section-resize {
+    height: 6px;
+    background: var(--bg-1);
+    border-top: 1px solid var(--line);
+    cursor: ns-resize;
+    position: relative;
+    flex-shrink: 0;
+    transition: background 0.15s;
+  }
+  .section-resize:hover { background: var(--accent-soft); }
+  .section-resize::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 30px;
+    height: 2px;
+    background: var(--line-3);
+    border-radius: 1px;
+    transition: background 0.15s;
+  }
+  .section-resize:hover::before { background: var(--accent); }
+  .section-resize.dragging { background: var(--accent-soft); }
+  .section-resize.dragging::before { background: var(--accent); }
+
+  /* ============ PALETTE ============ */
+  .palette-group {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+  .palette-group:last-child { margin-bottom: 0; }
+  .palette-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-2);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    flex-shrink: 0;
+    width: 60px;
+    padding-top: 5px;
+  }
+  .palette {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    flex: 1;
+  }
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 10px;
+    background: var(--bg-3);
+    border: 1px solid var(--line-2);
+    border-radius: 4px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-0);
+    cursor: grab;
+    user-select: none;
+    transition: transform 0.1s, border-color 0.15s, background 0.15s;
+  }
+  .chip:hover {
+    background: var(--bg-4);
+    border-color: var(--text-2);
+    transform: translateY(-1px);
+  }
+  .chip:active { cursor: grabbing; transform: translateY(0); }
+  .chip .swatch { width: 8px; height: 8px; border-radius: 1px; }
+  .chip[data-input-type="dummy"] .swatch { background: var(--dummy); }
+  .chip[data-input-type="value"] .swatch { background: var(--value); }
+  .chip[data-input-type="statement"] .swatch { background: var(--statement); }
+  .chip[data-field-type] .swatch { background: var(--accent); }
+
+  .palette-help {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-3);
+    margin-top: 6px;
+    line-height: 1.5;
+    padding: 6px 8px;
+    background: var(--bg-1);
+    border-radius: 3px;
+    border-left: 2px solid var(--line-2);
+  }
+  .palette-help b { color: var(--text-1); font-weight: 500; }
+
+  /* ============ ARCHETYPE SELECTOR ============ */
+  .archetype-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+  }
+  @media (max-width: 700px) {
+    .archetype-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  .archetype-card {
+    background: var(--bg-1);
+    border: 1px solid var(--line-2);
+    border-radius: 5px;
+    padding: 10px 8px;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    position: relative;
+  }
+  .archetype-card:hover {
+    border-color: var(--text-2);
+    background: var(--bg-3);
+  }
+  .archetype-card.active {
+    border-color: var(--accent);
+    background: var(--accent-soft);
+    box-shadow: 0 0 0 1px var(--accent-line);
+  }
+  .archetype-card.active::after {
+    content: '✓';
+    position: absolute;
+    top: 4px;
+    right: 6px;
+    color: var(--accent);
+    font-size: 10px;
+    font-weight: 700;
+  }
+  .archetype-svg {
+    width: 60px;
+    height: 40px;
+    flex-shrink: 0;
+  }
+  .archetype-svg .ablock {
+    fill: var(--bg-4);
+    stroke: var(--text-2);
+    stroke-width: 1;
+    transition: fill 0.15s, stroke 0.15s;
+  }
+  .archetype-card.active .archetype-svg .ablock {
+    fill: var(--accent);
+    stroke: var(--accent-2);
+  }
+  .archetype-card.active .archetype-svg .aghost {
+    stroke: var(--accent-line);
+  }
+  .archetype-svg .aghost {
+    fill: none;
+    stroke: var(--line-2);
+    stroke-width: 1;
+    stroke-dasharray: 2 2;
+  }
+  .archetype-name {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-0);
+    text-align: center;
+  }
+  .archetype-card.active .archetype-name { color: var(--accent); }
+  .archetype-desc {
+    font-family: var(--mono);
+    font-size: 9px;
+    color: var(--text-2);
+    text-align: center;
+    line-height: 1.3;
+  }
+
+  .archetype-mode-toggle {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px dashed var(--line);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .archetype-mode-toggle label {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-2);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+  }
+  .custom-conn-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-top: 8px;
+  }
+  .custom-conn-grid label.check-row { background: var(--bg-1); padding: 6px 8px; border-radius: 4px; border: 1px solid var(--line-2); }
+
+  /* ============ CONSTRUCTION ZONE ============ */
+  .construction-zone {
+    min-height: 200px;
+    padding: 10px;
+    background: var(--bg-1);
+    border: 1px dashed var(--line-2);
+    border-radius: 4px;
+    transition: border-color 0.15s, background 0.15s;
+  }
+  .construction-zone.drag-over {
+    border-color: var(--accent);
+    background: var(--accent-soft);
+  }
+  .construction-zone.empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-2);
+    font-size: 12px;
+    font-style: italic;
+    font-family: var(--mono);
+    flex-direction: column;
+    gap: 6px;
+  }
+  .construction-zone.empty::before {
+    content: '⚒';
+    font-size: 32px;
+    opacity: 0.3;
+  }
+
+  .input-row {
+    background: var(--bg-2);
+    border: 1px solid var(--line);
+    border-left-width: 3px;
+    border-radius: 4px;
+    padding: 8px;
+    margin-bottom: 8px;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  .input-row:last-child { margin-bottom: 0; }
+  .input-row.dummy { border-left-color: var(--dummy); }
+  .input-row.value { border-left-color: var(--value); }
+  .input-row.statement { border-left-color: var(--statement); }
+  .input-row.sortable-ghost { opacity: 0.4; }
+  .input-row.sortable-chosen { box-shadow: 0 4px 12px rgba(0,0,0,0.4); }
+
+  .input-head {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 6px;
+  }
+  .input-grip {
+    color: var(--text-2);
+    cursor: grab;
+    font-family: var(--mono);
+    font-size: 10px;
+    user-select: none;
+  }
+  .input-type {
+    font-family: var(--mono);
+    font-size: 9px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 2px 6px;
+    border-radius: 2px;
+  }
+  .input-row.dummy .input-type { background: rgba(59, 130, 246, 0.15); color: var(--dummy); }
+  .input-row.value .input-type { background: rgba(16, 185, 129, 0.15); color: var(--value); }
+  .input-row.statement .input-type { background: rgba(249, 115, 22, 0.15); color: var(--statement); }
+
+  .input-name {
+    flex: 1;
+    padding: 3px 6px;
+    background: var(--bg-1);
+    border: 1px solid var(--line);
+    color: var(--text-0);
+    border-radius: 3px;
+    font-family: var(--mono);
+    font-size: 11px;
+    min-width: 0;
+  }
+  .input-name:focus { outline: none; border-color: var(--accent); }
+  .input-name:disabled {
+    background: transparent;
+    border-color: transparent;
+    color: var(--text-2);
+    cursor: not-allowed;
+  }
+
+  .icon-btn {
+    width: 22px; height: 22px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: 1px solid var(--line);
+    color: var(--text-1);
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 11px;
+    line-height: 1;
+    transition: all 0.15s;
+    flex-shrink: 0;
+  }
+  .icon-btn:hover {
+    background: var(--bg-4);
+    color: var(--text-0);
+    border-color: var(--text-2);
+  }
+  .icon-btn.danger:hover {
+    background: rgba(239, 68, 68, 0.15);
+    color: var(--red);
+    border-color: var(--red);
+  }
+  .icon-btn.accent:hover {
+    background: var(--accent-soft);
+    color: var(--accent);
+    border-color: var(--accent);
+  }
+
+  .field-zone {
+    min-height: 36px;
+    padding: 6px;
+    background: var(--bg-1);
+    border: 1px dashed var(--line);
+    border-radius: 3px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    align-items: center;
+    transition: border-color 0.15s, background 0.15s;
+  }
+  .field-zone.drag-over {
+    border-color: var(--accent);
+    background: var(--accent-soft);
+  }
+  .field-zone .placeholder {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-2);
+    padding: 0 4px;
+    font-style: italic;
+  }
+  .field-chip {
+    display: inline-flex;
+    align-items: stretch;
+    background: rgba(245, 165, 36, 0.08);
+    border: 1px solid rgba(245, 165, 36, 0.3);
+    border-radius: 4px;
+    overflow: hidden;
+    font-family: var(--mono);
+    font-size: 10px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .field-chip:hover {
+    background: rgba(245, 165, 36, 0.15);
+    border-color: var(--accent);
+  }
+  .field-chip .field-icon {
+    display: flex;
+    align-items: center;
+    padding: 0 6px;
+    background: rgba(245, 165, 36, 0.18);
+    color: var(--accent);
+    font-size: 11px;
+    border-right: 1px solid rgba(245, 165, 36, 0.25);
+  }
+  .field-chip .field-meta {
+    display: flex;
+    flex-direction: column;
+    padding: 3px 8px;
+    line-height: 1.25;
+    min-width: 0;
+  }
+  .field-chip .field-label-display {
+    color: var(--text-0);
+    font-weight: 500;
+    font-size: 11px;
+    white-space: nowrap;
+  }
+  .field-chip .field-label-display.unset {
+    color: var(--text-3);
+    font-style: italic;
+  }
+  .field-chip .field-tech-name {
+    color: var(--text-2);
+    font-size: 9px;
+    font-weight: 400;
+    letter-spacing: 0.3px;
+    white-space: nowrap;
+  }
+  .field-chip .field-remove {
+    display: flex;
+    align-items: center;
+    padding: 0 6px;
+    color: var(--text-2);
+    border-left: 1px solid rgba(245, 165, 36, 0.2);
+    transition: all 0.15s;
+  }
+  .field-chip .field-remove:hover {
+    background: rgba(239, 68, 68, 0.2);
+    color: var(--red);
+  }
+
+  /* ============ PROPERTIES ============ */
+  .props-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  @media (max-width: 600px) { .props-grid { grid-template-columns: 1fr; } }
+  .prop {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .prop.full { grid-column: 1 / -1; }
+  .prop label {
+    font-family: var(--mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-2);
+  }
+  .prop input[type="text"] {
+    padding: 5px 8px;
+    background: var(--bg-1);
+    border: 1px solid var(--line-2);
+    color: var(--text-0);
+    border-radius: 3px;
+    font-family: var(--sans);
+    font-size: 12px;
+  }
+  .prop input[type="text"]:focus { outline: none; border-color: var(--accent); }
+  .color-row { display: flex; align-items: center; gap: 6px; }
+  .prop input[type="color"] {
+    width: 40px; height: 28px;
+    padding: 2px;
+    background: var(--bg-1);
+    border: 1px solid var(--line-2);
+    border-radius: 3px;
+    cursor: pointer;
+  }
+  .color-hex {
+    flex: 1;
+    padding: 5px 8px;
+    background: var(--bg-1);
+    border: 1px solid var(--line-2);
+    color: var(--text-0);
+    border-radius: 3px;
+    font-family: var(--mono);
+    font-size: 11px;
+    min-width: 0;
+  }
+  .size-row { display: flex; align-items: center; gap: 8px; }
+  .prop input[type="range"] {
+    flex: 1;
+    -webkit-appearance: none;
+    appearance: none;
+    height: 4px;
+    background: var(--bg-1);
+    border-radius: 2px;
+    outline: none;
+    border: 1px solid var(--line-2);
+    cursor: pointer;
+    min-width: 0;
+  }
+  .prop input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 2px solid var(--bg-1);
+    cursor: pointer;
+    box-shadow: 0 0 0 1px var(--accent-line);
+  }
+  .prop input[type="range"]::-moz-range-thumb {
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 2px solid var(--bg-1);
+    cursor: pointer;
+  }
+  .size-value {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent);
+    min-width: 36px;
+    text-align: right;
+  }
+
+  .checkbox-stack { display: flex; flex-direction: column; gap: 6px; }
+  .check-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    user-select: none;
+  }
+  .check-row input[type="checkbox"] {
+    appearance: none;
+    width: 14px; height: 14px;
+    background: var(--bg-1);
+    border: 1px solid var(--line-2);
+    border-radius: 2px;
+    cursor: pointer;
+    position: relative;
+    flex-shrink: 0;
+  }
+  .check-row input[type="checkbox"]:checked {
+    background: var(--accent);
+    border-color: var(--accent);
+  }
+  .check-row input[type="checkbox"]:checked::after {
+    content: '✓';
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--bg-0);
+    font-size: 10px;
+    font-weight: 700;
+  }
+  .check-row input[type="checkbox"]:disabled { opacity: 0.4; cursor: not-allowed; }
+  .check-row span { font-family: var(--mono); font-size: 11px; color: var(--text-1); }
+  .check-row input:disabled + span { color: var(--text-2); }
+
+  /* ============ PREVIEW + JSON + JS GRID ============ */
+  .triple-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  @media (max-width: 700px) { .triple-grid { grid-template-columns: 1fr; } }
+  .preview-wrap {
+    position: relative;
+    background: var(--bg-1);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    overflow: hidden;
+    height: var(--preview-height, 220px);
+    grid-column: 1 / -1;
+  }
+  .preview-wrap.compact { height: var(--preview-height, 180px); }
+  #blocklyPreview { width: 100%; height: 100%; }
+  .preview-edit-btn {
+    position: absolute;
+    top: 6px; right: 6px;
+    width: 28px; height: 28px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-3);
+    border: 1px solid var(--accent-line);
+    color: var(--accent);
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 13px;
+    z-index: 10;
+    transition: all 0.15s;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+  }
+  .preview-edit-btn:hover {
+    background: var(--accent);
+    color: var(--bg-0);
+    transform: scale(1.05);
+  }
+  .preview-edit-btn .badge {
+    position: absolute;
+    top: -4px; right: -4px;
+    min-width: 14px; height: 14px;
+    padding: 0 3px;
+    background: var(--bronze);
+    color: var(--bg-0);
+    border-radius: 7px;
+    font-family: var(--mono);
+    font-size: 9px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1.5px solid var(--bg-1);
+  }
+  .preview-edit-btn .badge.hidden { display: none; }
+
+  .code-panel {
+    background: var(--bg-1);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    height: var(--code-panel-height, 260px);
+  }
+  .code-panel-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 5px 8px;
+    background: var(--bg-2);
+    border-bottom: 1px solid var(--line);
+    font-family: var(--mono);
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-2);
+    flex-shrink: 0;
+  }
+  .code-panel-head .label-with-icon {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .code-copy-btn {
+    padding: 2px 8px;
+    background: var(--bg-3);
+    border: 1px solid var(--line-2);
+    color: var(--text-1);
+    border-radius: 3px;
+    font-family: var(--mono);
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .code-copy-btn:hover { color: var(--accent); border-color: var(--accent); }
+  .code-copy-btn.copied { color: var(--green); border-color: var(--green); }
+  .code-content {
+    flex: 1;
+    overflow: auto;
+    padding: 8px 10px;
+    font-family: var(--mono);
+    font-size: 10.5px;
+    line-height: 1.5;
+    color: var(--text-0);
+    white-space: pre;
+    scrollbar-width: thin;
+    scrollbar-color: var(--line-2) transparent;
+    margin: 0;
+  }
+  .code-content::-webkit-scrollbar { width: 6px; height: 6px; }
+  .code-content::-webkit-scrollbar-thumb { background: var(--line-2); border-radius: 3px; }
+
+  /* JSON syntax highlighting */
+  .json-key { color: #93c5fd; }
+  .json-string { color: #86efac; }
+  .json-number { color: #fbbf24; }
+  .json-bool { color: #c084fc; }
+  .json-null { color: var(--text-2); }
+  /* JS syntax highlighting */
+  .js-kw { color: #c084fc; font-weight: 600; }
+  .js-str { color: #86efac; }
+  .js-num { color: #fbbf24; }
+  .js-com { color: var(--text-2); font-style: italic; }
+  .js-fn { color: #93c5fd; }
+  .js-prop { color: #fbbf24; }
+  .js-blk { color: #f5a524; }
+
+  /* ============ CODE EDITOR ============ */
+  .code-wrap { position: relative; }
+  textarea#codeGenerator {
+    width: 100%;
+    min-height: 130px;
+    height: var(--gen-height, 130px);
+    padding: 10px;
+    background: var(--bg-1);
+    border: 1px solid var(--line-2);
+    color: var(--text-0);
+    border-radius: 4px;
+    font-family: var(--mono);
+    font-size: 11px;
+    line-height: 1.6;
+    resize: vertical;
+    tab-size: 2;
+  }
+  textarea#codeGenerator:focus { outline: none; border-color: var(--accent); }
+
+  /* ============ ACTIONS ============ */
+  .action-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  @media (max-width: 480px) { .action-row { grid-template-columns: 1fr; } }
+  .lifecycle-btn {
+    padding: 10px;
+    background: var(--bg-3);
+    border: 1px solid var(--line-2);
+    color: var(--text-0);
+    border-radius: 4px;
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    position: relative;
+  }
+  .lifecycle-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: var(--bg-4);
+  }
+  .lifecycle-btn .lc-badge {
+    position: absolute;
+    top: 4px; right: 4px;
+    min-width: 16px; height: 16px;
+    padding: 0 4px;
+    background: var(--accent);
+    color: var(--bg-0);
+    border-radius: 8px;
+    font-family: var(--mono);
+    font-size: 9px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .lifecycle-btn .lc-badge.hidden { display: none; }
+
+  .save-btn {
+    padding: 10px;
+    background: linear-gradient(180deg, var(--accent) 0%, var(--accent-2) 100%);
+    color: var(--bg-0);
+    border: none;
+    border-radius: 4px;
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    cursor: pointer;
+    transition: transform 0.1s, box-shadow 0.15s;
+    box-shadow: 0 2px 0 rgba(0,0,0,0.3);
+  }
+  .save-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 3px 8px rgba(245, 165, 36, 0.3);
+  }
+  .save-btn:active { transform: translateY(0); }
+
+  /* ============ MODAL ============ */
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.65);
+    backdrop-filter: blur(4px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    animation: fadeIn 0.15s;
+    padding: 16px;
+  }
+  .modal-backdrop.show { display: flex; }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  .modal {
+    background: var(--bg-2);
+    border: 1px solid var(--line-2);
+    border-radius: 8px;
+    width: 460px;
+    max-width: 100%;
+    max-height: 90vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+    animation: slideUp 0.2s;
+  }
+  .modal.large { width: 760px; }
+  @keyframes slideUp { from { transform: translateY(8px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+  .modal-head {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .modal-head .marker { width: 4px; height: 14px; background: var(--accent); border-radius: 1px; }
+  .modal-head h2 {
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .modal-head .modal-subtitle {
+    margin-left: auto;
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-2);
+  }
+  .modal-body { padding: 16px; overflow-y: auto; }
+  .form-group { margin-bottom: 12px; }
+  .form-group label {
+    display: block;
+    font-family: var(--mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-2);
+    margin-bottom: 4px;
+  }
+  .form-group .helper {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-3);
+    margin-top: 4px;
+    line-height: 1.4;
+  }
+  .form-group input[type="text"],
+  .form-group input[type="number"],
+  .form-group textarea {
+    width: 100%;
+    padding: 6px 9px;
+    background: var(--bg-1);
+    border: 1px solid var(--line-2);
+    color: var(--text-0);
+    border-radius: 3px;
+    font-family: var(--sans);
+    font-size: 12px;
+  }
+  .form-group input:focus, .form-group textarea:focus { outline: none; border-color: var(--accent); }
+  .form-row { display: flex; gap: 8px; }
+  .form-row > * { flex: 1; }
+  .modal-foot {
+    padding: 12px 16px;
+    border-top: 1px solid var(--line);
+    display: flex;
+    justify-content: flex-end;
+    gap: 6px;
+    background: var(--bg-1);
+  }
+  .btn {
+    padding: 6px 14px;
+    background: var(--bg-3);
+    border: 1px solid var(--line-2);
+    color: var(--text-0);
+    border-radius: 3px;
+    cursor: pointer;
+    font-family: var(--mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 500;
+    transition: all 0.15s;
+  }
+  .btn:hover { background: var(--bg-4); border-color: var(--text-2); }
+  .btn.primary {
+    background: var(--accent);
+    color: var(--bg-0);
+    border-color: var(--accent);
+    font-weight: 600;
+  }
+  .btn.primary:hover { background: var(--accent-2); border-color: var(--accent-2); }
+
+  .dropdown-options-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 28px;
+    gap: 4px;
+    margin-bottom: 4px;
+  }
+  .dropdown-options-row input { padding: 4px 6px; font-size: 11px; }
+  .dropdown-options-row .icon-btn { width: 28px; }
+  #modalAddOption {
+    margin-top: 6px;
+    padding: 4px 10px;
+    background: var(--bg-1);
+    border: 1px dashed var(--line-2);
+    color: var(--text-1);
+    border-radius: 3px;
+    font-family: var(--mono);
+    font-size: 10px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  #modalAddOption:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* Lifecycle modal */
+  .lc-method {
+    background: var(--bg-1);
+    border: 1px solid var(--line);
+    border-radius: 5px;
+    margin-bottom: 10px;
+    overflow: hidden;
+    transition: border-color 0.15s;
+  }
+  .lc-method.has-code {
+    border-color: var(--accent-line);
+    box-shadow: 0 0 0 1px rgba(245, 165, 36, 0.1);
+  }
+  .lc-method.custom { border-left: 3px solid var(--bronze); }
+  .lc-method-head {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 10px;
+    background: var(--bg-2);
+    border-bottom: 1px solid var(--line);
+  }
+  .lc-method-name {
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-0);
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .lc-method-name input.lc-name-input {
+    flex: 0 1 auto;
+    min-width: 80px;
+    background: var(--bg-1);
+    border: 1px solid var(--line-2);
+    color: var(--text-0);
+    padding: 3px 6px;
+    border-radius: 3px;
+    font-family: var(--mono);
+    font-size: 12px;
+  }
+  .lc-method-name input.lc-params-input {
+    flex: 1;
+    background: var(--bg-1);
+    border: 1px solid var(--line-2);
+    color: var(--text-1);
+    padding: 3px 6px;
+    border-radius: 3px;
+    font-family: var(--mono);
+    font-size: 11px;
+  }
+  .lc-method-name input:focus { outline: none; border-color: var(--accent); }
+  .lc-method-name .lc-paren { color: var(--text-2); font-weight: 400; }
+  .lc-method-tag {
+    font-family: var(--mono);
+    font-size: 9px;
+    padding: 2px 6px;
+    border-radius: 3px;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    flex-shrink: 0;
+  }
+  .lc-method-tag.builtin {
+    background: rgba(59, 130, 246, 0.15);
+    color: var(--blue);
+    border: 1px solid rgba(59, 130, 246, 0.3);
+  }
+  .lc-method-tag.custom {
+    background: rgba(205, 127, 50, 0.15);
+    color: var(--bronze);
+    border: 1px solid rgba(205, 127, 50, 0.3);
+  }
+  .lc-method-tag.prop {
+    background: rgba(168, 85, 247, 0.15);
+    color: var(--purple);
+    border: 1px solid rgba(168, 85, 247, 0.3);
+  }
+  .lc-method-textarea {
+    width: 100%;
+    padding: 8px 10px;
+    background: var(--bg-1);
+    border: none;
+    color: var(--text-0);
+    font-family: var(--mono);
+    font-size: 11px;
+    line-height: 1.5;
+    resize: vertical;
+    min-height: 60px;
+    tab-size: 2;
+    display: block;
+  }
+  .lc-method-textarea:focus { outline: none; }
+  .lc-method-help {
+    padding: 4px 10px;
+    background: var(--bg-2);
+    border-top: 1px solid var(--line);
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-3);
+  }
+  .lc-add-row {
+    display: flex;
+    gap: 8px;
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px dashed var(--line);
+  }
+  .lc-add-btn {
+    flex: 1;
+    padding: 8px;
+    background: var(--bg-1);
+    border: 1px dashed var(--line-2);
+    color: var(--text-1);
+    border-radius: 4px;
+    font-family: var(--mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .lc-add-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: var(--bg-2);
+  }
+
+  /* Toast */
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    padding: 10px 16px;
+    background: var(--bg-2);
+    border: 1px solid var(--green);
+    border-left-width: 3px;
+    color: var(--text-0);
+    border-radius: 4px;
+    font-family: var(--mono);
+    font-size: 12px;
+    opacity: 0;
+    transition: opacity 0.2s, transform 0.2s;
+    pointer-events: none;
+    z-index: 2000;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    max-width: calc(100vw - 32px);
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  .toast.error { border-color: var(--red); }
+  .toast.error::before { content: '✕'; color: var(--red); font-weight: 700; }
+  .toast.success::before { content: '✓'; color: var(--green); font-weight: 700; }
+
+  /* Blockly tweaks */
+  .blocklyMainBackground { stroke: none !important; }
+  .blocklyToolboxDiv { background: var(--bg-2) !important; border-right: 1px solid var(--line) !important; }
+  .blocklyTreeRow { color: var(--text-0) !important; }
+  .blocklyFlyoutBackground { fill: var(--bg-1) !important; fill-opacity: 1 !important; }
+
+  body.resizing-section, body.resizing-section * { user-select: none; cursor: ns-resize !important; }
+</style>
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <span class="mark">▲ KANTO APLO</span>
+      <span class="sep">/</span>
+      <span class="title">Atelier de Blocs</span>
+    </div>
+    <nav class="tabs" role="tablist">
+      <button class="tab-btn active" data-tab="editor" role="tab">
+        <span class="tab-icon">▦</span>
+        <span>Éditeur</span>
+      </button>
+      <button class="tab-btn" data-tab="hephaistos" role="tab">
+        <span class="tab-icon">⚒</span>
+        <span>Héphaïstos</span>
+      </button>
+    </nav>
+    <div class="spacer"></div>
+    <button class="header-action" id="resetBuilderBtn" title="Réinitialiser le constructeur">
+      <span>↺</span> Nouveau bloc
+    </button>
+    <div class="header-action">
+      <span class="dot"></span> Blockly v10
+    </div>
+  </header>
+
+  <main>
+    <!-- TAB 1: Editor -->
+    <section class="tab-pane active" id="pane-editor">
+      <div class="pane-header">
+        <span class="marker"></span>
+        Éditeur principal
+        <span class="count" id="editorCount">0 blocs</span>
+      </div>
+      <div id="blocklyMain"></div>
+    </section>
+
+    <!-- TAB 2: Héphaïstos -->
+    <section class="tab-pane" id="pane-hephaistos">
+      <div class="hephaistos-grid">
+        <!-- LEFT COLUMN -->
+        <div class="heph-col heph-col-left">
+          <div class="heph-banner">
+            <span class="heph-emblem">⚒</span>
+            <div class="heph-text">
+              <div class="heph-name">HÉPHAÏSTOS</div>
+              <div class="heph-tag">Forgeron de blocs · ΗΦΑΙΣΤΟΣ</div>
+            </div>
+          </div>
+
+          <!-- 1. Archetype -->
+          <div class="section">
+            <div class="section-head">
+              <span class="num">01</span>
+              <h3>Archétype du bloc</h3>
+            </div>
+            <div class="section-body-wrap">
+              <div class="section-body">
+                <div class="archetype-grid" id="archetypeGrid">
+                  <!-- 4 cards, populated by JS -->
+                </div>
+                <div class="archetype-mode-toggle">
+                  <label class="check-row" style="margin: 0;">
+                    <input type="checkbox" id="archetypeCustom">
+                    <span>Mode personnalisé (régler les connexions à la main)</span>
+                  </label>
+                </div>
+                <div id="customConnGrid" class="custom-conn-grid" style="display: none;">
+                  <label class="check-row">
+                    <input type="checkbox" id="propOutput" checked>
+                    <span>output</span>
+                  </label>
+                  <label class="check-row">
+                    <input type="checkbox" id="propPrev">
+                    <span>previous</span>
+                  </label>
+                  <label class="check-row">
+                    <input type="checkbox" id="propNext">
+                    <span>next</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2. Palette -->
+          <div class="section">
+            <div class="section-head">
+              <span class="num">02</span>
+              <h3>Palette · contenu interne</h3>
+            </div>
+            <div class="section-body-wrap">
+              <div class="section-body">
+                <div class="palette-group">
+                  <span class="palette-label">Entrées</span>
+                  <div class="palette" id="inputsPalette">
+                    <div class="chip" data-input-type="dummy" draggable="true">
+                      <span class="swatch"></span>dummy
+                    </div>
+                    <div class="chip" data-input-type="value" draggable="true">
+                      <span class="swatch"></span>value
+                    </div>
+                    <div class="chip" data-input-type="statement" draggable="true">
+                      <span class="swatch"></span>statement
+                    </div>
+                  </div>
+                </div>
+                <div class="palette-group">
+                  <span class="palette-label">Champs</span>
+                  <div class="palette" id="fieldsPalette">
+                    <div class="chip" data-field-type="text" draggable="true">
+                      <span class="swatch"></span>📝 texte
+                    </div>
+                    <div class="chip" data-field-type="checkbox" draggable="true">
+                      <span class="swatch"></span>☑ checkbox
+                    </div>
+                    <div class="chip" data-field-type="dropdown" draggable="true">
+                      <span class="swatch"></span>▾ dropdown
+                    </div>
+                    <div class="chip" data-field-type="image" draggable="true">
+                      <span class="swatch"></span>🖼 image
+                    </div>
+                  </div>
+                </div>
+                <div class="palette-help">
+                  <b>dummy</b> = ligne de champs uniquement · <b>value</b> = slot pour brancher un bloc valeur · <b>statement</b> = zone d'empilement à l'intérieur. Ces options définissent <b>ce qu'il y a dedans</b>, pas la forme externe (gérée en 01).
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 3. Construction -->
+          <div class="section" data-resizable id="sectionStructure">
+            <div class="section-head">
+              <span class="num">03</span>
+              <h3>Structure</h3>
+              <button class="head-action" id="clearStructureBtn">Vider</button>
+            </div>
+            <div class="section-body-wrap">
+              <div class="section-body">
+                <div class="construction-zone empty" id="constructionZone">
+                  Glissez des entrées ici
+                </div>
+              </div>
+              <div class="section-resize" data-target="sectionStructure" data-property="--body-height"></div>
+            </div>
+          </div>
+
+          <!-- 4. Generator code -->
+          <div class="section" data-resizable id="sectionGenerator">
+            <div class="section-head">
+              <span class="num">04</span>
+              <h3>Code générateur (JavaScript)</h3>
+              <button class="head-action" id="codeReset">Auto</button>
+            </div>
+            <div class="section-body-wrap">
+              <div class="section-body">
+                <div class="code-wrap">
+                  <textarea id="codeGenerator" spellcheck="false" placeholder="// Le code par défaut sera généré automatiquement"></textarea>
+                </div>
+              </div>
+              <div class="section-resize" data-target="sectionGenerator" data-property="--gen-height"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT COLUMN -->
+        <div class="heph-col heph-col-right">
+          <!-- A. Properties -->
+          <div class="section">
+            <div class="section-head">
+              <span class="num">A</span>
+              <h3>Propriétés</h3>
+            </div>
+            <div class="section-body-wrap">
+              <div class="section-body">
+                <div class="props-grid">
+                  <div class="prop">
+                    <label>Couleur</label>
+                    <div class="color-row">
+                      <input type="color" id="propColor" value="#5b80a5">
+                      <input type="text" class="color-hex" id="propColorHex" value="#5b80a5" maxlength="7">
+                    </div>
+                  </div>
+                  <div class="prop">
+                    <label>Échelle aperçu</label>
+                    <div class="size-row">
+                      <input type="range" id="propScale" min="0.5" max="2.5" step="0.1" value="1">
+                      <span class="size-value" id="propScaleVal">1.0×</span>
+                    </div>
+                  </div>
+                  <div class="prop full">
+                    <label>Info-bulle (tooltip)</label>
+                    <input type="text" id="propTooltip" placeholder="Description du bloc...">
+                  </div>
+                  <div class="prop full">
+                    <label>Options de rendu</label>
+                    <label class="check-row">
+                      <input type="checkbox" id="propInline">
+                      <span>Champs en ligne (inputsInline)</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- B. Preview + JSON + JS -->
+          <div class="section" data-resizable id="sectionPreview">
+            <div class="section-head">
+              <span class="num">B</span>
+              <h3>Aperçu temps réel</h3>
+            </div>
+            <div class="section-body-wrap">
+              <div class="section-body">
+                <div class="preview-wrap" id="previewWrap">
+                  <button class="preview-edit-btn" id="previewEditBtn" title="Méthodes JS personnalisées (init, onChange, mutationToDom...)">
+                    ✎
+                    <span class="badge hidden" id="previewEditBadge">0</span>
+                  </button>
+                  <div id="blocklyPreview"></div>
+                </div>
+              </div>
+              <div class="section-resize" data-target="sectionPreview" data-property="--preview-height"></div>
+            </div>
+          </div>
+
+          <!-- C. JSON definition -->
+          <div class="section" data-resizable id="sectionJson">
+            <div class="section-head">
+              <span class="num">C</span>
+              <h3>JSON · définition du bloc</h3>
+            </div>
+            <div class="section-body-wrap">
+              <div class="section-body">
+                <div class="code-panel" id="jsonPanel">
+                  <div class="code-panel-head">
+                    <span class="label-with-icon"><span style="color:var(--accent)">{ }</span> message0 / args0</span>
+                    <button class="code-copy-btn" id="jsonCopyBtn">Copier</button>
+                  </div>
+                  <pre class="code-content" id="jsonContent">// Glissez une entrée pour commencer</pre>
+                </div>
+              </div>
+              <div class="section-resize" data-target="sectionJson" data-property="--code-panel-height"></div>
+            </div>
+          </div>
+
+          <!-- D. JS code -->
+          <div class="section" data-resizable id="sectionJs">
+            <div class="section-head">
+              <span class="num">D</span>
+              <h3>Code JavaScript généré</h3>
+            </div>
+            <div class="section-body-wrap">
+              <div class="section-body">
+                <div class="code-panel" id="jsPanel">
+                  <div class="code-panel-head">
+                    <span class="label-with-icon"><span style="color:var(--blue)">JS</span> Blockly.Blocks + générateur</span>
+                    <button class="code-copy-btn" id="jsCopyBtn">Copier</button>
+                  </div>
+                  <pre class="code-content" id="jsContent">// Glissez une entrée pour commencer</pre>
+                </div>
+              </div>
+              <div class="section-resize" data-target="sectionJs" data-property="--code-panel-height"></div>
+            </div>
+          </div>
+
+          <!-- E. Actions -->
+          <div class="section">
+            <div class="section-head">
+              <span class="num">E</span>
+              <h3>Actions</h3>
+            </div>
+            <div class="section-body-wrap">
+              <div class="section-body">
+                <div class="action-row">
+                  <button class="lifecycle-btn" id="lifecycleBtn">
+                    ✎ Méthodes JS
+                    <span class="lc-badge hidden" id="lifecycleBadge">0</span>
+                  </button>
+                  <button class="save-btn" id="saveBlockBtn">
+                    ⚒ Forger le bloc
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===== FIELD MODAL ===== -->
+  <div class="modal-backdrop" id="fieldModal">
+    <div class="modal">
+      <div class="modal-head">
+        <span class="marker"></span>
+        <h2 id="fieldModalTitle">Configuration du champ</h2>
+      </div>
+      <div class="modal-body" id="fieldModalBody"></div>
+      <div class="modal-foot">
+        <button class="btn" id="fieldModalCancel">Annuler</button>
+        <button class="btn primary" id="fieldModalSave">Enregistrer</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SAVE MODAL ===== -->
+  <div class="modal-backdrop" id="saveModal">
+    <div class="modal">
+      <div class="modal-head">
+        <span class="marker"></span>
+        <h2>Forger le bloc</h2>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label>Identifiant unique du bloc</label>
+          <input type="text" id="saveBlockName" placeholder="ex: my_custom_block">
+          <div class="helper">Lettres minuscules, chiffres et underscores uniquement.</div>
+        </div>
+      </div>
+      <div class="modal-foot">
+        <button class="btn" id="saveModalCancel">Annuler</button>
+        <button class="btn primary" id="saveModalConfirm">Enregistrer</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== LIFECYCLE MODAL ===== -->
+  <div class="modal-backdrop" id="lifecycleModal">
+    <div class="modal large">
+      <div class="modal-head">
+        <span class="marker"></span>
+        <h2>Méthodes &amp; propriétés JS</h2>
+        <span class="modal-subtitle">init · onChange · mutationToDom · custom</span>
+      </div>
+      <div class="modal-body" id="lifecycleBody"></div>
+      <div class="modal-foot">
+        <button class="btn" id="lifecycleCancel">Annuler</button>
+        <button class="btn primary" id="lifecycleSave">Enregistrer</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast success" id="toast"></div>
+
+  <script src="https://unpkg.com/blockly@10.4.3/blockly.min.js"></script>
+  <script src="https://unpkg.com/blockly@10.4.3/msg/fr.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
+
+  <script>
+  // ============================================================
+  //  KANTO APLO — Héphaïstos v3
+  // ============================================================
+  Blockly.setLocale(Blockly.Msg);
+
+  const PREVIEW_TYPE = '__heph_preview_block__';
+  let inputCounter = 0;
+  let fieldCounter = 0;
+  const customBlocks = {};
+  let draggedInputType = null;
+  let draggedFieldType = null;
+  let modalContext = null;
+
+  // ============ Archetypes ============
+  const ARCHETYPES = [
+    {
+      id: 'value',
+      name: 'Valeur',
+      desc: 'Se branche dans un autre bloc',
+      output: true, prev: false, next: false,
+      svg: `<svg class="archetype-svg" viewBox="0 0 60 40">
+        <path class="ablock" d="M 8 10 L 38 10 L 38 14 Q 42 14 42 18 Q 42 22 38 22 L 38 30 L 8 30 Z"/>
+      </svg>`,
+    },
+    {
+      id: 'stack',
+      name: 'Empilable',
+      desc: 'Au milieu d\'une séquence',
+      output: false, prev: true, next: true,
+      svg: `<svg class="archetype-svg" viewBox="0 0 60 40">
+        <path class="aghost" d="M 14 4 L 18 4 L 20 6 L 24 6 L 26 4 L 50 4"/>
+        <path class="ablock" d="M 8 8 L 14 8 L 16 10 L 22 10 L 24 8 L 50 8 L 50 30 L 24 30 L 22 32 L 16 32 L 14 30 L 8 30 Z"/>
+        <path class="aghost" d="M 14 36 L 16 34 L 22 34 L 24 36 L 50 36"/>
+      </svg>`,
+    },
+    {
+      id: 'terminal',
+      name: 'Terminal',
+      desc: 'Fin de séquence (return, break)',
+      output: false, prev: true, next: false,
+      svg: `<svg class="archetype-svg" viewBox="0 0 60 40">
+        <path class="aghost" d="M 14 4 L 18 4 L 20 6 L 24 6 L 26 4 L 50 4"/>
+        <path class="ablock" d="M 8 8 L 14 8 L 16 10 L 22 10 L 24 8 L 50 8 L 50 32 L 8 32 Z"/>
+      </svg>`,
+    },
+    {
+      id: 'root',
+      name: 'Racine',
+      desc: 'Standalone, comme une fonction',
+      output: false, prev: false, next: false,
+      svg: `<svg class="archetype-svg" viewBox="0 0 60 40">
+        <path class="ablock" d="M 8 8 L 50 8 L 50 32 L 8 32 Z"/>
+      </svg>`,
+    },
+  ];
+  let currentArchetype = 'value';
+  let archetypeCustom = false;
+
+  // ============ Lifecycle methods ============
+  const BUILTIN_METHODS = [
+    { name: 'init', params: '', help: "Code additionnel exécuté APRÈS l'initialisation JSON par défaut." },
+    { name: 'onchange', params: 'event', help: "Déclenché à chaque changement du workspace." },
+    { name: 'mutationToDom', params: '', help: "Sérialise l'état du bloc en élément XML." },
+    { name: 'domToMutation', params: 'xmlElement', help: "Restaure l'état depuis l'élément XML." },
+  ];
+  const METHOD_TEMPLATES = {
+    init: "function() {\n  // Code exécuté après le init par défaut\n}",
+    onchange: "function(event) {\n  \n}",
+    mutationToDom: "function() {\n  var container = Blockly.utils.xml.createElement('mutation');\n  return container;\n}",
+    domToMutation: "function(xmlElement) {\n  \n}",
+  };
+
+  const state = {
+    inputs: [],
+    methods: BUILTIN_METHODS.map(m => ({
+      name: m.name, params: m.params, code: '',
+      builtin: true, kind: 'method', help: m.help,
+    })),
+    previewScale: 1.0,
+  };
+
+  // ============ Tabs ============
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+  });
+  function switchTab(name) {
+    document.querySelectorAll('.tab-btn').forEach(b =>
+      b.classList.toggle('active', b.dataset.tab === name));
+    document.querySelectorAll('.tab-pane').forEach(p =>
+      p.classList.toggle('active', p.id === `pane-${name}`));
+    setTimeout(() => {
+      if (name === 'editor') Blockly.svgResize(mainWorkspace);
+      else Blockly.svgResize(previewWorkspace);
+    }, 50);
+  }
+
+  // ============ Toolbox ============
+  function buildToolboxXml() {
+    const customBlocksXml = Object.keys(customBlocks)
+      .map(t => `<block type="${t}"></block>`).join('');
+    return `<xml id="toolbox" style="display:none">
+      <category name="Logique" colour="210">
+        <block type="controls_if"></block>
+        <block type="logic_compare"></block>
+        <block type="logic_operation"></block>
+        <block type="logic_negate"></block>
+        <block type="logic_boolean"></block>
+        <block type="logic_null"></block>
+        <block type="logic_ternary"></block>
+      </category>
+      <category name="Boucles" colour="120">
+        <block type="controls_repeat_ext">
+          <value name="TIMES"><shadow type="math_number"><field name="NUM">10</field></shadow></value>
+        </block>
+        <block type="controls_whileUntil"></block>
+        <block type="controls_for">
+          <value name="FROM"><shadow type="math_number"><field name="NUM">1</field></shadow></value>
+          <value name="TO"><shadow type="math_number"><field name="NUM">10</field></shadow></value>
+          <value name="BY"><shadow type="math_number"><field name="NUM">1</field></shadow></value>
+        </block>
+        <block type="controls_flow_statements"></block>
+      </category>
+      <category name="Math" colour="230">
+        <block type="math_number"><field name="NUM">0</field></block>
+        <block type="math_arithmetic"></block>
+        <block type="math_single"></block>
+        <block type="math_round"></block>
+        <block type="math_modulo"></block>
+      </category>
+      <category name="Texte" colour="160">
+        <block type="text"></block>
+        <block type="text_join"></block>
+        <block type="text_print"></block>
+        <block type="text_length"></block>
+      </category>
+      <category name="Variables" colour="330" custom="VARIABLE"></category>
+      <category name="Fonctions" colour="290" custom="PROCEDURE"></category>
+      <sep></sep>
+      <category name="Personnalisé" colour="20">
+        ${customBlocksXml || '<label text="Forgez vos blocs dans Héphaïstos →"></label>'}
+      </category>
+    </xml>`;
+  }
+
+  // ============ Workspaces ============
+  const mainWorkspace = Blockly.inject('blocklyMain', {
+    toolbox: buildToolboxXml(),
+    trashcan: true,
+    grid: { spacing: 22, length: 3, colour: '#cbd5e1', snap: true },
+    zoom: { controls: true, wheel: true, startScale: 0.95, maxScale: 2, minScale: 0.4 },
+    move: { scrollbars: true, drag: true, wheel: false },
+    renderer: 'thrasos',
+  });
+  const previewWorkspace = Blockly.inject('blocklyPreview', {
+    toolbox: null, trashcan: false, scrollbars: true, sounds: false,
+    move: { scrollbars: false, drag: false, wheel: false },
+    zoom: { controls: false, wheel: false, startScale: 1.0 },
+    renderer: 'thrasos',
+  });
+  mainWorkspace.addChangeListener(() => {
+    const c = mainWorkspace.getAllBlocks(false).length;
+    document.getElementById('editorCount').textContent = `${c} bloc${c > 1 ? 's' : ''}`;
+  });
+
+  // ============ Render archetype cards ============
+  function renderArchetypes() {
+    const grid = document.getElementById('archetypeGrid');
+    grid.innerHTML = '';
+    ARCHETYPES.forEach(a => {
+      const card = document.createElement('div');
+      card.className = 'archetype-card' + (currentArchetype === a.id && !archetypeCustom ? ' active' : '');
+      card.innerHTML = `${a.svg}
+        <div class="archetype-name">${a.name}</div>
+        <div class="archetype-desc">${a.desc}</div>`;
+      card.addEventListener('click', () => {
+        currentArchetype = a.id;
+        archetypeCustom = false;
+        document.getElementById('archetypeCustom').checked = false;
+        document.getElementById('customConnGrid').style.display = 'none';
+        applyArchetype();
+        renderArchetypes();
+        updatePreview();
+      });
+      grid.appendChild(card);
+    });
+  }
+
+  function applyArchetype() {
+    const a = ARCHETYPES.find(x => x.id === currentArchetype);
+    if (!a) return;
+    document.getElementById('propOutput').checked = a.output;
+    document.getElementById('propPrev').checked = a.prev;
+    document.getElementById('propNext').checked = a.next;
+    // Disable in non-custom mode
+    document.getElementById('propOutput').disabled = !archetypeCustom;
+    document.getElementById('propPrev').disabled = !archetypeCustom;
+    document.getElementById('propNext').disabled = !archetypeCustom;
+  }
+
+  document.getElementById('archetypeCustom').addEventListener('change', (e) => {
+    archetypeCustom = e.target.checked;
+    document.getElementById('customConnGrid').style.display = archetypeCustom ? 'grid' : 'none';
+    document.getElementById('propOutput').disabled = !archetypeCustom;
+    document.getElementById('propPrev').disabled = !archetypeCustom;
+    document.getElementById('propNext').disabled = !archetypeCustom;
+    renderArchetypes();
+    if (!archetypeCustom) applyArchetype();
+    updatePreview();
+  });
+
+  // Output exclusivity in custom mode
+  document.getElementById('propOutput').addEventListener('change', (e) => {
+    if (!archetypeCustom) return;
+    if (e.target.checked) {
+      document.getElementById('propPrev').checked = false;
+      document.getElementById('propNext').checked = false;
+    }
+    updatePreview();
+  });
+  document.getElementById('propPrev').addEventListener('change', (e) => {
+    if (!archetypeCustom) return;
+    if (e.target.checked) document.getElementById('propOutput').checked = false;
+    updatePreview();
+  });
+  document.getElementById('propNext').addEventListener('change', (e) => {
+    if (!archetypeCustom) return;
+    if (e.target.checked) document.getElementById('propOutput').checked = false;
+    updatePreview();
+  });
+
+  // ============ Field helpers ============
+  function defaultFieldConfig(type) {
+    const id = ++fieldCounter;
+    const name = `FIELD${id}`;
+    const base = { id, type, name, label: '' };
+    if (type === 'text')     return { ...base, defaultValue: 'défaut' };
+    if (type === 'checkbox') return { ...base, checked: true };
+    if (type === 'dropdown') return { ...base, options: [['Option A', 'A'], ['Option B', 'B']] };
+    if (type === 'image')    return { ...base, src: 'https://www.gstatic.com/codesite/ph/images/star_on.gif', width: 16, height: 16, alt: '*' };
+  }
+  function fieldToBlocklyJson(field) {
+    if (field.type === 'text')     return { type: 'field_input',    name: field.name, text: field.defaultValue || '' };
+    if (field.type === 'checkbox') return { type: 'field_checkbox', name: field.name, checked: !!field.checked };
+    if (field.type === 'dropdown') return { type: 'field_dropdown', name: field.name, options: field.options };
+    if (field.type === 'image')    return { type: 'field_image',    src: field.src, width: field.width || 16, height: field.height || 16, alt: field.alt || '*' };
+  }
+  function fieldIcon(type) {
+    return { text: '📝', checkbox: '☑', dropdown: '▾', image: '🖼' }[type] || '?';
+  }
+
+  // ============ Build JSON definition ============
+  function buildBlockJson(typeName) {
+    const messageParts = [];
+    const args = [];
+    let argIdx = 1;
+
+    for (const input of state.inputs) {
+      for (const field of input.fields) {
+        if (field.label && field.label.trim()) {
+          messageParts.push(`%${argIdx++}`);
+          args.push({ type: 'field_label', text: field.label });
+        }
+        messageParts.push(`%${argIdx++}`);
+        args.push(fieldToBlocklyJson(field));
+      }
+      if (input.type === 'value') {
+        messageParts.push(`%${argIdx++}`);
+        args.push({ type: 'input_value', name: input.name });
+      } else if (input.type === 'statement') {
+        messageParts.push(`%${argIdx++}`);
+        args.push({ type: 'input_statement', name: input.name });
+      } else {
+        messageParts.push(`%${argIdx++}`);
+        args.push({ type: 'input_dummy' });
+      }
+    }
+
+    const def = {
+      type: typeName,
+      message0: messageParts.join(' ') || 'bloc vide',
+      args0: args,
+      colour: document.getElementById('propColor').value,
+      tooltip: document.getElementById('propTooltip').value || '',
+      helpUrl: '',
+    };
+    if (document.getElementById('propInline').checked) def.inputsInline = true;
+    if (document.getElementById('propOutput').checked) {
+      def.output = null;
+    } else {
+      if (document.getElementById('propPrev').checked) def.previousStatement = null;
+      if (document.getElementById('propNext').checked) def.nextStatement = null;
+    }
+    return def;
+  }
+
+  // ============ Default generator code ============
+  function generateDefaultCode() {
+    const lines = ['// Récupération des champs et entrées'];
+    const seen = new Set();
+    for (const input of state.inputs) {
+      for (const field of input.fields) {
+        if (field.type === 'image') continue;
+        if (seen.has(field.name)) continue;
+        seen.add(field.name);
+        const v = field.name.toLowerCase();
+        lines.push(`var ${v} = block.getFieldValue('${field.name}');`);
+      }
+      if (input.type === 'value') {
+        lines.push(`var ${input.name.toLowerCase()} = Blockly.JavaScript.valueToCode(block, '${input.name}', Blockly.JavaScript.ORDER_ATOMIC);`);
+      } else if (input.type === 'statement') {
+        lines.push(`var ${input.name.toLowerCase()} = Blockly.JavaScript.statementToCode(block, '${input.name}');`);
+      }
+    }
+    lines.push('');
+    if (document.getElementById('propOutput').checked) {
+      lines.push('// Bloc valeur — retourne [code, ordre]');
+      lines.push('var code = "/* TODO: générer la valeur */";');
+      lines.push('return [code, Blockly.JavaScript.ORDER_NONE];');
+    } else {
+      lines.push('// Bloc commande — retourne une chaîne terminée par "\\n"');
+      lines.push('var code = "/* TODO: générer la commande */\\n";');
+      lines.push('return code;');
+    }
+    return lines.join('\n');
+  }
+
+  // ============ Syntax highlighting ============
+  function escapeHtml(s) {
+    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+  function highlightJson(obj) {
+    let s = JSON.stringify(obj, null, 2);
+    s = escapeHtml(s);
+    return s.replace(
+      /("(\\u[a-fA-F0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g,
+      (match) => {
+        let cls = 'json-number';
+        if (/^"/.test(match)) {
+          cls = /:$/.test(match) ? 'json-key' : 'json-string';
+        } else if (/true|false/.test(match)) cls = 'json-bool';
+        else if (/null/.test(match)) cls = 'json-null';
+        return `<span class="${cls}">${match}</span>`;
+      }
+    );
+  }
+  function highlightJs(code) {
+    let s = escapeHtml(code);
+    // comments
+    s = s.replace(/(\/\/[^\n]*)/g, '<span class="js-com">$1</span>');
+    s = s.replace(/(\/\*[\s\S]*?\*\/)/g, '<span class="js-com">$1</span>');
+    // strings
+    s = s.replace(/('(?:\\.|[^'\\])*'|"(?:\\.|[^"\\])*")/g, '<span class="js-str">$1</span>');
+    // keywords
+    s = s.replace(/\b(function|var|let|const|return|if|else|for|while|new|this|true|false|null|typeof|instanceof)\b/g, '<span class="js-kw">$1</span>');
+    // numbers
+    s = s.replace(/\b(\d+\.?\d*)\b/g, '<span class="js-num">$1</span>');
+    // Blockly highlight
+    s = s.replace(/\b(Blockly)\b/g, '<span class="js-blk">$1</span>');
+    return s;
+  }
+
+  // ============ Generate full JS code (read-only output) ============
+  function generateFullJsCode(typeName) {
+    const def = buildBlockJson(typeName);
+    const lines = [];
+
+    lines.push(`// ============================================================`);
+    lines.push(`//  Bloc : ${typeName}`);
+    lines.push(`//  Généré par Héphaïstos · KANTO APLO`);
+    lines.push(`// ============================================================`);
+    lines.push('');
+    lines.push(`Blockly.defineBlocksWithJsonArray([`);
+    lines.push(JSON.stringify(def, null, 2).split('\n').map(l => '  ' + l).join('\n').replace(/^  /, '  '));
+    lines.push(`]);`);
+    lines.push('');
+
+    // Lifecycle methods + custom
+    const activeMethods = state.methods.filter(m => m.code.trim());
+    if (activeMethods.length > 0) {
+      lines.push(`// — Méthodes & propriétés attachées au bloc —`);
+      for (const m of activeMethods) {
+        const code = m.code.trim();
+        if (m.name === 'init' && m.builtin) {
+          // Init special: append AFTER default init
+          lines.push(`(function() {`);
+          lines.push(`  var __originalInit = Blockly.Blocks['${typeName}'].init;`);
+          lines.push(`  Blockly.Blocks['${typeName}'].init = function() {`);
+          lines.push(`    __originalInit.call(this);`);
+          lines.push(`    (${code}).call(this);`);
+          lines.push(`  };`);
+          lines.push(`})();`);
+        } else {
+          lines.push(`Blockly.Blocks['${typeName}'].${m.name} = ${code};`);
+        }
+        lines.push('');
+      }
+    }
+
+    // Generator
+    const genCode = document.getElementById('codeGenerator').value || generateDefaultCode();
+    lines.push(`// — Générateur JavaScript —`);
+    lines.push(`Blockly.JavaScript['${typeName}'] = function(block) {`);
+    genCode.split('\n').forEach(l => lines.push('  ' + l));
+    lines.push(`};`);
+
+    return lines.join('\n');
+  }
+
+  // ============ Preview + JSON + JS update ============
+  function updatePreview() {
+    if (state.inputs.length === 0) {
+      previewWorkspace.clear();
+      document.getElementById('jsonContent').innerHTML =
+        '<span class="json-null">// Glissez une entrée pour commencer</span>';
+      document.getElementById('jsContent').innerHTML =
+        '<span class="js-com">// Glissez une entrée pour commencer</span>';
+    } else {
+      try {
+        const def = buildBlockJson(PREVIEW_TYPE);
+        Blockly.defineBlocksWithJsonArray([def]);
+        previewWorkspace.clear();
+        const block = previewWorkspace.newBlock(PREVIEW_TYPE);
+        block.initSvg();
+        block.render();
+        block.moveBy(15, 15);
+
+        // JSON view
+        const displayDef = { ...def, type: '<your_block_type>' };
+        document.getElementById('jsonContent').innerHTML = highlightJson(displayDef);
+
+        // Full JS view
+        const fullJs = generateFullJsCode('<your_block_type>');
+        document.getElementById('jsContent').innerHTML = highlightJs(fullJs);
+      } catch (e) {
+        console.error('Preview error:', e);
+        document.getElementById('jsonContent').textContent = '// Erreur: ' + e.message;
+      }
+    }
+
+    const codeArea = document.getElementById('codeGenerator');
+    if (codeArea.dataset.userModified !== '1') {
+      codeArea.value = generateDefaultCode();
+    }
+    updateLifecycleBadge();
+  }
+
+  function updateLifecycleBadge() {
+    const count = state.methods.filter(m => m.code.trim() !== '').length;
+    const badge = document.getElementById('lifecycleBadge');
+    const previewBadge = document.getElementById('previewEditBadge');
+    badge.textContent = String(count);
+    previewBadge.textContent = String(count);
+    badge.classList.toggle('hidden', count === 0);
+    previewBadge.classList.toggle('hidden', count === 0);
+  }
+
+  // ============ Construction zone rendering ============
+  function escapeAttr(s) {
+    return String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  function renderConstructionZone() {
+    const zone = document.getElementById('constructionZone');
+    zone.innerHTML = '';
+    if (state.inputs.length === 0) {
+      zone.classList.add('empty');
+      zone.textContent = 'Glissez des entrées ici';
+      return;
+    }
+    zone.classList.remove('empty');
+
+    for (const input of state.inputs) {
+      const row = document.createElement('div');
+      row.className = `input-row ${input.type}`;
+      row.dataset.inputId = String(input.id);
+
+      const head = document.createElement('div');
+      head.className = 'input-head';
+
+      const grip = document.createElement('span');
+      grip.className = 'input-grip';
+      grip.textContent = '⋮⋮';
+      head.appendChild(grip);
+
+      const typeBadge = document.createElement('span');
+      typeBadge.className = 'input-type';
+      typeBadge.textContent = input.type;
+      head.appendChild(typeBadge);
+
+      const nameInput = document.createElement('input');
+      nameInput.type = 'text';
+      nameInput.className = 'input-name';
+      nameInput.value = input.name;
+      nameInput.placeholder = input.type === 'dummy' ? '— pas de nom requis —' : 'NOM_INTERNE';
+      if (input.type === 'dummy') nameInput.disabled = true;
+      nameInput.addEventListener('change', () => {
+        const v = nameInput.value.trim().toUpperCase().replace(/[^A-Z0-9_]/g, '_');
+        input.name = v || `INPUT${input.id}`;
+        nameInput.value = input.name;
+        updatePreview();
+      });
+      head.appendChild(nameInput);
+
+      const removeBtn = document.createElement('button');
+      removeBtn.className = 'icon-btn danger';
+      removeBtn.innerHTML = '✕';
+      removeBtn.addEventListener('click', () => {
+        state.inputs = state.inputs.filter(i => i.id !== input.id);
+        renderConstructionZone();
+        updatePreview();
+      });
+      head.appendChild(removeBtn);
+      row.appendChild(head);
+
+      const fieldZone = document.createElement('div');
+      fieldZone.className = 'field-zone';
+      fieldZone.dataset.inputId = String(input.id);
+
+      if (input.fields.length === 0) {
+        const placeholder = document.createElement('span');
+        placeholder.className = 'placeholder';
+        placeholder.textContent = 'Glissez des champs ici';
+        fieldZone.appendChild(placeholder);
+      }
+
+      for (const field of input.fields) {
+        const chip = document.createElement('span');
+        chip.className = 'field-chip';
+        chip.title = 'Cliquer pour configurer';
+
+        const icon = document.createElement('span');
+        icon.className = 'field-icon';
+        icon.textContent = fieldIcon(field.type);
+        chip.appendChild(icon);
+
+        const meta = document.createElement('span');
+        meta.className = 'field-meta';
+        const labelDisplay = document.createElement('span');
+        labelDisplay.className = 'field-label-display';
+        if (field.label && field.label.trim()) {
+          labelDisplay.textContent = field.label;
+        } else {
+          labelDisplay.classList.add('unset');
+          labelDisplay.textContent = '(sans label)';
+        }
+        meta.appendChild(labelDisplay);
+        const techName = document.createElement('span');
+        techName.className = 'field-tech-name';
+        techName.textContent = field.name;
+        meta.appendChild(techName);
+        chip.appendChild(meta);
+
+        const removeFieldBtn = document.createElement('span');
+        removeFieldBtn.className = 'field-remove';
+        removeFieldBtn.textContent = '✕';
+        removeFieldBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          input.fields = input.fields.filter(f => f.id !== field.id);
+          renderConstructionZone();
+          updatePreview();
+        });
+        chip.appendChild(removeFieldBtn);
+
+        chip.addEventListener('click', () => openFieldModal(input, field));
+        fieldZone.appendChild(chip);
+      }
+
+      fieldZone.addEventListener('dragover', (e) => {
+        if (draggedFieldType) {
+          e.preventDefault();
+          fieldZone.classList.add('drag-over');
+        }
+      });
+      fieldZone.addEventListener('dragleave', () => fieldZone.classList.remove('drag-over'));
+      fieldZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        fieldZone.classList.remove('drag-over');
+        if (!draggedFieldType) return;
+        const newField = defaultFieldConfig(draggedFieldType);
+        input.fields.push(newField);
+        renderConstructionZone();
+        updatePreview();
+        openFieldModal(input, newField);
+      });
+
+      row.appendChild(fieldZone);
+      zone.appendChild(row);
+    }
+
+    if (window.Sortable) {
+      Sortable.create(zone, {
+        animation: 150,
+        handle: '.input-grip',
+        ghostClass: 'sortable-ghost',
+        chosenClass: 'sortable-chosen',
+        onEnd: () => {
+          const order = [...zone.querySelectorAll('.input-row')]
+            .map(r => parseInt(r.dataset.inputId, 10));
+          state.inputs.sort((a, b) => order.indexOf(a.id) - order.indexOf(b.id));
+          updatePreview();
+        },
+      });
+    }
+  }
+
+  // ============ DnD palette → targets ============
+  document.querySelectorAll('#inputsPalette .chip').forEach(el => {
+    el.addEventListener('dragstart', (e) => {
+      draggedInputType = el.dataset.inputType;
+      e.dataTransfer.effectAllowed = 'copy';
+    });
+    el.addEventListener('dragend', () => { draggedInputType = null; });
+  });
+  document.querySelectorAll('#fieldsPalette .chip').forEach(el => {
+    el.addEventListener('dragstart', (e) => {
+      draggedFieldType = el.dataset.fieldType;
+      e.dataTransfer.effectAllowed = 'copy';
+    });
+    el.addEventListener('dragend', () => { draggedFieldType = null; });
+  });
+
+  const constructionZone = document.getElementById('constructionZone');
+  constructionZone.addEventListener('dragover', (e) => {
+    if (draggedInputType) {
+      e.preventDefault();
+      constructionZone.classList.add('drag-over');
+    }
+  });
+  constructionZone.addEventListener('dragleave', () => constructionZone.classList.remove('drag-over'));
+  constructionZone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    constructionZone.classList.remove('drag-over');
+    if (!draggedInputType) return;
+    const id = ++inputCounter;
+    state.inputs.push({
+      id, type: draggedInputType,
+      name: draggedInputType === 'dummy' ? '' : `INPUT${id}`,
+      fields: [],
+    });
+    renderConstructionZone();
+    updatePreview();
+  });
+
+  document.getElementById('clearStructureBtn').addEventListener('click', () => {
+    if (state.inputs.length === 0) return;
+    if (!confirm('Vider la structure ?')) return;
+    state.inputs = [];
+    renderConstructionZone();
+    updatePreview();
+  });
+
+  // ============ Properties listeners ============
+  const propColor = document.getElementById('propColor');
+  const propColorHex = document.getElementById('propColorHex');
+  propColor.addEventListener('input', () => {
+    propColorHex.value = propColor.value;
+    updatePreview();
+  });
+  propColorHex.addEventListener('change', () => {
+    if (/^#[0-9a-fA-F]{6}$/.test(propColorHex.value)) {
+      propColor.value = propColorHex.value;
+      updatePreview();
+    } else propColorHex.value = propColor.value;
+  });
+  document.getElementById('propTooltip').addEventListener('input', updatePreview);
+  document.getElementById('propInline').addEventListener('change', updatePreview);
+
+  const propScale = document.getElementById('propScale');
+  const propScaleVal = document.getElementById('propScaleVal');
+  propScale.addEventListener('input', () => {
+    state.previewScale = parseFloat(propScale.value);
+    propScaleVal.textContent = state.previewScale.toFixed(1) + '×';
+    previewWorkspace.setScale(state.previewScale);
+  });
+
+  // Generator code
+  const codeArea = document.getElementById('codeGenerator');
+  codeArea.addEventListener('input', () => {
+    codeArea.dataset.userModified = '1';
+    updatePreview();
+  });
+  document.getElementById('codeReset').addEventListener('click', () => {
+    codeArea.dataset.userModified = '0';
+    codeArea.value = generateDefaultCode();
+    updatePreview();
+  });
+
+  // ============ Copy buttons ============
+  function makeCopyHandler(btnId, getter) {
+    document.getElementById(btnId).addEventListener('click', async () => {
+      if (state.inputs.length === 0) {
+        showToast('Rien à copier — la structure est vide.', 'error');
+        return;
+      }
+      try {
+        await navigator.clipboard.writeText(getter());
+        const btn = document.getElementById(btnId);
+        const original = btn.textContent;
+        btn.textContent = '✓ Copié';
+        btn.classList.add('copied');
+        setTimeout(() => {
+          btn.textContent = original;
+          btn.classList.remove('copied');
+        }, 1600);
+      } catch (e) {
+        showToast('Copie impossible : ' + e.message, 'error');
+      }
+    });
+  }
+  makeCopyHandler('jsonCopyBtn', () =>
+    JSON.stringify(buildBlockJson('<your_block_type>'), null, 2));
+  makeCopyHandler('jsCopyBtn', () =>
+    generateFullJsCode('<your_block_type>'));
+
+  // ============ FIELD MODAL ============
+  function openFieldModal(input, field) {
+    modalContext = { input, field };
+    const body = document.getElementById('fieldModalBody');
+    document.getElementById('fieldModalTitle').textContent = `Configuration · ${field.type}`;
+
+    let html = `
+      <div class="form-group">
+        <label>Label affiché dans le bloc <span style="color:var(--text-3)">(optionnel)</span></label>
+        <input type="text" id="modalFieldLabel" value="${escapeAttr(field.label || '')}" placeholder="ex: Quantité, Couleur, ...">
+        <div class="helper">Si renseigné, ce texte apparaît avant le champ dans le bloc rendu.</div>
+      </div>
+      <div class="form-group">
+        <label>Nom interne (utilisé dans le code généré)</label>
+        <input type="text" id="modalFieldName" value="${escapeAttr(field.name)}">
+      </div>`;
+    if (field.type === 'text') {
+      html += `<div class="form-group"><label>Valeur par défaut</label>
+        <input type="text" id="modalFieldDefault" value="${escapeAttr(field.defaultValue || '')}"></div>`;
+    } else if (field.type === 'checkbox') {
+      html += `<div class="form-group"><label>État initial</label>
+        <label class="check-row" style="margin-top: 4px;">
+          <input type="checkbox" id="modalFieldChecked" ${field.checked ? 'checked' : ''}>
+          <span>Coché par défaut</span></label></div>`;
+    } else if (field.type === 'dropdown') {
+      html += `<div class="form-group"><label>Options (texte affiché → valeur)</label>
+        <div id="modalDropdownOptions"></div>
+        <button type="button" id="modalAddOption">+ Ajouter une option</button></div>`;
+    } else if (field.type === 'image') {
+      html += `<div class="form-group"><label>URL de l'image</label>
+        <input type="text" id="modalFieldSrc" value="${escapeAttr(field.src || '')}"></div>
+        <div class="form-row">
+          <div class="form-group"><label>Largeur (px)</label>
+            <input type="number" id="modalFieldWidth" min="8" max="200" value="${field.width || 16}"></div>
+          <div class="form-group"><label>Hauteur (px)</label>
+            <input type="number" id="modalFieldHeight" min="8" max="200" value="${field.height || 16}"></div>
+        </div>
+        <div class="form-group"><label>Texte alternatif</label>
+          <input type="text" id="modalFieldAlt" value="${escapeAttr(field.alt || '*')}"></div>`;
+    }
+    body.innerHTML = html;
+
+    if (field.type === 'dropdown') {
+      renderDropdownOptions(field.options || [['Option A', 'A']]);
+      document.getElementById('modalAddOption').addEventListener('click', () => {
+        const opts = collectDropdownOptions();
+        opts.push([`Option ${opts.length + 1}`, `value${opts.length + 1}`]);
+        renderDropdownOptions(opts);
+      });
+    }
+
+    document.getElementById('fieldModal').classList.add('show');
+    setTimeout(() => document.getElementById('modalFieldLabel').focus(), 50);
+  }
+
+  function renderDropdownOptions(options) {
+    const container = document.getElementById('modalDropdownOptions');
+    container.innerHTML = '';
+    options.forEach((opt, idx) => {
+      const row = document.createElement('div');
+      row.className = 'dropdown-options-row';
+      row.innerHTML = `
+        <input type="text" placeholder="Texte affiché" value="${escapeAttr(opt[0])}">
+        <input type="text" placeholder="Valeur" value="${escapeAttr(opt[1])}">
+        <button type="button" class="icon-btn danger">✕</button>`;
+      row.querySelector('button').addEventListener('click', () => {
+        const opts = collectDropdownOptions();
+        opts.splice(idx, 1);
+        if (opts.length === 0) opts.push(['Option', 'value']);
+        renderDropdownOptions(opts);
+      });
+      container.appendChild(row);
+    });
+  }
+  function collectDropdownOptions() {
+    return [...document.querySelectorAll('#modalDropdownOptions .dropdown-options-row')]
+      .map(row => {
+        const inputs = row.querySelectorAll('input');
+        return [inputs[0].value, inputs[1].value];
+      });
+  }
+  document.getElementById('fieldModalCancel').addEventListener('click', closeFieldModal);
+  function closeFieldModal() {
+    document.getElementById('fieldModal').classList.remove('show');
+    modalContext = null;
+  }
+  document.getElementById('fieldModalSave').addEventListener('click', () => {
+    if (!modalContext) return;
+    const { field } = modalContext;
+    field.label = document.getElementById('modalFieldLabel').value || '';
+    const newName = document.getElementById('modalFieldName').value.trim()
+      .toUpperCase().replace(/[^A-Z0-9_]/g, '_');
+    field.name = newName || field.name;
+
+    if (field.type === 'text') field.defaultValue = document.getElementById('modalFieldDefault').value;
+    else if (field.type === 'checkbox') field.checked = document.getElementById('modalFieldChecked').checked;
+    else if (field.type === 'dropdown') {
+      const opts = collectDropdownOptions().filter(o => o[0].trim() && o[1].trim());
+      field.options = opts.length ? opts : [['Option', 'value']];
+    } else if (field.type === 'image') {
+      field.src = document.getElementById('modalFieldSrc').value || field.src;
+      field.width = parseInt(document.getElementById('modalFieldWidth').value, 10) || 16;
+      field.height = parseInt(document.getElementById('modalFieldHeight').value, 10) || 16;
+      field.alt = document.getElementById('modalFieldAlt').value || '*';
+    }
+    closeFieldModal();
+    renderConstructionZone();
+    updatePreview();
+  });
+
+  // ============ LIFECYCLE MODAL ============
+  document.getElementById('lifecycleBtn').addEventListener('click', openLifecycleModal);
+  document.getElementById('previewEditBtn').addEventListener('click', openLifecycleModal);
+  document.getElementById('lifecycleCancel').addEventListener('click', () =>
+    document.getElementById('lifecycleModal').classList.remove('show'));
+
+  function openLifecycleModal() {
+    renderLifecycleBody();
+    document.getElementById('lifecycleModal').classList.add('show');
+  }
+
+  function renderLifecycleBody() {
+    const body = document.getElementById('lifecycleBody');
+    body.innerHTML = '';
+    state.methods.forEach((method, idx) => {
+      body.appendChild(buildMethodCard(method, idx));
+    });
+    const addRow = document.createElement('div');
+    addRow.className = 'lc-add-row';
+    addRow.innerHTML = `
+      <button class="lc-add-btn" data-add="method">+ Méthode (function)</button>
+      <button class="lc-add-btn" data-add="property">+ Propriété (valeur)</button>`;
+    addRow.querySelectorAll('.lc-add-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const kind = btn.dataset.add;
+        const baseName = kind === 'method' ? 'myMethod' : 'myProp';
+        let n = 1, candidate = baseName;
+        while (state.methods.some(m => m.name === candidate)) candidate = baseName + (++n);
+        state.methods.push({
+          name: candidate,
+          params: kind === 'method' ? '' : null,
+          code: kind === 'method' ? "function() {\n  // ...\n}" : "true",
+          builtin: false,
+          kind,
+          help: kind === 'method'
+            ? "Méthode personnalisée — attachée à Blockly.Blocks[type]."
+            : "Propriété personnalisée — assignée à Blockly.Blocks[type].",
+        });
+        renderLifecycleBody();
+      });
+    });
+    body.appendChild(addRow);
+  }
+
+  function buildMethodCard(method, idx) {
+    const isMethod = method.kind === 'method';
+    const card = document.createElement('div');
+    card.className = 'lc-method' + (method.builtin ? '' : ' custom') + (method.code.trim() ? ' has-code' : '');
+
+    const head = document.createElement('div');
+    head.className = 'lc-method-head';
+
+    const tag = document.createElement('span');
+    tag.className = 'lc-method-tag ' + (method.builtin ? 'builtin' : (isMethod ? 'custom' : 'prop'));
+    tag.textContent = method.builtin ? 'natif' : (isMethod ? 'fn' : 'prop');
+    head.appendChild(tag);
+
+    const name = document.createElement('div');
+    name.className = 'lc-method-name';
+    if (method.builtin) {
+      const nameSpan = document.createElement('span');
+      nameSpan.textContent = method.name;
+      nameSpan.style.flexShrink = '0';
+      name.appendChild(nameSpan);
+      if (isMethod) {
+        const paren1 = document.createElement('span');
+        paren1.className = 'lc-paren';
+        paren1.textContent = '(';
+        name.appendChild(paren1);
+        const paramsInput = document.createElement('input');
+        paramsInput.type = 'text';
+        paramsInput.className = 'lc-params-input';
+        paramsInput.value = method.params || '';
+        paramsInput.placeholder = 'event, ...';
+        paramsInput.addEventListener('change', () => {
+          method.params = paramsInput.value.trim();
+        });
+        name.appendChild(paramsInput);
+        const paren2 = document.createElement('span');
+        paren2.className = 'lc-paren';
+        paren2.textContent = ')';
+        name.appendChild(paren2);
+      }
+    } else {
+      const nameInput = document.createElement('input');
+      nameInput.type = 'text';
+      nameInput.className = 'lc-name-input';
+      nameInput.value = method.name;
+      nameInput.addEventListener('change', () => {
+        const v = nameInput.value.trim().replace(/[^A-Za-z0-9_$]/g, '_');
+        method.name = v || method.name;
+        nameInput.value = method.name;
+      });
+      name.appendChild(nameInput);
+      if (isMethod) {
+        const paren1 = document.createElement('span');
+        paren1.className = 'lc-paren';
+        paren1.textContent = '(';
+        name.appendChild(paren1);
+        const paramsInput = document.createElement('input');
+        paramsInput.type = 'text';
+        paramsInput.className = 'lc-params-input';
+        paramsInput.value = method.params || '';
+        paramsInput.placeholder = 'arg1, arg2';
+        paramsInput.addEventListener('change', () => {
+          method.params = paramsInput.value.trim();
+        });
+        name.appendChild(paramsInput);
+        const paren2 = document.createElement('span');
+        paren2.className = 'lc-paren';
+        paren2.textContent = ')';
+        name.appendChild(paren2);
+      }
+    }
+    head.appendChild(name);
+
+    if (method.builtin && isMethod) {
+      const insertBtn = document.createElement('button');
+      insertBtn.className = 'icon-btn accent';
+      insertBtn.innerHTML = '↵';
+      insertBtn.title = 'Insérer le squelette';
+      insertBtn.addEventListener('click', () => {
+        const ta = card.querySelector('textarea');
+        if (!ta.value.trim() || confirm('Remplacer le code actuel par le squelette par défaut ?')) {
+          method.code = METHOD_TEMPLATES[method.name] || '';
+          ta.value = method.code;
+          card.classList.toggle('has-code', method.code.trim() !== '');
+        }
+      });
+      head.appendChild(insertBtn);
+    }
+    if (!method.builtin) {
+      const removeBtn = document.createElement('button');
+      removeBtn.className = 'icon-btn danger';
+      removeBtn.innerHTML = '✕';
+      removeBtn.addEventListener('click', () => {
+        state.methods.splice(idx, 1);
+        renderLifecycleBody();
+      });
+      head.appendChild(removeBtn);
+    }
+    card.appendChild(head);
+
+    const ta = document.createElement('textarea');
+    ta.className = 'lc-method-textarea';
+    ta.spellcheck = false;
+    if (isMethod) {
+      ta.placeholder = method.builtin
+        ? `// Vide = non attaché. Cliquez sur ↵ pour insérer le squelette.`
+        : `// function(${method.params || ''}) { ... }`;
+    } else {
+      ta.placeholder = `// Valeur — ex: 42, "string", true, [1,2,3], { key: "value" }`;
+    }
+    ta.value = method.code;
+    ta.addEventListener('input', () => {
+      method.code = ta.value;
+      card.classList.toggle('has-code', ta.value.trim() !== '');
+    });
+    card.appendChild(ta);
+
+    if (method.help) {
+      const help = document.createElement('div');
+      help.className = 'lc-method-help';
+      help.textContent = method.help;
+      card.appendChild(help);
+    }
+    return card;
+  }
+
+  document.getElementById('lifecycleSave').addEventListener('click', () => {
+    for (const m of state.methods) {
+      const code = m.code.trim();
+      if (!code) continue;
+      try {
+        new Function(`"use strict"; return (${code});`);
+      } catch (e) {
+        showToast(`Erreur dans "${m.name}" : ${e.message}`, 'error');
+        return;
+      }
+    }
+    document.getElementById('lifecycleModal').classList.remove('show');
+    updateLifecycleBadge();
+    updatePreview();
+    showToast('Méthodes enregistrées.', 'success');
+  });
+
+  // ============ SAVE BLOCK ============
+  document.getElementById('saveBlockBtn').addEventListener('click', () => {
+    if (state.inputs.length === 0) {
+      showToast("Ajoutez au moins une entrée avant de forger.", 'error');
+      return;
+    }
+    const defaultName = `custom_block_${Object.keys(customBlocks).length + 1}`;
+    document.getElementById('saveBlockName').value = defaultName;
+    document.getElementById('saveModal').classList.add('show');
+    setTimeout(() => {
+      const inp = document.getElementById('saveBlockName');
+      inp.focus(); inp.select();
+    }, 50);
+  });
+  document.getElementById('saveModalCancel').addEventListener('click', () =>
+    document.getElementById('saveModal').classList.remove('show'));
+  document.getElementById('saveBlockName').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') document.getElementById('saveModalConfirm').click();
+    if (e.key === 'Escape') document.getElementById('saveModalCancel').click();
+  });
+
+  document.getElementById('saveModalConfirm').addEventListener('click', () => {
+    const raw = document.getElementById('saveBlockName').value.trim();
+    const cleanName = raw.toLowerCase().replace(/[^a-z0-9_]/g, '_');
+    if (!cleanName) { showToast("Identifiant invalide.", 'error'); return; }
+    if (cleanName.startsWith('__')) { showToast("Identifiant réservé.", 'error'); return; }
+    if (customBlocks[cleanName]) {
+      if (!confirm(`Le bloc "${cleanName}" existe déjà. Le remplacer ?`)) return;
+    }
+
+    const def = buildBlockJson(cleanName);
+    Blockly.defineBlocksWithJsonArray([def]);
+
+    const blockObj = Blockly.Blocks[cleanName];
+    const originalInit = blockObj.init;
+
+    for (const m of state.methods) {
+      const code = m.code.trim();
+      if (!code) continue;
+      let value;
+      try {
+        value = new Function(`"use strict"; return (${code});`)();
+      } catch (e) {
+        showToast(`Erreur "${m.name}": ${e.message}`, 'error');
+        return;
+      }
+      if (m.name === 'init' && typeof value === 'function') {
+        blockObj.init = function () {
+          originalInit.call(this);
+          try { value.call(this); } catch (e) { console.error('[init custom]', e); }
+        };
+      } else {
+        blockObj[m.name] = value;
+      }
+    }
+
+    const code = document.getElementById('codeGenerator').value || generateDefaultCode();
+    let generatorFn;
+    try {
+      generatorFn = new Function('block', code);
+    } catch (e) {
+      showToast("Erreur dans le code générateur : " + e.message, 'error');
+      return;
+    }
+    if (Blockly.JavaScript.forBlock) Blockly.JavaScript.forBlock[cleanName] = generatorFn;
+    Blockly.JavaScript[cleanName] = generatorFn;
+
+    customBlocks[cleanName] = {
+      def, code,
+      methods: state.methods.filter(m => m.code.trim()).map(m => ({ ...m })),
+    };
+    mainWorkspace.updateToolbox(buildToolboxXml());
+    document.getElementById('saveModal').classList.remove('show');
+    showToast(`⚒ Bloc "${cleanName}" forgé.`, 'success');
+    resetBuilder();
+    switchTab('editor');
+  });
+
+  // ============ Reset ============
+  function resetBuilder() {
+    state.inputs = [];
+    state.methods = BUILTIN_METHODS.map(m => ({
+      name: m.name, params: m.params, code: '',
+      builtin: true, kind: 'method', help: m.help,
+    }));
+    currentArchetype = 'value';
+    archetypeCustom = false;
+    document.getElementById('archetypeCustom').checked = false;
+    document.getElementById('customConnGrid').style.display = 'none';
+    document.getElementById('propColor').value = '#5b80a5';
+    document.getElementById('propColorHex').value = '#5b80a5';
+    document.getElementById('propTooltip').value = '';
+    document.getElementById('propInline').checked = false;
+    propScale.value = 1.0;
+    propScaleVal.textContent = '1.0×';
+    state.previewScale = 1.0;
+    previewWorkspace.setScale(1.0);
+    codeArea.value = '';
+    codeArea.dataset.userModified = '0';
+    applyArchetype();
+    renderArchetypes();
+    renderConstructionZone();
+    updatePreview();
+  }
+  document.getElementById('resetBuilderBtn').addEventListener('click', () => {
+    if (state.inputs.length > 0 && !confirm('Réinitialiser le constructeur ?')) return;
+    resetBuilder();
+  });
+
+  // ============ Section resize handles ============
+  document.querySelectorAll('.section-resize').forEach(handle => {
+    let startY = 0;
+    let startHeight = 0;
+    let target = null;
+    let property = null;
+    let bodyEl = null;
+
+    handle.addEventListener('mousedown', (e) => {
+      e.preventDefault();
+      target = handle.dataset.target;
+      property = handle.dataset.property;
+      const section = document.getElementById(target);
+      // Find the actual content element to read current height
+      bodyEl = section.querySelector('.section-body > *') || section.querySelector('.section-body');
+      startY = e.clientY;
+      startHeight = bodyEl.offsetHeight;
+      handle.classList.add('dragging');
+      document.body.classList.add('resizing-section');
+    });
+
+    document.addEventListener('mousemove', (e) => {
+      if (!target) return;
+      const delta = e.clientY - startY;
+      const newHeight = Math.max(80, startHeight + delta);
+      const section = document.getElementById(target);
+      section.style.setProperty(property, newHeight + 'px');
+      // Trigger blockly resize if preview
+      if (target === 'sectionPreview') {
+        Blockly.svgResize(previewWorkspace);
+      }
+    });
+
+    document.addEventListener('mouseup', () => {
+      if (target) {
+        handle.classList.remove('dragging');
+        document.body.classList.remove('resizing-section');
+        target = null;
+      }
+    });
+  });
+
+  // ============ Toast ============
+  let toastTimeout = null;
+  function showToast(msg, kind = 'success') {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = `toast show ${kind}`;
+    if (toastTimeout) clearTimeout(toastTimeout);
+    toastTimeout = setTimeout(() => t.classList.remove('show'), 3500);
+  }
+
+  // ============ Window resize / modal click ============
+  window.addEventListener('resize', () => {
+    Blockly.svgResize(mainWorkspace);
+    Blockly.svgResize(previewWorkspace);
+  });
+  document.querySelectorAll('.modal-backdrop').forEach(bd => {
+    bd.addEventListener('click', (e) => { if (e.target === bd) bd.classList.remove('show'); });
+  });
+
+  // ============ Init ============
+  renderArchetypes();
+  applyArchetype();
+  renderConstructionZone();
+  updatePreview();
+  setTimeout(() => Blockly.svgResize(mainWorkspace), 100);
+  </script>
+</body>
+</html>
