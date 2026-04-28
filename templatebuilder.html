@@ -1,0 +1,1174 @@
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+
+/* ============================================================================
+ * TEKTON EDITOR — v0.1
+ * Single-file architecture. Sections delimited by banners. Each "MODULE" block
+ * is self-contained and can later be extracted to its own file.
+ * ============================================================================
+ */
+
+/* ============================================================================
+ * MODULE — DIRECTIVES REGISTRY                                  [extensible]
+ * Single source of truth for the directive/tag attributes attached to every
+ * element. Add a new entry to extend; the rest of the editor will pick it up
+ * automatically (modal, HTML serializer, project config overrides).
+ * ============================================================================ */
+const getDirectives = () => [
+  { key: 'tekton-tag-id',   label: 'Tag ID',   role: 'id',   defaultName: 'tekton-tag-id'   },
+  { key: 'tekton-tag-name', label: 'Tag Name', role: 'name', defaultName: 'tekton-tag-name' },
+  // FUTURE: { key: 'tekton-tag-bind',  label: 'Bind',  role: 'bind' },
+  // FUTURE: { key: 'tekton-tag-event', label: 'Event', role: 'event' },
+];
+
+const buildDefaultDirectives = (overrides = {}) => {
+  const map = {};
+  for (const d of getDirectives()) map[d.key] = overrides[d.key] ?? '';
+  return map;
+};
+
+/* ============================================================================
+ * MODULE — AVAILABLE COMPONENTS                              [API_HOOK ready]
+ * Palette items. Replace this function body with an API call later — the
+ * shape returned must remain identical.
+ * ============================================================================ */
+const getAvailableComponents = () => [
+  { type: 'div',     label: 'Div',     icon: '▢', category: 'structure' },
+  { type: 'header',  label: 'Header',  icon: '◰', category: 'structure' },
+  { type: 'footer',  label: 'Footer',  icon: '◱', category: 'structure' },
+  { type: 'section', label: 'Section', icon: '▤', category: 'structure' },
+  { type: 'article', label: 'Article', icon: '▥', category: 'structure' },
+  { type: 'main',    label: 'Main',    icon: '▣', category: 'structure' },
+  { type: 'aside',   label: 'Aside',   icon: '▦', category: 'structure' },
+  { type: 'nav',     label: 'Nav',     icon: '═', category: 'structure' },
+  // FUTURE COMPONENTS (table, list, …) — same shape, append here or via API.
+];
+
+/* ============================================================================
+ * MODULE — DEFAULT TEMPLATES                                 [API_HOOK ready]
+ * Static for v0.1; swap to fetch() later. Each template carries a `builder`
+ * that produces a fresh tree — keeps templates independent of mutable state.
+ * ============================================================================ */
+const getDefaultTemplates = () => [
+  {
+    id: 'tpl_blank',
+    name: 'Blank',
+    targetType: 'web',
+    description: 'Conteneur vide.',
+    builder: () => createElement('div', { name: 'root', styleOptions: { minHeight: '600px', backgroundColor: '#ffffff' } }),
+  },
+  {
+    id: 'tpl_three',
+    name: 'Header / Body / Footer',
+    targetType: 'web',
+    description: 'Trois sections classiques.',
+    builder: () => {
+      const root = createElement('div', { name: 'root', styleOptions: { display: 'flex', flexDirection: 'column', minHeight: '700px', backgroundColor: '#ffffff' } });
+      root.children.push(createElement('header', { name: 'site-header', styleOptions: { height: '80px', backgroundColor: '#1f2937' } }));
+      root.children.push(createElement('main',   { name: 'site-body',   styleOptions: { flex: '1', backgroundColor: '#f3f4f6', minHeight: '400px' } }));
+      root.children.push(createElement('footer', { name: 'site-footer', styleOptions: { height: '60px', backgroundColor: '#111827' } }));
+      return root;
+    },
+  },
+  {
+    id: 'tpl_two_col',
+    name: 'Sidebar + Main',
+    targetType: 'web',
+    description: 'Deux colonnes côte à côte.',
+    builder: () => {
+      const root = createElement('div', { name: 'root', styleOptions: { display: 'flex', flexDirection: 'row', minHeight: '600px', backgroundColor: '#ffffff' } });
+      root.children.push(createElement('aside',   { name: 'sidebar', styleOptions: { width: '240px', backgroundColor: '#1f2937' } }));
+      root.children.push(createElement('section', { name: 'content', styleOptions: { flex: '1', backgroundColor: '#f9fafb' } }));
+      return root;
+    },
+  },
+  {
+    id: 'tpl_phone_app',
+    name: 'Mobile App Shell',
+    targetType: 'mobile',
+    description: 'Top bar + content + tab bar.',
+    builder: () => {
+      const root = createElement('div', { name: 'app-shell', styleOptions: { display: 'flex', flexDirection: 'column', width: '375px', height: '667px', backgroundColor: '#ffffff', margin: '0 auto' } });
+      root.children.push(createElement('header', { name: 'top-bar',  styleOptions: { height: '56px',  backgroundColor: '#0f172a' } }));
+      root.children.push(createElement('main',   { name: 'content',  styleOptions: { flex: '1',       backgroundColor: '#f1f5f9' } }));
+      root.children.push(createElement('nav',    { name: 'tab-bar',  styleOptions: { height: '64px',  backgroundColor: '#0f172a' } }));
+      return root;
+    },
+  },
+];
+
+/* ============================================================================
+ * MODULE — TARGET TYPES (template render targets)
+ * ============================================================================ */
+const getTargetTypes = () => [
+  { key: 'web',     label: 'Web',     viewport: { width: 1280, height: 800 } },
+  { key: 'tablet',  label: 'Tablet',  viewport: { width: 768,  height: 1024 } },
+  { key: 'mobile',  label: 'Mobile',  viewport: { width: 375,  height: 667  } },
+];
+
+/* ============================================================================
+ * MODULE — STORAGE ADAPTER                                   [swap-ready]
+ * In-memory for v0.1. Replace the body of load/save with localStorage or
+ * fetch() — interface stays identical (async).
+ * ============================================================================ */
+let _MEMORY_STATE_ = null; // global memory slot per spec
+const StorageAdapter = {
+  async loadProject() {
+    return _MEMORY_STATE_ ? JSON.parse(JSON.stringify(_MEMORY_STATE_)) : null;
+    // FUTURE (localStorage):
+    //   const raw = localStorage.getItem('tekton.project'); return raw ? JSON.parse(raw) : null;
+    // FUTURE (API):
+    //   const res = await fetch('/api/projects/current'); return res.ok ? res.json() : null;
+  },
+  async saveProject(project) {
+    _MEMORY_STATE_ = JSON.parse(JSON.stringify(project));
+    return true;
+    // FUTURE (localStorage):
+    //   localStorage.setItem('tekton.project', JSON.stringify(project)); return true;
+    // FUTURE (API):
+    //   const res = await fetch('/api/projects', { method:'POST', body: JSON.stringify(project) }); return res.ok;
+  },
+  async listProjects() {
+    return _MEMORY_STATE_ ? [_MEMORY_STATE_] : [];
+  },
+};
+
+/* ============================================================================
+ * MODULE — LOGGER                                            [observable]
+ * logger.info(msg, meta?) / .warn / .error  — UI subscribes via .subscribe().
+ * ============================================================================ */
+class TektonLogger {
+  constructor() { this.entries = []; this.subs = new Set(); }
+  subscribe(fn) { this.subs.add(fn); fn(this.entries); return () => this.subs.delete(fn); }
+  _emit() { for (const fn of this.subs) fn(this.entries); }
+  log(level, msg, meta) {
+    this.entries = [...this.entries, { id: shortId(), level, msg, meta: meta ?? null, ts: new Date() }];
+    this._emit();
+  }
+  info(m, meta)  { this.log('info',  m, meta); }
+  warn(m, meta)  { this.log('warn',  m, meta); }
+  error(m, meta) { this.log('error', m, meta); }
+  clear() { this.entries = []; this._emit(); }
+}
+const logger = new TektonLogger();
+
+/* ============================================================================
+ * MODULE — UTILITIES
+ * ============================================================================ */
+const shortId = () => Math.random().toString(36).slice(2, 10);
+const newElementId = () => 'el_' + shortId();
+const newTemplateId = () => 'tpl_' + shortId();
+
+/* ============================================================================
+ * MODULE — ELEMENT FACTORY & TREE OPS                         [immutable]
+ * ============================================================================ */
+function createElement(type = 'div', overrides = {}) {
+  const id   = overrides.id   || newElementId();
+  const name = overrides.name || `${type}-${id.slice(3, 7)}`;
+  return {
+    id,
+    type,
+    directives: buildDefaultDirectives({
+      'tekton-tag-id': id,
+      'tekton-tag-name': name,
+      ...(overrides.directives || {}),
+    }),
+    styleOptions: { ...(overrides.styleOptions || {}) },
+    customCss: overrides.customCss || '',
+    classes: overrides.classes || [],
+    children: overrides.children || [],
+  };
+}
+
+function findElement(node, id) {
+  if (!node) return null;
+  if (node.id === id) return node;
+  for (const c of node.children) {
+    const f = findElement(c, id);
+    if (f) return f;
+  }
+  return null;
+}
+
+function findParent(node, id, parent = null) {
+  if (!node) return null;
+  if (node.id === id) return parent;
+  for (const c of node.children) {
+    const f = findParent(c, id, node);
+    if (f) return f;
+  }
+  return null;
+}
+
+function updateElement(node, id, updater) {
+  if (node.id === id) return updater(node);
+  return { ...node, children: node.children.map(c => updateElement(c, id, updater)) };
+}
+
+function addChild(node, parentId, child) {
+  if (node.id === parentId) return { ...node, children: [...node.children, child] };
+  return { ...node, children: node.children.map(c => addChild(c, parentId, child)) };
+}
+
+function removeElement(node, id) {
+  return { ...node, children: node.children.filter(c => c.id !== id).map(c => removeElement(c, id)) };
+}
+
+/* ============================================================================
+ * MODULE — CSS UTILITIES & STYLE PRECEDENCE
+ * Spec: customCss DOMINATES styleOptions field-by-field.
+ * ============================================================================ */
+function cssStringToObject(css) {
+  if (!css || !css.trim()) return {};
+  const body = css.includes('{') ? (css.match(/\{([\s\S]*)\}/)?.[1] || '') : css;
+  const out = {};
+  for (const decl of body.split(';')) {
+    const [k, ...rest] = decl.split(':');
+    if (!k || !rest.length) continue;
+    const key = k.trim().replace(/-([a-z])/g, (_, c) => c.toUpperCase());
+    if (key) out[key] = rest.join(':').trim();
+  }
+  return out;
+}
+
+function cssObjectToString(obj) {
+  if (!obj || !Object.keys(obj).length) return '';
+  return Object.entries(obj)
+    .map(([k, v]) => `${k.replace(/[A-Z]/g, m => '-' + m.toLowerCase())}: ${v};`)
+    .join('\n');
+}
+
+function safeJsonParse(s) {
+  try { return [JSON.parse(s), null]; } catch (e) { return [null, e.message]; }
+}
+
+function prettyJson(obj) {
+  try { return JSON.stringify(obj, null, 2); } catch { return ''; }
+}
+
+function computeFinalStyle(element) {
+  // customCss overrides styleOptions — per spec
+  return { ...element.styleOptions, ...cssStringToObject(element.customCss) };
+}
+
+/* ============================================================================
+ * MODULE — HTML SERIALIZER
+ * Honors per-template directive name overrides (project config).
+ * ============================================================================ */
+function elementToHtml(el, indent, projectConfig, templateConfig) {
+  const pad = '  '.repeat(indent);
+  const dirs = getDirectives();
+  const overrides = { ...(projectConfig?.directiveOverrides || {}), ...(templateConfig?.directiveOverrides || {}) };
+
+  const dirAttrs = dirs.map(d => {
+    const attrName = overrides[d.key] || d.key;
+    const v = el.directives[d.key] || '';
+    return `${attrName}="${escapeAttr(v)}"`;
+  }).join(' ');
+
+  const classAttr = el.classes.length ? ` class="${el.classes.join(' ')}"` : '';
+  const finalStyle = computeFinalStyle(el);
+  const styleStr = Object.entries(finalStyle)
+    .map(([k, v]) => `${k.replace(/[A-Z]/g, m => '-' + m.toLowerCase())}: ${v}`)
+    .join('; ');
+  const styleAttr = styleStr ? ` style="${styleStr}"` : '';
+
+  const open  = `${pad}<${el.type} id="${el.id}" ${dirAttrs}${classAttr}${styleAttr}>`;
+  const close = `</${el.type}>`;
+  if (!el.children.length) return `${open}${close}`;
+  const inner = el.children.map(c => elementToHtml(c, indent + 1, projectConfig, templateConfig)).join('\n');
+  return `${open}\n${inner}\n${pad}${close}`;
+}
+const escapeAttr = (s) => String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;');
+
+/* ============================================================================
+ * MODULE — PROJECT FACTORY
+ * ============================================================================ */
+function createProject(name = 'Mon Projet') {
+  const tpl = getDefaultTemplates()[0];
+  const t = createTemplateFrom(tpl, 'Page principale');
+  return {
+    name,
+    version: 'v0.1',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    config: {
+      directiveOverrides: {},     // { 'tekton-tag-id': 'data-id', ... }
+      globalClasses: [],          // [{ name: 'btn', css: '...' }, ...]
+      containerStyle: {},         // default style applied to template root
+    },
+    templates: [t],
+    activeTemplateId: t.id,
+  };
+}
+
+function createTemplateFrom(defaultTemplate, name) {
+  return {
+    id: newTemplateId(),
+    name,
+    targetType: defaultTemplate.targetType,
+    sourceTemplateId: defaultTemplate.id,
+    config: {
+      directiveOverrides: {},
+      globalClasses: [],
+      containerStyle: {},
+    },
+    tree: defaultTemplate.builder(),
+  };
+}
+
+/* ============================================================================
+ * MODULE — STYLE OPTION FIELDS (modal Style tab)
+ * Add a row → pops in the modal automatically.
+ * ============================================================================ */
+const STYLE_FIELDS = [
+  { key: 'width',           label: 'width',            placeholder: '100px / 50%' },
+  { key: 'height',          label: 'height',           placeholder: '100px / auto' },
+  { key: 'minWidth',        label: 'min-width',        placeholder: '0' },
+  { key: 'maxWidth',        label: 'max-width',        placeholder: '100%' },
+  { key: 'minHeight',       label: 'min-height',       placeholder: '0' },
+  { key: 'maxHeight',       label: 'max-height',       placeholder: 'none' },
+  { key: 'margin',          label: 'margin',           placeholder: '0 auto' },
+  { key: 'padding',         label: 'padding',          placeholder: '12px' },
+  { key: 'top',             label: 'top',              placeholder: '0' },
+  { key: 'right',           label: 'right',            placeholder: '0' },
+  { key: 'bottom',          label: 'bottom',           placeholder: '0' },
+  { key: 'left',            label: 'left',             placeholder: '0' },
+  { key: 'color',           label: 'color',            placeholder: '#000' },
+  { key: 'backgroundColor', label: 'background-color', placeholder: '#fff' },
+  { key: 'borderRadius',    label: 'border-radius',    placeholder: '0' },
+  { key: 'border',          label: 'border',           placeholder: '1px solid #ccc' },
+  { key: 'display',         label: 'display',          placeholder: 'block / flex' },
+  { key: 'flexDirection',   label: 'flex-direction',   placeholder: 'row / column' },
+  { key: 'justifyContent',  label: 'justify-content',  placeholder: 'center' },
+  { key: 'alignItems',      label: 'align-items',      placeholder: 'center' },
+  { key: 'gap',             label: 'gap',              placeholder: '8px' },
+  { key: 'overflow',        label: 'overflow',         placeholder: 'auto' },
+  { key: 'zIndex',          label: 'z-index',          placeholder: '0' },
+  { key: 'opacity',         label: 'opacity',          placeholder: '1' },
+];
+
+const POSITION_VALUES = ['static', 'relative', 'absolute', 'fixed', 'sticky'];
+
+/* ============================================================================
+ * UI — DESIGN TOKENS (inline so artifact is fully self-contained)
+ * ============================================================================ */
+const T = {
+  bg:        '#0a0c10',
+  surface:   '#11141a',
+  surface2:  '#161a22',
+  border:    '#1f2530',
+  borderHi:  '#2a3140',
+  text:      '#e8e6e1',
+  muted:     '#7a8290',
+  dim:       '#4a5160',
+  accent:    '#d97757',  // tekton copper
+  accentDim: '#5a3424',
+  good:      '#7cb88a',
+  warn:      '#d4a857',
+  bad:       '#d96b6b',
+  fontMono:  "'JetBrains Mono', ui-monospace, 'Cascadia Code', Menlo, monospace",
+  fontUi:    "'Bricolage Grotesque', system-ui, sans-serif",
+};
+
+/* ============================================================================
+ * UI — Custom hooks
+ * ============================================================================ */
+function useLogger() {
+  const [entries, setEntries] = useState(logger.entries);
+  useEffect(() => logger.subscribe(setEntries), []);
+  return entries;
+}
+
+/* ============================================================================
+ * UI — CONSOLE PANEL
+ * ============================================================================ */
+function ConsolePanel({ collapsed, onToggle }) {
+  const entries = useLogger();
+  const ref = useRef(null);
+  useEffect(() => { if (ref.current) ref.current.scrollTop = ref.current.scrollHeight; }, [entries]);
+
+  const fmt = (d) => d.toTimeString().slice(0, 8) + '.' + String(d.getMilliseconds()).padStart(3, '0');
+  const colors = { info: T.muted, warn: T.warn, error: T.bad };
+  const prefix = { info: '›', warn: '⚠', error: '✕' };
+
+  return (
+    <div style={{ borderTop: `1px solid ${T.border}`, background: T.bg, fontFamily: T.fontMono, fontSize: 11, color: T.text, height: collapsed ? 28 : 200, transition: 'height 200ms', display: 'flex', flexDirection: 'column' }}>
+      <div style={{ height: 28, padding: '0 12px', display: 'flex', alignItems: 'center', gap: 12, borderBottom: collapsed ? 'none' : `1px solid ${T.border}`, color: T.muted, cursor: 'pointer', userSelect: 'none' }} onClick={onToggle}>
+        <span style={{ color: T.accent }}>{collapsed ? '▸' : '▾'}</span>
+        <span style={{ letterSpacing: 1.5, fontSize: 10, textTransform: 'uppercase' }}>console</span>
+        <span style={{ color: T.dim }}>· {entries.length} entries</span>
+        <button onClick={(e) => { e.stopPropagation(); logger.clear(); }} style={{ marginLeft: 'auto', background: 'transparent', border: `1px solid ${T.border}`, color: T.muted, fontFamily: T.fontMono, fontSize: 10, padding: '2px 8px', cursor: 'pointer' }}>clear</button>
+      </div>
+      {!collapsed && (
+        <div ref={ref} style={{ flex: 1, overflowY: 'auto', padding: '8px 12px' }}>
+          {entries.length === 0 && <div style={{ color: T.dim }}>$ awaiting events…</div>}
+          {entries.map(e => (
+            <div key={e.id} style={{ display: 'flex', gap: 8, padding: '2px 0', color: colors[e.level] }}>
+              <span style={{ color: T.dim, minWidth: 90 }}>{fmt(e.ts)}</span>
+              <span style={{ width: 12 }}>{prefix[e.level]}</span>
+              <span style={{ flex: 1 }}>{e.msg}{e.meta ? <span style={{ color: T.dim }}> {JSON.stringify(e.meta)}</span> : null}</span>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ============================================================================
+ * UI — TAB STRIP
+ * ============================================================================ */
+function Tabs({ tabs, value, onChange }) {
+  return (
+    <div style={{ display: 'flex', borderBottom: `1px solid ${T.border}` }}>
+      {tabs.map(t => (
+        <button key={t.key} onClick={() => onChange(t.key)} style={{
+          padding: '8px 14px', fontFamily: T.fontMono, fontSize: 11, letterSpacing: 1, textTransform: 'uppercase',
+          background: value === t.key ? T.surface2 : 'transparent',
+          color: value === t.key ? T.accent : T.muted,
+          border: 'none',
+          borderBottom: value === t.key ? `1px solid ${T.accent}` : '1px solid transparent',
+          cursor: 'pointer',
+        }}>{t.label}</button>
+      ))}
+    </div>
+  );
+}
+
+/* ============================================================================
+ * UI — EDIT MODAL (two tabs: Info & Style)
+ * ============================================================================ */
+function EditModal({ element, onClose, onChange, onDelete, projectConfig, templateConfig }) {
+  const [tab, setTab] = useState('info');
+  const [cssDraft, setCssDraft] = useState('');
+  const [jsonDraft, setJsonDraft] = useState('');
+  const [jsonErr, setJsonErr] = useState(null);
+
+  useEffect(() => {
+    if (element) {
+      setCssDraft(element.customCss || '');
+      setJsonDraft(prettyJson(cssStringToObject(element.customCss || '')));
+      setJsonErr(null);
+    }
+  }, [element?.id]);
+
+  if (!element) return null;
+  const dirs = getDirectives();
+  const overrides = { ...(projectConfig?.directiveOverrides || {}), ...(templateConfig?.directiveOverrides || {}) };
+
+  const patch = (mut) => onChange(prev => ({ ...prev, ...mut }));
+  const patchOpt = (k, v) => onChange(prev => {
+    const styleOptions = { ...prev.styleOptions };
+    if (v === '' || v == null) delete styleOptions[k]; else styleOptions[k] = v;
+    return { ...prev, styleOptions };
+  });
+  const patchDir = (k, v) => onChange(prev => ({ ...prev, directives: { ...prev.directives, [k]: v } }));
+
+  const applyCss = () => {
+    onChange(prev => ({ ...prev, customCss: cssDraft }));
+    setJsonDraft(prettyJson(cssStringToObject(cssDraft)));
+    setJsonErr(null);
+    logger.info('CSS appliqué', { id: element.id });
+  };
+  const cssToJson = () => setJsonDraft(prettyJson(cssStringToObject(cssDraft)));
+  const jsonToCss = () => {
+    const [obj, err] = safeJsonParse(jsonDraft);
+    if (err) { setJsonErr(err); logger.error('JSON CSS invalide', { id: element.id, err }); return; }
+    const css = cssObjectToString(obj);
+    setCssDraft(css);
+    onChange(prev => ({ ...prev, customCss: css }));
+    setJsonErr(null);
+    logger.info('JSON → CSS appliqué', { id: element.id });
+  };
+
+  return (
+    <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(4px)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={onClose}>
+      <div onClick={e => e.stopPropagation()} style={{
+        width: 720, maxHeight: '85vh', background: T.surface, border: `1px solid ${T.borderHi}`,
+        boxShadow: '0 24px 64px rgba(0,0,0,0.5)', display: 'flex', flexDirection: 'column', color: T.text, fontFamily: T.fontMono, fontSize: 12,
+      }}>
+        <div style={{ padding: '12px 16px', borderBottom: `1px solid ${T.border}`, display: 'flex', alignItems: 'center', gap: 12 }}>
+          <span style={{ fontFamily: T.fontUi, fontSize: 16, color: T.accent, letterSpacing: 0.5 }}>‹ {element.type} ›</span>
+          <span style={{ color: T.dim }}>·</span>
+          <span style={{ color: T.muted }}>{element.id}</span>
+          <button onClick={() => { if (confirm('Supprimer cet élément ?')) { onDelete(element.id); onClose(); } }}
+            style={{ marginLeft: 'auto', background: 'transparent', border: `1px solid ${T.bad}`, color: T.bad, padding: '4px 10px', fontFamily: T.fontMono, fontSize: 11, cursor: 'pointer' }}>delete</button>
+          <button onClick={onClose} style={{ background: 'transparent', border: `1px solid ${T.border}`, color: T.muted, padding: '4px 10px', fontFamily: T.fontMono, fontSize: 11, cursor: 'pointer' }}>close</button>
+        </div>
+
+        <Tabs value={tab} onChange={setTab} tabs={[
+          { key: 'info',  label: 'Info' },
+          { key: 'style', label: 'Style' },
+        ]} />
+
+        <div style={{ flex: 1, overflowY: 'auto', padding: 16 }}>
+          {tab === 'info' && (
+            <div style={{ display: 'grid', gap: 12 }}>
+              <Field label="ID élément" value={element.id} onChange={v => {
+                const old = element.id;
+                if (!v.trim() || v === old) return;
+                patch({ id: v });
+                if (element.directives['tekton-tag-id'] === old) patchDir('tekton-tag-id', v);
+                logger.info('ID modifié', { from: old, to: v });
+              }} />
+              <Field label="Type HTML" value={element.type} onChange={v => patch({ type: v.trim() || 'div' })} />
+              <Field label="Classes CSS (séparées par espace)" value={element.classes.join(' ')} onChange={v => patch({ classes: v.split(/\s+/).filter(Boolean) })} />
+
+              <div style={{ marginTop: 12, paddingTop: 12, borderTop: `1px solid ${T.border}` }}>
+                <div style={{ color: T.muted, fontSize: 10, letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: 8 }}>Directives</div>
+                {dirs.map(d => (
+                  <div key={d.key} style={{ marginBottom: 10 }}>
+                    <div style={{ display: 'flex', gap: 8, color: T.dim, fontSize: 10, marginBottom: 3 }}>
+                      <span>{d.label}</span>
+                      <span style={{ color: T.dim }}>·</span>
+                      <span>attribut: <code style={{ color: T.accent }}>{overrides[d.key] || d.key}</code></span>
+                    </div>
+                    <input value={element.directives[d.key] || ''} onChange={e => patchDir(d.key, e.target.value)}
+                      style={inputStyle()} />
+                  </div>
+                ))}
+              </div>
+
+              <div style={{ marginTop: 12, paddingTop: 12, borderTop: `1px solid ${T.border}` }}>
+                <div style={{ color: T.muted, fontSize: 10, letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: 8 }}>Méta</div>
+                <div style={{ color: T.dim }}>Enfants: {element.children.length}</div>
+              </div>
+            </div>
+          )}
+
+          {tab === 'style' && (
+            <div style={{ display: 'grid', gap: 16 }}>
+              <div>
+                <div style={{ color: T.muted, fontSize: 10, letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: 8 }}>Position</div>
+                <select value={element.styleOptions.position || 'static'} onChange={e => patchOpt('position', e.target.value)} style={inputStyle()}>
+                  {POSITION_VALUES.map(p => <option key={p} value={p}>{p}</option>)}
+                </select>
+              </div>
+
+              <div>
+                <div style={{ color: T.muted, fontSize: 10, letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: 8 }}>Options (overridables par CSS custom)</div>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+                  {STYLE_FIELDS.map(f => (
+                    <div key={f.key}>
+                      <div style={{ color: T.dim, fontSize: 10, marginBottom: 2 }}>{f.label}</div>
+                      <input value={element.styleOptions[f.key] || ''} placeholder={f.placeholder}
+                        onChange={e => patchOpt(f.key, e.target.value)} style={inputStyle()} />
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div style={{ paddingTop: 12, borderTop: `1px solid ${T.border}` }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 6 }}>
+                  <div style={{ color: T.muted, fontSize: 10, letterSpacing: 1.5, textTransform: 'uppercase' }}>CSS custom (dominant)</div>
+                  <span style={{ color: T.dim, fontSize: 10 }}>écrase les options ci-dessus</span>
+                  <button onClick={cssToJson} style={ghostBtn()}>css → json</button>
+                  <button onClick={applyCss}  style={ghostBtn(T.accent)}>apply</button>
+                </div>
+                <textarea value={cssDraft} onChange={e => setCssDraft(e.target.value)}
+                  placeholder={'height: 120px;\nbackground-color: #fafafa;'}
+                  style={{ ...inputStyle(), height: 120, resize: 'vertical', fontFamily: T.fontMono }} />
+              </div>
+
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 6 }}>
+                  <div style={{ color: T.muted, fontSize: 10, letterSpacing: 1.5, textTransform: 'uppercase' }}>JSON style object</div>
+                  <button onClick={jsonToCss} style={ghostBtn(T.accent)}>json → css & apply</button>
+                  {jsonErr && <span style={{ color: T.bad, fontSize: 10 }}>{jsonErr}</span>}
+                </div>
+                <textarea value={jsonDraft} onChange={e => setJsonDraft(e.target.value)}
+                  style={{ ...inputStyle(), height: 120, resize: 'vertical', fontFamily: T.fontMono }} />
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function Field({ label, value, onChange }) {
+  return (
+    <div>
+      <div style={{ color: T.dim, fontSize: 10, marginBottom: 3 }}>{label}</div>
+      <input value={value} onChange={e => onChange(e.target.value)} style={inputStyle()} />
+    </div>
+  );
+}
+function inputStyle() {
+  return {
+    width: '100%', background: T.bg, border: `1px solid ${T.border}`, color: T.text,
+    fontFamily: T.fontMono, fontSize: 12, padding: '6px 8px', outline: 'none',
+  };
+}
+function ghostBtn(color = T.muted) {
+  return {
+    background: 'transparent', border: `1px solid ${color === T.accent ? T.accent : T.border}`,
+    color, fontFamily: T.fontMono, fontSize: 10, letterSpacing: 1, textTransform: 'uppercase',
+    padding: '3px 8px', cursor: 'pointer',
+  };
+}
+
+/* ============================================================================
+ * UI — RESIZABLE / DRAGGABLE WRAPPER FOR ELEMENTS ON CANVAS
+ * Cursor handles: 4 corners resize. If position is absolute|fixed|sticky, the
+ * element can also be repositioned by dragging its move-handle.
+ * ============================================================================ */
+function ElementOnCanvas({ element, selectedId, onSelect, onUpdate, onDelete, onEdit, projectConfig, templateConfig, depth = 0 }) {
+  const ref = useRef(null);
+  const finalStyle = computeFinalStyle(element);
+  const isSelected = selectedId === element.id;
+  const isFloating = ['absolute', 'fixed', 'sticky'].includes(finalStyle.position);
+
+  const startResize = (corner) => (e) => {
+    e.stopPropagation();
+    e.preventDefault();
+    const rect = ref.current.getBoundingClientRect();
+    const startX = e.clientX, startY = e.clientY;
+    const startW = rect.width, startH = rect.height;
+    const onMove = (ev) => {
+      const dx = ev.clientX - startX, dy = ev.clientY - startY;
+      let w = startW, h = startH;
+      if (corner.includes('e')) w = Math.max(20, startW + dx);
+      if (corner.includes('w')) w = Math.max(20, startW - dx);
+      if (corner.includes('s')) h = Math.max(20, startH + dy);
+      if (corner.includes('n')) h = Math.max(20, startH - dy);
+      onUpdate(prev => ({ ...prev, styleOptions: { ...prev.styleOptions, width: Math.round(w) + 'px', height: Math.round(h) + 'px' } }));
+    };
+    const onUp = () => {
+      window.removeEventListener('mousemove', onMove);
+      window.removeEventListener('mouseup', onUp);
+      logger.info('Element redimensionné', { id: element.id });
+    };
+    window.addEventListener('mousemove', onMove);
+    window.addEventListener('mouseup', onUp);
+  };
+
+  const startMove = (e) => {
+    if (!isFloating) return;
+    e.stopPropagation();
+    e.preventDefault();
+    const startX = e.clientX, startY = e.clientY;
+    const startTop = parseFloat(finalStyle.top || 0);
+    const startLeft = parseFloat(finalStyle.left || 0);
+    const onMove = (ev) => {
+      const dx = ev.clientX - startX, dy = ev.clientY - startY;
+      onUpdate(prev => ({ ...prev, styleOptions: { ...prev.styleOptions, left: (startLeft + dx) + 'px', top: (startTop + dy) + 'px' } }));
+    };
+    const onUp = () => {
+      window.removeEventListener('mousemove', onMove);
+      window.removeEventListener('mouseup', onUp);
+      logger.info('Element déplacé', { id: element.id });
+    };
+    window.addEventListener('mousemove', onMove);
+    window.addEventListener('mouseup', onUp);
+  };
+
+  // Two children side-by-side hint: if container has multiple children with no display set,
+  // show a subtle hint suggesting flex.
+  const sideBySideHint = useMemo(() => {
+    if (element.children.length < 2) return false;
+    const fs = computeFinalStyle(element);
+    return !fs.display;
+  }, [element]);
+
+  // Container: render with hint border + padding so children are visible
+  const containerStyle = {
+    ...finalStyle,
+    minHeight: finalStyle.minHeight || (element.children.length ? finalStyle.minHeight : '40px'),
+    minWidth: finalStyle.minWidth || (element.children.length ? finalStyle.minWidth : '40px'),
+    boxSizing: 'border-box',
+    outline: isSelected ? `2px solid ${T.accent}` : `1px dashed ${T.borderHi}`,
+    outlineOffset: isSelected ? 0 : -1,
+    cursor: 'pointer',
+    position: finalStyle.position || 'relative',
+  };
+
+  return (
+    <div
+      ref={ref}
+      onClick={(e) => { e.stopPropagation(); onSelect(element.id); }}
+      style={containerStyle}
+      data-tekton-id={element.id}
+    >
+      {element.children.map(c => (
+        <ElementOnCanvas key={c.id} element={c}
+          selectedId={selectedId}
+          onSelect={onSelect}
+          onUpdate={(updater) => onUpdate(prev => updateElement(prev, c.id, updater))}
+          onDelete={onDelete}
+          onEdit={onEdit}
+          projectConfig={projectConfig}
+          templateConfig={templateConfig}
+          depth={depth + 1}
+        />
+      ))}
+
+      {!element.children.length && (
+        <div style={{ fontFamily: T.fontMono, fontSize: 10, color: T.dim, padding: 8, pointerEvents: 'none' }}>
+          ‹{element.type}#{element.directives['tekton-tag-name']}›
+        </div>
+      )}
+
+      {sideBySideHint && (
+        <div style={{ position: 'absolute', top: 4, right: 4, padding: '2px 6px', background: T.warn, color: '#000', fontFamily: T.fontMono, fontSize: 9, opacity: 0.9 }}>
+          ⓘ enfants empilés — set display:flex pour côte-à-côte
+        </div>
+      )}
+
+      {isSelected && (
+        <>
+          {/* selection label + actions */}
+          <div onMouseDown={startMove} style={{ position: 'absolute', top: -22, left: -2, height: 20, padding: '0 4px 0 8px', background: T.accent, color: '#000', fontFamily: T.fontMono, fontSize: 10, display: 'flex', alignItems: 'center', gap: 6, cursor: isFloating ? 'move' : 'default', userSelect: 'none', zIndex: 10 }}>
+            <span>{element.type}</span>
+            <span style={{ opacity: 0.6 }}>·</span>
+            <span>{element.directives['tekton-tag-name']}</span>
+            {isFloating && <span style={{ opacity: 0.7 }}>⤧</span>}
+            <button onClick={(e) => { e.stopPropagation(); onEdit && onEdit(element.id); }}
+              style={{ background: 'rgba(0,0,0,0.25)', border: 'none', color: '#000', fontFamily: T.fontMono, fontSize: 10, padding: '0 6px', cursor: 'pointer', height: 16, marginLeft: 4 }}>edit</button>
+            <button onClick={(e) => { e.stopPropagation(); if (confirm('Supprimer ?')) onDelete(element.id); }}
+              style={{ background: 'rgba(0,0,0,0.25)', border: 'none', color: '#000', fontFamily: T.fontMono, fontSize: 10, padding: '0 6px', cursor: 'pointer', height: 16 }}>×</button>
+          </div>
+          {/* corner handles */}
+          {['nw','ne','sw','se'].map(c => (
+            <div key={c} onMouseDown={startResize(c)} style={{
+              position: 'absolute', width: 10, height: 10, background: T.bg, border: `2px solid ${T.accent}`,
+              [c.includes('n') ? 'top' : 'bottom']: -5,
+              [c.includes('w') ? 'left' : 'right']: -5,
+              cursor: c + '-resize', zIndex: 10,
+            }} />
+          ))}
+        </>
+      )}
+    </div>
+  );
+}
+
+/* ============================================================================
+ * UI — TREE VIEW (sidebar)
+ * ============================================================================ */
+function TreeNode({ node, selectedId, onSelect, depth = 0 }) {
+  const [open, setOpen] = useState(true);
+  const isSel = node.id === selectedId;
+  return (
+    <div>
+      <div onClick={() => onSelect(node.id)} style={{
+        display: 'flex', alignItems: 'center', gap: 4,
+        padding: '3px 6px', paddingLeft: 6 + depth * 12,
+        background: isSel ? T.surface2 : 'transparent',
+        color: isSel ? T.accent : T.text,
+        fontFamily: T.fontMono, fontSize: 11, cursor: 'pointer',
+        borderLeft: isSel ? `2px solid ${T.accent}` : '2px solid transparent',
+      }}>
+        {node.children.length > 0 ? (
+          <span onClick={e => { e.stopPropagation(); setOpen(!open); }} style={{ width: 12, color: T.muted }}>{open ? '▾' : '▸'}</span>
+        ) : <span style={{ width: 12 }} />}
+        <span style={{ color: T.dim }}>‹{node.type}›</span>
+        <span style={{ marginLeft: 4 }}>{node.directives['tekton-tag-name']}</span>
+      </div>
+      {open && node.children.map(c => <TreeNode key={c.id} node={c} selectedId={selectedId} onSelect={onSelect} depth={depth + 1} />)}
+    </div>
+  );
+}
+
+/* ============================================================================
+ * UI — TEMPLATE PICKER
+ * ============================================================================ */
+function TemplatePicker({ open, onClose, onPick }) {
+  if (!open) return null;
+  const tpls = getDefaultTemplates(); // API_HOOK
+  return (
+    <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(4px)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={onClose}>
+      <div onClick={e => e.stopPropagation()} style={{ width: 600, background: T.surface, border: `1px solid ${T.borderHi}`, padding: 20, fontFamily: T.fontMono, color: T.text }}>
+        <div style={{ fontFamily: T.fontUi, fontSize: 18, color: T.accent, marginBottom: 16, letterSpacing: 0.5 }}>Choisir un template</div>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+          {tpls.map(t => (
+            <div key={t.id} onClick={() => onPick(t)} style={{ padding: 14, border: `1px solid ${T.border}`, cursor: 'pointer', transition: 'all 150ms' }}
+              onMouseEnter={e => { e.currentTarget.style.borderColor = T.accent; e.currentTarget.style.background = T.surface2; }}
+              onMouseLeave={e => { e.currentTarget.style.borderColor = T.border; e.currentTarget.style.background = 'transparent'; }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
+                <span style={{ color: T.text, fontSize: 13 }}>{t.name}</span>
+                <span style={{ color: T.dim, fontSize: 10 }}>{t.targetType}</span>
+              </div>
+              <div style={{ color: T.muted, fontSize: 11 }}>{t.description}</div>
+            </div>
+          ))}
+        </div>
+        <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 16 }}>
+          <button onClick={onClose} style={ghostBtn()}>cancel</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ============================================================================
+ * UI — PROJECT CONFIG MODAL
+ * ============================================================================ */
+function ProjectConfigModal({ open, project, activeTemplate, onClose, onChange }) {
+  if (!open) return null;
+  const dirs = getDirectives();
+  const overrideOf = (k) => project.config.directiveOverrides[k] || '';
+  const setOverride = (k, v) => {
+    const next = { ...project.config.directiveOverrides };
+    if (v.trim()) next[k] = v.trim(); else delete next[k];
+    onChange(p => ({ ...p, config: { ...p.config, directiveOverrides: next } }));
+    logger.info('Directive override mise à jour', { key: k, to: v });
+  };
+  const addClass = () => {
+    const name = prompt('Nom de la classe globale ?'); if (!name) return;
+    onChange(p => ({ ...p, config: { ...p.config, globalClasses: [...p.config.globalClasses, { name, css: '' }] } }));
+    logger.info('Classe globale ajoutée', { name });
+  };
+  const updClass = (i, k, v) => onChange(p => ({
+    ...p, config: { ...p.config, globalClasses: p.config.globalClasses.map((c, idx) => idx === i ? { ...c, [k]: v } : c) }
+  }));
+  const delClass = (i) => onChange(p => ({ ...p, config: { ...p.config, globalClasses: p.config.globalClasses.filter((_, idx) => idx !== i) } }));
+  const setContainerStyleField = (k, v) => onChange(p => ({
+    ...p, config: { ...p.config, containerStyle: v ? { ...p.config.containerStyle, [k]: v } : (() => { const c = { ...p.config.containerStyle }; delete c[k]; return c; })() }
+  }));
+
+  return (
+    <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(4px)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={onClose}>
+      <div onClick={e => e.stopPropagation()} style={{ width: 720, maxHeight: '85vh', overflowY: 'auto', background: T.surface, border: `1px solid ${T.borderHi}`, padding: 20, fontFamily: T.fontMono, color: T.text }}>
+        <div style={{ fontFamily: T.fontUi, fontSize: 18, color: T.accent, marginBottom: 16, letterSpacing: 0.5 }}>Configuration projet</div>
+
+        <div style={{ marginBottom: 20 }}>
+          <div style={{ color: T.muted, fontSize: 10, letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: 8 }}>Renommer les directives (attribut HTML émis)</div>
+          {dirs.map(d => (
+            <div key={d.key} style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: 6 }}>
+              <span style={{ width: 180, color: T.dim, fontSize: 11 }}>{d.label}</span>
+              <span style={{ width: 160, color: T.muted, fontSize: 11 }}>défaut: {d.defaultName}</span>
+              <input value={overrideOf(d.key)} placeholder="(laisser vide pour défaut)" onChange={e => setOverride(d.key, e.target.value)} style={inputStyle()} />
+            </div>
+          ))}
+        </div>
+
+        <div style={{ marginBottom: 20 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+            <span style={{ color: T.muted, fontSize: 10, letterSpacing: 1.5, textTransform: 'uppercase' }}>Classes CSS globales</span>
+            <button onClick={addClass} style={ghostBtn(T.accent)}>+ ajouter</button>
+          </div>
+          {project.config.globalClasses.length === 0 && <div style={{ color: T.dim, fontSize: 11 }}>aucune classe</div>}
+          {project.config.globalClasses.map((c, i) => (
+            <div key={i} style={{ marginBottom: 10, padding: 8, border: `1px solid ${T.border}` }}>
+              <div style={{ display: 'flex', gap: 6, marginBottom: 4 }}>
+                <input value={c.name} onChange={e => updClass(i, 'name', e.target.value)} placeholder=".class-name" style={inputStyle()} />
+                <button onClick={() => delClass(i)} style={ghostBtn(T.bad)}>×</button>
+              </div>
+              <textarea value={c.css} onChange={e => updClass(i, 'css', e.target.value)} placeholder="display: flex; gap: 8px;" style={{ ...inputStyle(), height: 60, resize: 'vertical' }} />
+            </div>
+          ))}
+        </div>
+
+        <div style={{ marginBottom: 20 }}>
+          <div style={{ color: T.muted, fontSize: 10, letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: 8 }}>Style container global (appliqué au root de chaque template)</div>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6 }}>
+            {['width', 'maxWidth', 'minHeight', 'margin', 'padding', 'backgroundColor'].map(k => (
+              <div key={k}>
+                <div style={{ color: T.dim, fontSize: 10, marginBottom: 2 }}>{k}</div>
+                <input value={project.config.containerStyle[k] || ''} onChange={e => setContainerStyleField(k, e.target.value)} style={inputStyle()} />
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8 }}>
+          <button onClick={onClose} style={ghostBtn(T.accent)}>fermer</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ============================================================================
+ * UI — LIVE PREVIEW (renders current tree as actual DOM via dangerouslySetInnerHTML)
+ * ============================================================================ */
+function LivePreview({ tree, projectConfig, templateConfig, viewport }) {
+  const html = useMemo(() => elementToHtml(tree, 0, projectConfig, templateConfig), [tree, projectConfig, templateConfig]);
+  // Inject global classes
+  const globalCss = (projectConfig.globalClasses || []).map(c => `.${c.name} { ${c.css} }`).join('\n');
+  return (
+    <div style={{ flex: 1, overflow: 'auto', background: '#1c1f26', padding: 20, display: 'flex', justifyContent: 'center', alignItems: 'flex-start' }}>
+      <div style={{ width: viewport.width, minHeight: viewport.height, background: '#fff', boxShadow: '0 0 0 1px ' + T.borderHi + ', 0 20px 60px rgba(0,0,0,0.4)' }}>
+        <style>{globalCss}</style>
+        <div dangerouslySetInnerHTML={{ __html: html }} />
+      </div>
+    </div>
+  );
+}
+
+/* ============================================================================
+ * UI — HTML OUTPUT
+ * ============================================================================ */
+function HtmlOutput({ tree, projectConfig, templateConfig }) {
+  const html = useMemo(() => elementToHtml(tree, 0, projectConfig, templateConfig), [tree, projectConfig, templateConfig]);
+  const copy = () => { navigator.clipboard?.writeText(html); logger.info('HTML copié dans le presse-papier'); };
+  return (
+    <div style={{ flex: 1, display: 'flex', flexDirection: 'column', background: T.bg }}>
+      <div style={{ padding: '6px 12px', borderBottom: `1px solid ${T.border}`, display: 'flex', alignItems: 'center', gap: 12 }}>
+        <span style={{ color: T.muted, fontFamily: T.fontMono, fontSize: 10, letterSpacing: 1.5, textTransform: 'uppercase' }}>generated html</span>
+        <button onClick={copy} style={ghostBtn(T.accent)}>copy</button>
+      </div>
+      <pre style={{ flex: 1, margin: 0, overflow: 'auto', padding: 12, color: T.text, fontFamily: T.fontMono, fontSize: 11, lineHeight: 1.5 }}>{html}</pre>
+    </div>
+  );
+}
+
+/* ============================================================================
+ * UI — STATE JSON (for debug / clarity of saved shape)
+ * ============================================================================ */
+function StateJson({ project }) {
+  return (
+    <div style={{ flex: 1, display: 'flex', flexDirection: 'column', background: T.bg }}>
+      <div style={{ padding: '6px 12px', borderBottom: `1px solid ${T.border}` }}>
+        <span style={{ color: T.muted, fontFamily: T.fontMono, fontSize: 10, letterSpacing: 1.5, textTransform: 'uppercase' }}>project state · forme sauvegardée</span>
+      </div>
+      <pre style={{ flex: 1, margin: 0, overflow: 'auto', padding: 12, color: T.text, fontFamily: T.fontMono, fontSize: 11, lineHeight: 1.5 }}>{prettyJson(project)}</pre>
+    </div>
+  );
+}
+
+/* ============================================================================
+ * MAIN APP
+ * ============================================================================ */
+export default function TektonEditor() {
+  const [project, setProject] = useState(() => createProject('Tekton Project'));
+  const [selectedId, setSelectedId] = useState(null);
+  const [editing, setEditing] = useState(null); // element id
+  const [tab, setTab] = useState('editor');     // editor | preview | html | state
+  const [consoleCollapsed, setConsoleCollapsed] = useState(false);
+  const [showTemplatePicker, setShowTemplatePicker] = useState(false);
+  const [showConfig, setShowConfig] = useState(false);
+
+  const activeTemplate = project.templates.find(t => t.id === project.activeTemplateId) || project.templates[0];
+
+  useEffect(() => { logger.info('Tekton editor démarré', { project: project.name, version: project.version }); /* eslint-disable-next-line */ }, []);
+
+  /* ---- project mutators ---- */
+  const updateActiveTree = (treeUpdater) => {
+    setProject(p => ({
+      ...p,
+      updatedAt: new Date().toISOString(),
+      templates: p.templates.map(t => t.id === p.activeTemplateId ? { ...t, tree: treeUpdater(t.tree) } : t),
+    }));
+  };
+
+  const handleAddComponent = (compType) => {
+    const targetParentId = selectedId || activeTemplate.tree.id;
+    const newEl = createElement(compType);
+    updateActiveTree(tree => addChild(tree, targetParentId, newEl));
+    setSelectedId(newEl.id);
+    logger.info(`+ ${compType} ajouté`, { parent: targetParentId, id: newEl.id });
+  };
+
+  const handleUpdateElement = (id, updater) => {
+    updateActiveTree(tree => updateElement(tree, id, updater));
+  };
+
+  const handleDeleteElement = (id) => {
+    if (id === activeTemplate.tree.id) { logger.warn('Impossible de supprimer le root'); return; }
+    updateActiveTree(tree => removeElement(tree, id));
+    setSelectedId(null);
+    logger.info('Élément supprimé', { id });
+  };
+
+  const handleNewTemplate = (defaultTemplate) => {
+    const t = createTemplateFrom(defaultTemplate, `${defaultTemplate.name} ${project.templates.length + 1}`);
+    setProject(p => ({ ...p, templates: [...p.templates, t], activeTemplateId: t.id }));
+    setSelectedId(null);
+    setShowTemplatePicker(false);
+    logger.info('Template créé', { name: t.name, source: defaultTemplate.id });
+  };
+
+  const handleCloneTemplate = () => {
+    const cloneTree = (n) => ({ ...n, id: newElementId(), children: n.children.map(cloneTree) });
+    const clone = { ...activeTemplate, id: newTemplateId(), name: activeTemplate.name + ' (copie)', tree: cloneTree(activeTemplate.tree) };
+    setProject(p => ({ ...p, templates: [...p.templates, clone], activeTemplateId: clone.id }));
+    logger.info('Template cloné', { from: activeTemplate.id, to: clone.id });
+  };
+
+  const handleDeleteTemplate = () => {
+    if (project.templates.length <= 1) { logger.warn('Au moins un template requis'); return; }
+    if (!confirm(`Supprimer le template "${activeTemplate.name}" ?`)) return;
+    setProject(p => {
+      const remaining = p.templates.filter(t => t.id !== p.activeTemplateId);
+      return { ...p, templates: remaining, activeTemplateId: remaining[0].id };
+    });
+    logger.info('Template supprimé', { id: activeTemplate.id });
+  };
+
+  const handleSetTargetType = (key) => {
+    setProject(p => ({ ...p, templates: p.templates.map(t => t.id === p.activeTemplateId ? { ...t, targetType: key } : t) }));
+    logger.info('Target type changé', { to: key });
+  };
+
+  const handleSave = async () => {
+    const ok = await StorageAdapter.saveProject(project);
+    logger.info(ok ? 'Projet sauvegardé' : 'Échec sauvegarde', { templates: project.templates.length });
+  };
+  const handleLoad = async () => {
+    const loaded = await StorageAdapter.loadProject();
+    if (loaded) { setProject(loaded); setSelectedId(null); logger.info('Projet chargé', { name: loaded.name }); }
+    else logger.warn('Aucun projet sauvegardé');
+  };
+
+  const editingElement = editing ? findElement(activeTemplate.tree, editing) : null;
+  const selectedElement = selectedId ? findElement(activeTemplate.tree, selectedId) : null;
+  const targetType = getTargetTypes().find(t => t.key === activeTemplate.targetType) || getTargetTypes()[0];
+
+  return (
+    <div style={{
+      width: '100%', height: '100vh', minHeight: 700,
+      background: T.bg, color: T.text, fontFamily: T.fontUi,
+      display: 'flex', flexDirection: 'column', overflow: 'hidden',
+    }}>
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
+
+      {/* HEADER */}
+      <div style={{ height: 48, padding: '0 16px', display: 'flex', alignItems: 'center', gap: 16, borderBottom: `1px solid ${T.border}`, background: T.surface, flexShrink: 0 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <div style={{ width: 22, height: 22, background: T.accent, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: T.fontMono, fontSize: 13, fontWeight: 700, color: '#000' }}>τ</div>
+          <span style={{ fontWeight: 600, letterSpacing: 0.5 }}>Tekton</span>
+          <span style={{ color: T.dim, fontFamily: T.fontMono, fontSize: 11 }}>editor</span>
+        </div>
+
+        <div style={{ height: 20, width: 1, background: T.border }} />
+
+        <input value={project.name} onChange={e => setProject(p => ({ ...p, name: e.target.value }))}
+          style={{ background: 'transparent', border: 'none', color: T.text, fontFamily: T.fontUi, fontSize: 14, fontWeight: 600, outline: 'none', width: 200 }} />
+        <span style={{ color: T.dim, fontFamily: T.fontMono, fontSize: 11 }}>{project.version}</span>
+
+        <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 8 }}>
+          <button onClick={() => setShowConfig(true)} style={ghostBtn()}>config projet</button>
+          <button onClick={handleLoad} style={ghostBtn()}>load</button>
+          <button onClick={handleSave} style={ghostBtn(T.accent)}>save</button>
+        </div>
+      </div>
+
+      {/* TEMPLATE BAR */}
+      <div style={{ height: 36, padding: '0 12px', display: 'flex', alignItems: 'center', gap: 4, borderBottom: `1px solid ${T.border}`, background: T.surface2, flexShrink: 0, overflowX: 'auto' }}>
+        {project.templates.map(t => (
+          <button key={t.id} onClick={() => { setProject(p => ({ ...p, activeTemplateId: t.id })); setSelectedId(null); }}
+            style={{
+              padding: '4px 12px', fontFamily: T.fontMono, fontSize: 11,
+              background: t.id === project.activeTemplateId ? T.bg : 'transparent',
+              color: t.id === project.activeTemplateId ? T.accent : T.muted,
+              border: `1px solid ${t.id === project.activeTemplateId ? T.accent : T.border}`,
+              cursor: 'pointer', whiteSpace: 'nowrap',
+            }}>{t.name}</button>
+        ))}
+        <button onClick={() => setShowTemplatePicker(true)} style={{ padding: '4px 10px', fontFamily: T.fontMono, fontSize: 11, background: 'transparent', color: T.accent, border: `1px dashed ${T.accent}`, cursor: 'pointer' }}>+ template</button>
+
+        <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 6 }}>
+          <span style={{ color: T.dim, fontFamily: T.fontMono, fontSize: 10, textTransform: 'uppercase', letterSpacing: 1 }}>cible</span>
+          <select value={activeTemplate.targetType} onChange={e => handleSetTargetType(e.target.value)}
+            style={{ background: T.bg, color: T.text, border: `1px solid ${T.border}`, fontFamily: T.fontMono, fontSize: 11, padding: '3px 6px' }}>
+            {getTargetTypes().map(t => <option key={t.key} value={t.key}>{t.label} {t.viewport.width}×{t.viewport.height}</option>)}
+          </select>
+          <button onClick={handleCloneTemplate} style={ghostBtn()}>clone</button>
+          <button onClick={handleDeleteTemplate} style={ghostBtn(T.bad)}>delete tpl</button>
+        </div>
+      </div>
+
+      {/* MAIN BODY */}
+      <div style={{ flex: 1, display: 'flex', minHeight: 0 }}>
+        {/* LEFT SIDEBAR */}
+        <div style={{ width: 240, borderRight: `1px solid ${T.border}`, background: T.surface, display: 'flex', flexDirection: 'column' }}>
+          <div style={{ padding: '10px 12px 6px', color: T.muted, fontFamily: T.fontMono, fontSize: 10, letterSpacing: 1.5, textTransform: 'uppercase' }}>Composants</div>
+          <div style={{ padding: '0 8px 8px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 4 }}>
+            {getAvailableComponents().map(c => (
+              <button key={c.type} onClick={() => handleAddComponent(c.type)} style={{
+                padding: '8px 6px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4,
+                background: T.bg, border: `1px solid ${T.border}`, color: T.text,
+                fontFamily: T.fontMono, fontSize: 10, cursor: 'pointer', transition: 'all 120ms',
+              }}
+                onMouseEnter={e => { e.currentTarget.style.borderColor = T.accent; e.currentTarget.style.color = T.accent; }}
+                onMouseLeave={e => { e.currentTarget.style.borderColor = T.border; e.currentTarget.style.color = T.text; }}>
+                <span style={{ fontSize: 18 }}>{c.icon}</span>
+                <span>{c.label}</span>
+              </button>
+            ))}
+          </div>
+
+          <div style={{ borderTop: `1px solid ${T.border}`, padding: '10px 12px 6px', color: T.muted, fontFamily: T.fontMono, fontSize: 10, letterSpacing: 1.5, textTransform: 'uppercase', display: 'flex', justifyContent: 'space-between' }}>
+            <span>Arbre</span>
+            <span style={{ color: T.dim }}>{selectedElement ? 'parent: ' + selectedElement.id.slice(0, 10) : 'root parent'}</span>
+          </div>
+          <div style={{ flex: 1, overflowY: 'auto', paddingBottom: 8 }}>
+            <TreeNode node={activeTemplate.tree} selectedId={selectedId} onSelect={setSelectedId} />
+          </div>
+
+          {selectedElement && (
+            <div style={{ borderTop: `1px solid ${T.border}`, padding: 8, display: 'flex', gap: 4, flexWrap: 'wrap' }}>
+              <button onClick={() => setEditing(selectedId)} style={ghostBtn(T.accent)}>edit</button>
+              <button onClick={() => handleDeleteElement(selectedId)} style={ghostBtn(T.bad)}>delete</button>
+              <button onClick={() => setSelectedId(null)} style={ghostBtn()}>deselect</button>
+            </div>
+          )}
+        </div>
+
+        {/* CENTER */}
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0 }}>
+          <Tabs value={tab} onChange={setTab} tabs={[
+            { key: 'editor',  label: '◫ editor' },
+            { key: 'preview', label: '◉ preview' },
+            { key: 'html',    label: '⌗ html' },
+            { key: 'state',   label: '{ } state' },
+          ]} />
+
+          {tab === 'editor' && (
+            <div style={{ flex: 1, overflow: 'auto', background: '#1c1f26', padding: 32 }} onClick={() => setSelectedId(null)}>
+              <div style={{ width: targetType.viewport.width, margin: '0 auto', background: '#fff', boxShadow: '0 0 0 1px ' + T.borderHi + ', 0 20px 60px rgba(0,0,0,0.4)', minHeight: 100 }} onClick={e => e.stopPropagation()}>
+                <ElementOnCanvas
+                  element={activeTemplate.tree}
+                  selectedId={selectedId}
+                  onSelect={setSelectedId}
+                  onUpdate={(updater) => updateActiveTree(tree => updater(tree))}
+                  onDelete={handleDeleteElement}
+                  onEdit={setEditing}
+                  projectConfig={project.config}
+                  templateConfig={activeTemplate.config}
+                />
+              </div>
+              <div style={{ marginTop: 16, textAlign: 'center', color: T.dim, fontFamily: T.fontMono, fontSize: 10 }}>
+                clique sur un élément pour le sélectionner · sélectionne un parent puis clique un composant à gauche pour l'ajouter dedans · poignées coin pour redimensionner · drag du label pour déplacer (position absolute/fixed)
+              </div>
+            </div>
+          )}
+
+          {tab === 'preview' && (
+            <LivePreview tree={activeTemplate.tree} projectConfig={project.config} templateConfig={activeTemplate.config} viewport={targetType.viewport} />
+          )}
+          {tab === 'html' && (
+            <HtmlOutput tree={activeTemplate.tree} projectConfig={project.config} templateConfig={activeTemplate.config} />
+          )}
+          {tab === 'state' && <StateJson project={project} />}
+        </div>
+      </div>
+
+      <ConsolePanel collapsed={consoleCollapsed} onToggle={() => setConsoleCollapsed(v => !v)} />
+
+      <EditModal
+        element={editingElement}
+        projectConfig={project.config}
+        templateConfig={activeTemplate.config}
+        onClose={() => setEditing(null)}
+        onChange={(updater) => handleUpdateElement(editing, updater)}
+        onDelete={handleDeleteElement}
+      />
+
+      <TemplatePicker open={showTemplatePicker} onClose={() => setShowTemplatePicker(false)} onPick={handleNewTemplate} />
+      <ProjectConfigModal open={showConfig} project={project} activeTemplate={activeTemplate} onClose={() => setShowConfig(false)} onChange={setProject} />
+    </div>
+  );
+}
+
+/* ============================================================================
+ * UI — CANVAS OVERLAY (handles selection at any depth)
+ * The recursive ElementOnCanvas above only marks the root; this overlay finds
+ * the selected element by data-attribute and applies handles globally.
+ * Kept simple for v0.1 — the rendered ElementOnCanvas already shows children;
+ * we just allow selection clicks to bubble up properly via stopPropagation.
+ * ============================================================================ */
+function CanvasOverlay() { return null; /* placeholder for future multi-select / global handles */ }
